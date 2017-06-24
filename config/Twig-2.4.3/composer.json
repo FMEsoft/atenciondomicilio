@@ -1,0 +1,34 @@
+{
+    "name": "twig/twig",
+    "type": "library",
+    "description": "Twig, the flexible, fast, and secure template language for PHP",
+    "keywords": ["templating"],
+    "license": "BSD-3-Clause",
+    "require": {
+        "php": "^7.0",
+        "symfony/polyfill-mbstring": "~1.0"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "~3.3@dev",
+        "symfony/debug": "~2.7",
+        "psr/container": "^1.0"
+    },
+    "autoload": {
+        "psr-0" : {
+            "Twig_" : "lib/"
+        },
+        "psr-4" : {
+            "Twig\\" : "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-0" : {
+            "Twig_Tests_" : "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.4-dev"
+        }
+    }
+}
