@@ -1,0 +1,60 @@
+{% extends 'Base/base.html' %}
+{% block wrapper %}
+    <section class="content-header">
+        <h1>
+            Atenciones
+            <small>Nueva Atención</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Nueva Atención</li>
+        </ol>
+    </section>
+{% endblock %}
+
+{% block content %}
+<div class="box">
+    <div class="box-header">
+      	<h3 class="box-title">Listado de Asociados</h3>
+    </div>
+    
+    <div class="box-body">
+      	<table id="example1" class="table table-bordered table-striped">
+        	<thead>
+		        <tr>
+			        <th>Nro.</th>
+			        <th>Nombre y Apellido</th>
+			        <th>DNI</th>
+			        <th>Sexo</th>
+		            <th>Acciones</th>
+		        </tr>
+        	</thead>
+	        <tbody>
+	        	{% for asociado in asociados %}
+	        	<tr>
+			        <td>{{ asociado.numero }}</td>
+			        <td>{{ asociado.nombreyapellido }}</td>
+			        <td>{{ asociado.dni }}</td>
+			        <td>{{ asociado.sexo }}</td>
+		            <td><a class="btn" href="#">Ver más</a></td>
+		        </tr>
+		        {% endfor %}
+		        <tr>
+			        <td>1</td>
+			        <td>nombre y apellido</td>
+			        <td>dni</td>
+			        <td>sexo</td>
+		            <td><a class="btn" href="#">Ver más</a></td>
+		        </tr>
+		        <tr>
+			        <td>1</td>
+			        <td>nombre y apellido</td>
+			        <td>dni</td>
+			        <td>sexo</td>
+		            <td><a class="btn" href="#">Ver más</a></td>
+		        </tr>
+	        </tbody>
+      	</table>
+    </div>    
+</div>
+{% endblock %}
