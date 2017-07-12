@@ -33,7 +33,7 @@
 	else
 		echo "algo va mal";
 	
-	//---------------CONSULTA DE PRUEBA----------------
+	//---------------FIN CONSULTA DE PRUEBA----------------
 
 	echo $twig->render('/Atenciones/nueva_atencion_1.html');	
 	
