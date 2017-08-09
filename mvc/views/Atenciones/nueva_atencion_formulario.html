@@ -1,0 +1,58 @@
+{% extends 'Base/base.html' %}
+{% block wrapper %}
+    <section class="content-header">
+        <h1>
+            Atenciones
+            <small>Nueva Atención</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Nueva Atención</li>
+        </ol>
+    </section>
+{% endblock %}
+
+{% block content %}
+
+<div class="box">
+    <div class="box-header">
+      	<h3 class="box-title">Nueva atención</h3>
+    </div>
+    
+    <div class="box-body">
+      	<form action="../../controllers/insertar_registro.php" method="post">
+			<fieldset><legend>Datos básicos</legend>
+			<label for="fecha">Fecha pedido</label><br/>
+			<input type="text" name="fecha" disabled value="{{ persona.fecha['year'] }}-{{ persona.fecha['mon'] }}-{{ persona.fecha['mday'] }}"/>
+			<br/>
+			<label for="hora">Hora pedido</label><br/>
+			<input type="text" name="hora" disabled value="{{ persona.fecha['hours'] }}:{{ persona.fecha['minutes'] }}"/>
+			<br/>
+			<label for="doctitu">Documento titular</label><br/>
+			<input type="text" name="doctitu" disabled />
+			<br/>
+			<label for="doc">Documento</label><br/>
+			<input type="text" name="doc" disabled value="{{ persona.doc }}"/>
+			<br/>
+			<label for="nombre">Nombre</label><br/>
+			<input type="text" name="nombre" disabled value="{{ persona.nombre }}"/>
+			</fieldset>
+			
+			<br/>
+			<fieldset><legend>Datos de la atención</legend>
+			<label for="prof">Profesional</label><br/>
+			<input type="text" name="prof"/>
+			<br/>
+			<label for="desc">Descripción de la situación</label><br/>
+			<input type="text" name="desc" />
+			<br/>
+			<label for="dom">Domicilio</label><br/>
+			<input type="text" name="dom" id="domicilio" value="{{ persona.dom }}"/>
+			<br/><br/>
+			<input type="submit" name="enviar" value="Generar atencion" />
+			
+			</fieldset>
+		</form>
+    </div>    
+</div>
+{% endblock %}
