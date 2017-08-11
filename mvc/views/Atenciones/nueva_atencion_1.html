@@ -33,15 +33,18 @@
 				<tr>
 					<td><a href="../controllers/atenciones.php?funcion=mostrarFormulario&numeral=3">nueva atencion</a></td>
 				</tr>
-	        	{% for asociado in asociados %}
-	        	<tr>
-			        <td>{{ asociado.numero }}</td>
-			        <td>{{ asociado.nombreyapellido }}</td>
-			        <td>{{ asociado.dni }}</td>
+	        	{% for asociado in resultado %}
+				<tr>
+					
+			        <td>{{ asociado.numero_soc }}</td>
+			        <td>{{ asociado.nombre }}</td>
+			        <td>{{ asociado.numdoc }}</td>
 			        <td>{{ asociado.sexo }}</td>
 		            <td><a class="btn" href="#">Ver más</a></td>
 		        </tr>
 		        {% endfor %}
+				
+				
 		        <tr>
 			        <td>1</td>
 			        <td>nombre y apellido</td>

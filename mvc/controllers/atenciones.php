@@ -37,27 +37,54 @@
 		$db = new CONEXION($config['dbhost'],$config['dbuser'],$config['dbpass'],$config['db']);
 		
 		//---------------CONSULTA DE PRUEBA----------------
-		$resultado = $db->select('SELECT * FROM fme_asistencia WHERE doctitu = 04191748');
 		
-
-		if($resultado)
+		//$resultado = $db->select('SELECT * FROM fme_asistencia WHERE doctitu = 04191748');
+		/*if($resultado)
 		{
 				foreach($resultado as $res)
+					$pers =[
 					echo "IDNUM: " . $res['idnum'] . " " ;
 					echo "CODSER: " . $res['cod_ser'] . " ";
 					echo "NROORDATE: " . $res['nroordate'] . " ";
 					echo "DOCTITU: " . $res['doctitu'] . " ";
 					echo "NUMDOC: " . $res['numdoc'] . " ";
 					echo "NOMBRE: " . $res['nombre'] . " ";
+					];
 		}
 		else
 			echo "algo va mal";
 		
 		//---------------FIN CONSULTA DE PRUEBA---------------
 
-		echo $twig->render('/Atenciones/nueva_atencion_1.html');	
+		echo $twig->render('/Atenciones/nueva_atencion_1.html',compact('pers'));	
 		
+	}*/
+
+$resultado = $db->select('SELECT socios.beneficio,socios.soc_titula,socios.numero_soc,persona.sexo,persona.nombre,persona.numdoc FROM socios, persona WHERE socios.soc_titula=socios.numero_soc AND persona.id_persona=socios.id_persona;');
+
+/*
+
+*/
+		 		if($resultado)
+	{
+				foreach($resultado as $res)
+					{
+					$asociado =[
+
+					];
+					
+					}
 	}
+	else
+		echo "error";
+
+	
+	//---------------FIN CONSULTA DE PRUEBA---------------
+
+	echo $twig->render('/Atenciones/nueva_atencion_1.html', compact('asociado','resultado'));
+}
+		
+		
 	
 	
 //funcion verMAS, el cual debe realizar la consulta del asociado seleccionado para mostrar toda su informacion
