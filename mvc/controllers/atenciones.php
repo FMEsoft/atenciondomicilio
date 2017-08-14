@@ -220,7 +220,6 @@ function verMas()
 					'doc' 		=>	$res['documento'],
 					'nombre'	=>	$res['nombre'],
 					'dom'		=>	$res['domicilio'],
-					'tel'		=>	$res['telefono']
 					
 				];
 	}
