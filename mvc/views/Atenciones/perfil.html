@@ -1,0 +1,106 @@
+{% extends 'Base/base.html' %}
+
+{% block wrapper %}
+    <section class="content-header">
+        <h1>
+            Atenciones
+            <small>Nueva Atención</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Nueva Atención</li>
+        </ol>
+    </section>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                  <li class="active"><a href="#datos" data-toggle="tab">Datos Titular</a></li>
+                  <li><a href="#planes-titular" data-toggle="tab">Planes Titular</a></li>
+                  <li><a href="#planes-adherentes" data-toggle="tab">Planes Adherentes</a></li>
+                  <li><a href="#planes-adherentes" data-toggle="tab">Atenciones</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="active tab-pane" id="datos">
+                        <div class="post">
+                            {% for res in resultadoTitular %}  
+                                <div class="user-block">
+                                    <img class="img-circle img-bordered-sm" src="../../static/images/user.png" alt="user image">
+                                    <span class="username">
+                                      <h4><b><a href="#">{{ res.nombre }}</a></b></h4>
+                                    </span>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p><label>Número de documento del titular :</label> {{ res.numdoc }}</p>
+                                        <p><label>Número de beneficio del titular : </label>{{ res.beneficio }}<p>
+                                        <p><label>Número de socio : </label>{{ res.numero_soc }}<p>
+                                        <p><label>ID persona del titular : </label>{{ res.id_persona }}<p>
+                                        <p><label>Domicilio del titular : </label>{{ res.domicilio }}<p>
+                                        <p><label>Fecha de nacimiento del titular : </label>{{ res.fecnacim }}<p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                  
+                    <div class="tab-pane" id="planes-titular">
+                        <div class="row">
+                            <div class="col-md-12">
+                            {% for res2 in resultadoTitularServicios1 %}  
+                                <p><label>Relación DEL TITULAR POR CUOTA: </label> {{ res2.parentesco }} </p>
+                                <p><label>Plan DEL TITULAR POR CUOTA: </label> {{ res.nombre }} </p>
+                            {% endfor %}
+                            </div>
+                        </div>
+
+                        {% for res22 in resultadoTitularServicios2 %}
+                            <p><label>Relación DEL TITULAR POR TARJETA: </label>{{ res22.parentezco }} </p>
+                            <p><label>Plan DEL TITULAR POR TARJETA : </label>{{ res22.nombre }} </p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="tab-pane" id="planes-adherentes">
+                        {% for res3 in resultadoAdherentes1 %}    
+                            <p> -------------------------------------------- </p>
+                            <p> Relación DEL ADHERENTE: {{ res3['parentesco'] }} </p>
+                            <p> Plan DEL ADHERENTE: {{ res3['nombre'] }} </p>
+                            <p> Número de socio DEL ADHERENTE: {{ res3['numero_soc'] }} </p>
+                            <p> Nro de beneficio DEL ADHERENTE: {{ res3['beneficio'] }} </p>
+                       {% endfor %}
+   
+                       {% for res33 in resultadoAdherentes1Nombres %}    
+                            <p> -------------------------------------------- </p>
+                            <p> Nombre DEL ADHERENTE: {{ res33['nombre'] }} </p>
+                            <p> -------------------------------------------- </p>
+                       {% endfor %}
+                       
+                       {% for res4 in resultadoAdherentes2 %}  
+                            <p> Relación DEL ADHERENTE: {{ res4['parentezco'] }} </p>
+                            <p> Plan DEL ADHERENTE: {{ res4['nombre'] }} </p>
+                            <p> Número de socio DEL ADHERENTE: {{ res4['numero_soc'] }} </p>
+                            <p> Nro de beneficio DEL ADHERENTE: {{ res4['beneficio'] }} </p>
+                       {% endfor %}
+                       
+                       {% for res44 in resultadoAdherentes2Nombres %}   
+                            <p> -------------------------------------------- </p>
+                            <p> Nombre DEL ADHERENTE: {{ res44['nombre'] }} </p>
+                            <p> -------------------------------------------- </p>
+                       {% endfor %}
+                    </div>
+
+                    <div class="active tab-pane" id="atenciones">
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+    </section>
+{% endblock %}

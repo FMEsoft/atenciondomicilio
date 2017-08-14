@@ -19,7 +19,7 @@
     </div>
     
     <div class="box-body">
-      	<table id="example1" class="table table-bordered table-striped">
+      	<table id="tabla" class="table table-bordered table-striped">
         	<thead>
 		        <tr>
 			        <th>Nro.</th>
@@ -30,37 +30,37 @@
 		        </tr>
         	</thead>
 	        <tbody>
-				<tr>
-					<td><a href="../controllers/atenciones.php?funcion=mostrarFormulario&numeral=3">nueva atencion</a></td>
-				</tr>
 	        	{% for asociado in resultado %}
 				<tr>
 					
 			        <td>{{ asociado.numero_soc }}</td>
 			        <td>{{ asociado.nombre }}</td>
 			        <td>{{ asociado.numdoc }}</td>
-			        <td>{{ asociado.sexo }}</td>
-		            <td><a class="btn" href="#">Ver más</a></td>
+			        {% if asociado.sexo == 1 %}
+			        	<td>M</td>
+			        {% else %}
+			        	<td>F</td>
+			        {% endif %}
+                    <td><a class="btn btn-success" href="../controllers/atenciones.php?funcion=verMas">Ver más</a></td>
+		            <!--<td><a class="btn btn-success" href="../controllers/atenciones.php?funcion=mostrarFormulario&numeral=3">Ver más</a></td>-->
 		        </tr>
 		        {% endfor %}
-				
-				
-		        <tr>
-			        <td>1</td>
-			        <td>nombre y apellido</td>
-			        <td>dni</td>
-			        <td>sexo</td>
-		            <td><a class="btn" href="#">Ver más</a></td>
-		        </tr>
-		        <tr>
-			        <td>1</td>
-			        <td>nombre y apellido</td>
-			        <td>dni</td>
-			        <td>sexo</td>
-		            <td><a class="btn" href="#">Ver más</a></td>
-		        </tr>
 	        </tbody>
       	</table>
     </div>    
 </div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+ 	$('#tabla').DataTable({
+ 		"language": {
+            "lengthMenu": "Mostrando _MENU_ registros por página",
+            "zeroRecords": "Ningún registro coincide con lo ingresado",
+            "info": "Mostrando página _PAGE_ de _PAGES_",
+            "infoEmpty": "No hay resultados",
+            "infoFiltered": "(de un total de _MAX_ total registros)"
+        }
+ 	});
+</script>
 {% endblock %}

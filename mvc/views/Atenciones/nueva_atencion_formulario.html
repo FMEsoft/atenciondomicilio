@@ -20,38 +20,63 @@
     </div>
     
     <div class="box-body">
-      	<form action="../../controllers/insertar_registro.php" method="post">
+      	<form action="../controllers/atenciones.php?funcion=generarAtencion" method="post">
 			<fieldset><legend>Datos básicos</legend>
-			<label for="fecha">Fecha pedido</label><br/>
-			<input type="text" name="fecha" disabled value="{{ persona.fecha['year'] }}-{{ persona.fecha['mon'] }}-{{ persona.fecha['mday'] }}"/>
-			<br/>
-			<label for="hora">Hora pedido</label><br/>
-			<input type="text" name="hora" disabled value="{{ persona.fecha['hours'] }}:{{ persona.fecha['minutes'] }}"/>
-			<br/>
-			<label for="doctitu">Documento titular</label><br/>
-			<input type="text" name="doctitu" disabled />
-			<br/>
-			<label for="doc">Documento</label><br/>
-			<input type="text" name="doc" disabled value="{{ persona.doc }}"/>
-			<br/>
-			<label for="nombre">Nombre</label><br/>
-			<input type="text" name="nombre" disabled value="{{ persona.nombre }}"/>
+				<div class="row">
+					<div class="col-md-6 form-group">
+						<label for="fecha">Fecha pedido</label><br/>
+						<input type="text" class="form-control" id="fecha" name="fecha" disabled value="{{ persona.fecha['year'] }}-{{ persona.fecha['mon'] }}-{{ persona.fecha['mday'] }}"/>
+					</div>
+					
+					<div class="col-md-6 form-group">
+						<label for="hora">Hora pedido</label><br/>
+						<input type="text" class="form-control" id="hora" name="hora" disabled value="{{ persona.fecha['hours'] }}:{{ persona.fecha['minutes'] }}"/>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-4 form-group">
+						<label for="doctitu">Documento titular</label><br/>
+						<input type="text" class="form-control" id="doctitu" name="doctitu" disabled />
+					</div>
+					
+					<div class="col-md-4 form-group">
+						<label for="doc">Documento</label><br/>
+						<input type="text" class="form-control" id="doc" name="doc" disabled value="{{ persona.doc }}"/>
+					</div>
+					
+					<div class="col-md-4 form-group">
+						<label for="nombre">Nombre</label><br/>
+						<input type="text" class="form-control" id="nombre" name="nombre" disabled value="{{ persona.nombre }}"/>
+					</div>
+				</div>
 			</fieldset>
 			
-			<br/>
 			<fieldset><legend>Datos de la atención</legend>
-			<label for="prof">Profesional</label><br/>
-			<input type="text" name="prof"/>
-			<br/>
-			<label for="desc">Descripción de la situación</label><br/>
-			<input type="text" name="desc" />
-			<br/>
-			<label for="dom">Domicilio</label><br/>
-			<input type="text" name="dom" id="domicilio" value="{{ persona.dom }}"/>
-			<br/><br/>
-			<input type="submit" name="enviar" value="Generar atencion" />
-			
+				<div class="row">
+					<div class="col-md-6 form-group">
+						<label for="prof">Profesional</label>
+						<input type="text" class="form-control" id="prof" name="prof"/>
+					</div>
+					<div class="col-md-6 form-group">
+						<label for="dom">Domicilio</label>
+						<input type="text" class="form-control" name="dom" id="domicilio" value="{{ persona.dom }}"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="desc">Descripción de la situación</label><br/>
+					<textarea type="text" class="form-control" id="desc" name="desc" rows="5" placeholder="Describe la situacion.." /></textarea>
+				</div>
 			</fieldset>
+
+			<div class="row"><br><br>
+				<div class="col-md-6">
+					<input class="btn btn-block btn-success" type="submit" name="enviar" value="Generar atencion" />
+				</div>
+				<div class="col-md-6">
+					<input class="btn btn-block btn-default" type="button" name="cancelar" value="Cancelar" />
+				</div>
+			</div>
 		</form>
     </div>    
 </div>

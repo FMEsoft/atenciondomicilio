@@ -17,7 +17,7 @@
 	
 	
 //funcion nuevaAtencion (MODIFICAR BLANQUITO) debe mostrar todos los asociados titulares
-	function nuevaAtencion()
+function nuevaAtencion()
 	{
 		require_once '../../vendor/autoload.php';
 		
@@ -60,36 +60,31 @@
 		
 	}*/
 
-$resultado = $db->select('SELECT socios.beneficio,socios.soc_titula,socios.numero_soc,persona.sexo,persona.nombre,persona.numdoc FROM socios, persona WHERE socios.soc_titula=socios.numero_soc AND persona.id_persona=socios.id_persona;');
+		$resultado = $db->select('SELECT socios.beneficio,socios.soc_titula,socios.numero_soc,persona.sexo,persona.nombre,persona.numdoc 
+									FROM socios, persona 
+									WHERE socios.soc_titula=socios.numero_soc 
+									AND persona.id_persona=socios.id_persona;');
 
-/*
-
-*/
-		 		if($resultado)
-	{
-				foreach($resultado as $res)
-					{
+		if($resultado)
+		{
+			foreach($resultado as $res)
+				{
 					$asociado =[
-
-					];
-					
-					}
-	}
-	else
-		echo "error";
+						];				
+				}
+		}
+		else
+			echo "error";
 
 	
-	//---------------FIN CONSULTA DE PRUEBA---------------
-
-	echo $twig->render('/Atenciones/nueva_atencion_1.html', compact('asociado','resultado'));
+		//---------------FIN CONSULTA DE PRUEBA---------------
+		echo $twig->render('/Atenciones/nueva_atencion_1.html', compact('asociado','resultado'));
 }
 		
 		
-	
-	
 //funcion verMAS, el cual debe realizar la consulta del asociado seleccionado para mostrar toda su informacion
 function verMas()	
-{
+	{
 	require_once '../../vendor/autoload.php';
 	
 	include ('conexion.php');
@@ -190,7 +185,7 @@ function verMas()
 	
 	
 
-	echo $twig->render('/Atenciones/VerMas.html', compact('resultadoTitular', 
+	echo $twig->render('/Atenciones/perfil.html', compact('resultadoTitular', 
 														  'resultadoTitularServicios1', 
 														  'resultadoTitularServicios2', 
 														  'resultadoAdherentes1',
@@ -206,7 +201,7 @@ function verMas()
 //se debe pasar por parametro el la variable 
 
 function mostrarFormulario()
-{
+	{
 	require_once '../../vendor/autoload.php';
 	
 	include ('conexion.php');
@@ -251,11 +246,10 @@ function mostrarFormulario()
 }
 	
 	
-	
 //funcion generarAtencion, que se ejecuta tras completar el formulario
 function generarAtencion()
-{
-require_once '../../vendor/autoload.php';
+	{
+	require_once '../../vendor/autoload.php';
 	
 	include ('conexion.php');
 
@@ -278,14 +272,13 @@ require_once '../../vendor/autoload.php';
 	
 	$pdf=new FPDF('P', 'pt', 'A4');
 	$pdf->AddPage();
-	$pdf->SetFont('Arial','B',25);
+	$pdf->SetFont('Arial','B',15);
 	$pdf->Cell(0,20,'Solicitud de asistencia','0','0','C');
 	
 	$pdf->Ln();	//salto de linea
 	
-	$pdf->SetFont('Arial','B',18);
+	$pdf->SetFont('Arial','B',12);
 	$pdf->Cell(10,150,'Fecha de solicitud: ','0','0','L');
-	
 	$pdf->Ln();
 	
 	$pdf->Cell(10,150,'Hora de solicitud: ','0','0','L');
