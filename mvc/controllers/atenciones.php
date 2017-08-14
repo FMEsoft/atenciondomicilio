@@ -195,7 +195,7 @@ function verMas()
 //funcion mostrarFormulario, que debe mostrar el formulario con los datos del asociado seleccionado
 //se debe pasar por parametro el la variable 
 
-function mostrarFormulario()
+/*function mostrarFormulario()
 	{
 	require_once '../../vendor/autoload.php';
 	
@@ -230,7 +230,7 @@ function mostrarFormulario()
 	//---------------FIN CONSULTA DE PRUEBA---------------
 
 	echo $twig->render('/Atenciones/nueva_atencion_formulario.html', compact('persona'));
-}
+}*/
 	
 	
 //funcion generarAtencion, que se ejecuta tras completar el formulario
