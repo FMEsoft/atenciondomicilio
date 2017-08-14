@@ -1,5 +1,8 @@
 <?php
 
+
+
+
 //Si la variable funcion no tiene ningun valor, se redirecciona al inicio------------
 	if(!isset($_GET['funcion']))
 	{
@@ -12,33 +15,33 @@
 		echo $twig->render('/Inicio/inicio.html');
 	}
 	
+//array para la conexion de la bd
+	include ('conexion.php');
+	$config['db']='fme_mutual';
+	$config['dbuser']='root';
+	$config['dbpass']='';
+	$config['dbhost']='localhost';
+	$config['dbEngine']='MYSQL';
+//para acceder a la variable $db en el ambito de una funcion, se usará la variable super global $GLOBALS['db'], de manera tal queda definida una unica vez la bd
+	$db = new CONEXION($config['dbhost'],$config['dbuser'],$config['dbpass'],$config['db']);
+	
 	
 //Para acceder a cada funcion se debe pasar por parametro una variable de nombre funcion=nombrefuncion; por ejemeplo atenciones.php?funcion=nuevaAtencion		
-	
 	
 //funcion nuevaAtencion (MODIFICAR BLANQUITO) debe mostrar todos los asociados titulares
 function nuevaAtencion()
 	{
 		require_once '../../vendor/autoload.php';
 		
-		include ('conexion.php');
+		
 
 		$loader = new Twig_Loader_Filesystem('../views');
 
 		$twig = new Twig_Environment($loader, []);
 		
-		// Array de conexión con la base de datos
-		$config['db']='fme_mutual';
-		$config['dbuser']='root';
-		$config['dbpass']='';
-		$config['dbhost']='localhost';
-		$config['dbEngine']='MYSQL';
-		
-		$db = new CONEXION($config['dbhost'],$config['dbuser'],$config['dbpass'],$config['db']);
-		
 		//---------------CONSULTA DE PRUEBA----------------
 		
-		//$resultado = $db->select('SELECT * FROM fme_asistencia WHERE doctitu = 04191748');
+		//$resultado = $GLOBALS['db']->select('SELECT * FROM fme_asistencia WHERE doctitu = 04191748');
 		/*if($resultado)
 		{
 				foreach($resultado as $res)
@@ -60,7 +63,7 @@ function nuevaAtencion()
 		
 	}*/
 
-		$resultado = $db->select('SELECT socios.beneficio,socios.soc_titula,socios.numero_soc,persona.sexo,persona.nombre,persona.numdoc 
+		$resultado = $GLOBALS['db']->select('SELECT socios.beneficio,socios.soc_titula,socios.numero_soc,persona.sexo,persona.nombre,persona.numdoc 
 									FROM socios, persona 
 									WHERE socios.soc_titula=socios.numero_soc 
 									AND persona.id_persona=socios.id_persona;');
@@ -74,7 +77,7 @@ function nuevaAtencion()
 				}
 		}
 		else
-			echo "error";
+			echo "error al mostrar el listado de asociados";
 
 	
 		//---------------FIN CONSULTA DE PRUEBA---------------
@@ -87,29 +90,21 @@ function verMas()
 	{
 	require_once '../../vendor/autoload.php';
 	
-	include ('conexion.php');
 
 	$loader = new Twig_Loader_Filesystem('../views');
 
 	$twig = new Twig_Environment($loader, []);
 	
-	// Array de conexión con la base de datos
-	$config['db']='fme_mutual';
-	$config['dbuser']='root';
-	$config['dbpass']='';
-	$config['dbhost']='localhost';
-	$config['dbEngine']='MYSQL';
-	
-	$db = new CONEXION($config['dbhost'],$config['dbuser'],$config['dbpass'],$config['db']);
+
 	
 	//NOTA: Para que el ejemplo funcione tienen que asociarle un adherente en la tabla socios, ya que en los datos de ejemplo todos son titulares
 	//NOTA: Lo que hice fue: en tabla socios en numero_soc=00044 cambiar el campo soc_titula de manera que quede soc_titula=00277
 	
 	//---------------CONSULTA QUE DEVUELVE TODA LA INFO DEL ASOCIADO TITULAR----------------
 	
-	$numero_socio = "00277"; //Es el número del socio titular que debe ser tomado del PASO 1
+	$numero_socio = $_GET['num_soc']; //Es el número del socio titular que debe ser tomado del PASO 1
 	
-	$resultadoTitular = $db->select("SELECT * FROM socios, persona 
+	$resultadoTitular = $GLOBALS['db']->select("SELECT * FROM socios, persona 
 							  WHERE soc_titula = '$numero_socio' 
 							  AND socios.id_persona = persona.id_persona
 							  AND numero_soc = soc_titula");
@@ -121,7 +116,7 @@ function verMas()
 	//---------------CONSULTA QUE DEVUELVE TODA LA INFO DE LOS SERVICIOS DEL ASOCIADO TITULAR----------------
 	
 	//Por cuota
-	$resultadoTitularServicios1 = $db->select("SELECT * FROM fme_adhsrv, tar_srv,socios 
+	$resultadoTitularServicios1 = $GLOBALS['db']->select("SELECT * FROM fme_adhsrv, tar_srv,socios 
 							   WHERE socnumero = '$numero_socio' 
 							   AND fme_adhsrv.codigo = tar_srv.idmutual
 							   AND soc_titula = '$numero_socio'
@@ -131,7 +126,7 @@ function verMas()
 	echo "Ocurrió un error en la consulta de los servicios del asociado titular en aportes por cuota";
 	
 	//Por tarjeta
-	$resultadoTitularServicios2 = $db->select("SELECT * FROM tar_srvadherentes, tar_srv, socios 
+	$resultadoTitularServicios2 = $GLOBALS['db']->select("SELECT * FROM tar_srvadherentes, tar_srv, socios 
 								WHERE socnumero = '$numero_socio' 
 								AND tar_srvadherentes.codigo = tar_srv.codigo
 								AND soc_titula = '$numero_socio'
@@ -143,7 +138,7 @@ function verMas()
 	
 	//---------------CONSULTA QUE DEVUELVE TODA LA INFO DE LOS ADHERENTES DEL ASOCIADO TITULAR CON APORTES POR CUOTA----------------
 	
-	$resultadoAdherentes1 = $db->select("SELECT * FROM socios, fme_adhsrv, tar_srv
+	$resultadoAdherentes1 = $GLOBALS['db']->select("SELECT * FROM socios, fme_adhsrv, tar_srv
 							   WHERE soc_titula = '$numero_socio' 
 							   AND socios.numero_soc <> '$numero_socio' 
 							   AND socios.numero_soc = fme_adhsrv.socnumero
@@ -153,7 +148,7 @@ function verMas()
 	echo "Ocurrió un error en la consulta de los servicios del ADHERENTE en aportes por cuota";
 
 	//Esta consulta solo recoge los nombres
-	$resultadoAdherentes1Nombres = $db->select("SELECT * FROM socios, fme_adhsrv
+	$resultadoAdherentes1Nombres = $GLOBALS['db']->select("SELECT * FROM socios, fme_adhsrv
 							   WHERE soc_titula = '$numero_socio' 
 							   AND socios.numero_soc <> '$numero_socio' 
 							   AND socios.numero_soc = fme_adhsrv.socnumero");
@@ -164,7 +159,7 @@ function verMas()
 	
 	//---------------CONSULTA QUE DEVUELVE TODA LA INFO DE LOS ADHERENTES DEL ASOCIADO TITULAR CON APORTES POR TARJETA----------------
 	
-	$resultadoAdherentes2 = $db->select("SELECT * FROM socios, tar_srvadherentes, tar_srv 
+	$resultadoAdherentes2 = $GLOBALS['db']->select("SELECT * FROM socios, tar_srvadherentes, tar_srv 
 							   WHERE socios.soc_titula = '$numero_socio' 
 							   AND numero_soc <> '$numero_socio' 
 							   AND socios.numero_soc = tar_srvadherentes.socnumero
@@ -174,7 +169,7 @@ function verMas()
 	echo "Ocurrió un error en la consulta de los servicios del ADHERENTE en aportes por tarjeta";
 
 	//Esta consulta solo recoge los nombres
-	$resultadoAdherentes2Nombres = $db->select("SELECT * FROM socios, tar_srvadherentes 
+	$resultadoAdherentes2Nombres = $GLOBALS['db']->select("SELECT * FROM socios, tar_srvadherentes 
 							   WHERE socios.soc_titula = '$numero_socio' 
 							   AND numero_soc <> '$numero_socio' 
 							   AND socios.numero_soc = tar_srvadherentes.socnumero");
@@ -193,7 +188,7 @@ function verMas()
 														  'resultadoAdherentes2',
 														  'resultadoAdherentes2Nombres'));	
 	
-	$db->cerrar_sesion();
+	
 }
 	
 	
@@ -204,25 +199,16 @@ function mostrarFormulario()
 	{
 	require_once '../../vendor/autoload.php';
 	
-	include ('conexion.php');
 
 	$loader = new Twig_Loader_Filesystem('../views');
 
 	$twig = new Twig_Environment($loader, []);
 	
-	// Array de conexión con la base de datos
-	$config['db']='fme_mutual';
-	$config['dbuser']='root';
-	$config['dbpass']='';
-	$config['dbhost']='localhost';
-	$config['dbEngine']='MYSQL';
 	
-	$db = new CONEXION($config['dbhost'],$config['dbuser'],$config['dbpass'],$config['db']);
-	
-	//---------------CONSULTA DE PRUEBA para la variable numeral----------------
-	
-	$numeral=$_GET["numeral"];
-	$resultado = $db->select("SELECT * FROM fme_adhsrv WHERE numeral = '$numeral'");
+	$numero_socio = $_GET['num_soc']
+	$resultado = $GLOBALS['db']->select("SELECT * FROM socios, persona 
+							  WHERE soc_titula = '$numero_socio' 
+							  AND socios.id_persona = persona.id_persona");
 	
 	
 	if($resultado)
@@ -233,7 +219,8 @@ function mostrarFormulario()
 					'fecha' 	=>	$fecha,
 					'doc' 		=>	$res['documento'],
 					'nombre'	=>	$res['nombre'],
-					'dom'		=>	$res['domicilio']
+					'dom'		=>	$res['domicilio'],
+					'tel'		=>	$res['telefono']
 					
 				];
 	}
@@ -251,20 +238,11 @@ function generarAtencion()
 	{
 	require_once '../../vendor/autoload.php';
 	
-	include ('conexion.php');
 
 	$loader = new Twig_Loader_Filesystem('../views');
 
 	$twig = new Twig_Environment($loader, []);
 	
-	// Array de conexión con la base de datos
-	$config['db']='fme_mutual';
-	$config['dbuser']='root';
-	$config['dbpass']='';
-	$config['dbhost']='localhost';
-	$config['dbEngine']='MYSQL';
-	
-	$db = new CONEXION($config['dbhost'],$config['dbuser'],$config['dbpass'],$config['db']);
 	
 	//---------------Generar PDF -------------------------------
 	
@@ -272,6 +250,55 @@ function generarAtencion()
 	
 	$pdf=new FPDF('P', 'pt', 'A4');
 	$pdf->AddPage();
+	
+	//Texto de Título
+	$pdf->SetXY(60, 25);
+	$pdf->MultiCell(65, 5, utf8_decode('Atencion domiciliaria'), 0, 'C');
+	 
+	
+	//De aqui en adelante se colocan distintos métodos
+	//para diseñar el formato.
+	 
+	//Fecha
+	$pdf->SetFont('Arial','', 12);
+	$pdf->SetXY(145,60);
+	$pdf->Cell(15, 8, 'FECHA:', 0, 'L');
+	$pdf->Line(163, 65.5, 185, 65.5);
+	 
+	//Nombre //Apellidos //DNI //TELEFONO
+	$pdf->SetXY(25, 80);
+	$pdf->Cell(20, 8, 'NOMBRE(S):', 0, 'L');
+	$pdf->Line(52, 85.5, 120, 85.5);
+	//*****
+	$pdf->SetXY(25,100);
+	$pdf->Cell(19, 8, 'APELLIDOS:', 0, 'L');
+	$pdf->Line(52, 105.5, 180, 105.5);
+	//*****
+	$pdf->SetXY(25, 120);
+	$pdf->Cell(10, 8, 'DNI:', 0, 'L');
+	$pdf->Line(35, 125.5, 90, 125.5);
+	//*****
+	$pdf->SetXY(110, 120);
+	$pdf->Cell(10, 8, utf8_decode('TELÉFONO:'), 0, 'L');
+	$pdf->Line(135, 125.5, 170, 125.5);
+	 
+	//LICENCIATURA  //CARGO   //CÓDIGO POSTAL
+	$pdf->SetXY(25, 140);
+	$pdf->Cell(10, 8, 'LINCECIATURA EN:', 0, 'L');
+	$pdf->Line(27, 154, 65, 154);
+	//*****
+	$pdf->SetXY(80, 140);
+	$pdf->Cell(10, 8, 'CARGO:', 0, 'L');
+	$pdf->Line(75, 154, 105, 154);
+	//*****
+	$pdf->SetXY(125, 140);
+	$pdf->Cell(10, 8, utf8_decode('CÓDIGO POSTAL:'), 0, 'L');
+	$pdf->Line(120, 154, 170, 154);
+	 
+	$pdf->Output(); //Salida al navegador
+	
+	
+	
 	$pdf->SetFont('Arial','B',15);
 	$pdf->Cell(0,20,'Solicitud de asistencia','0','0','C');
 	
@@ -313,8 +340,13 @@ function generarAtencion()
 	
 	echo $twig->render('/Atenciones/new1.html');		
 }
+
+
+
+
 	
 //llamada a la funcion con el parametro pasado por la url.	
 	$_GET['funcion']();
-	
+//luego de que se ejecutó la funcion, se cierra la bd
+	$db->cerrar_sesion();	
 ?>
