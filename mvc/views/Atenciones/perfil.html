@@ -93,6 +93,16 @@
                             <p> Nombre DEL ADHERENTE: {{ res44['nombre'] }} </p>
                             <p> -------------------------------------------- </p>
                        {% endfor %}
+					   
+					   
+					   {% for asistencia in asistencias %}   
+                            <p> -------------------------------------------- </p>
+                            <p> Nombre de quien recibió la asistencia: {{ asistencia['nombre'] }} </p>
+							<p> Fecha pedido de la asistencia: {{ asistencia['fec_pedido'] }} </p>
+							<p> Diagnostico: {{ asistencia['diagnostico'] }} </p>
+							<p> Dessit: {{ asistencia['dessit'] }} </p>
+                            <p> -------------------------------------------- </p>
+						{% endfor %}
                     </div>
 
                     <div class="active tab-pane" id="atenciones">
