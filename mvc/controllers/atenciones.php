@@ -85,111 +85,134 @@ function nuevaAtencion()
 }
 		
 		
-//funcion verMAS, el cual debe realizar la consulta del asociado seleccionado para mostrar toda su informacion
-function verMas()	
-	{
-	require_once '../../vendor/autoload.php';
-	
+	//funcion verMAS, el cual debe realizar la consulta del asociado seleccionado para mostrar toda su informacion
+		function verMas()	
+			{
+			require_once '../../vendor/autoload.php';
+			
 
-	$loader = new Twig_Loader_Filesystem('../views');
+			$loader = new Twig_Loader_Filesystem('../views');
 
-	$twig = new Twig_Environment($loader, []);
-	
+			$twig = new Twig_Environment($loader, []);
+			
 
-	
-	//NOTA: Para que el ejemplo funcione tienen que asociarle un adherente en la tabla socios, ya que en los datos de ejemplo todos son titulares
-	//NOTA: Lo que hice fue: en tabla socios en numero_soc=00044 cambiar el campo soc_titula de manera que quede soc_titula=00277
-	
-	//---------------CONSULTA QUE DEVUELVE TODA LA INFO DEL ASOCIADO TITULAR----------------
-	
-	$numero_socio = $_GET['num_soc']; //Es el número del socio titular que debe ser tomado del PASO 1
-	
-	$resultadoTitular = $GLOBALS['db']->select("SELECT * FROM socios, persona 
-							  WHERE soc_titula = '$numero_socio' 
-							  AND socios.id_persona = persona.id_persona
-							  AND numero_soc = soc_titula");
-	
-	if(!$resultadoTitular)
-	echo "Ocurrió un error en la consulta de la info del asociado titular";
-	
-	
-	//---------------CONSULTA QUE DEVUELVE TODA LA INFO DE LOS SERVICIOS DEL ASOCIADO TITULAR----------------
-	
-	//Por cuota
-	$resultadoTitularServicios1 = $GLOBALS['db']->select("SELECT * FROM fme_adhsrv, tar_srv,socios 
-							   WHERE socnumero = '$numero_socio' 
-							   AND fme_adhsrv.codigo = tar_srv.idmutual
-							   AND soc_titula = '$numero_socio'
-							   AND numero_soc = soc_titula");
-							   
-	if(!$resultadoTitularServicios1)
-	echo "Ocurrió un error en la consulta de los servicios del asociado titular en aportes por cuota";
-	
-	//Por tarjeta
-	$resultadoTitularServicios2 = $GLOBALS['db']->select("SELECT * FROM tar_srvadherentes, tar_srv, socios 
-								WHERE socnumero = '$numero_socio' 
-								AND tar_srvadherentes.codigo = tar_srv.codigo
-								AND soc_titula = '$numero_socio'
-								AND numero_soc = soc_titula");
-	
-	if(!$resultadoTitularServicios2)
-	echo "Ocurrió un error en la consulta de los servicios del asociado titular en aportes por tarjeta";
-	
-	
-	//---------------CONSULTA QUE DEVUELVE TODA LA INFO DE LOS ADHERENTES DEL ASOCIADO TITULAR CON APORTES POR CUOTA----------------
-	
-	$resultadoAdherentes1 = $GLOBALS['db']->select("SELECT * FROM socios, fme_adhsrv, tar_srv
-							   WHERE soc_titula = '$numero_socio' 
-							   AND socios.numero_soc <> '$numero_socio' 
-							   AND socios.numero_soc = fme_adhsrv.socnumero
-							   AND fme_adhsrv.codigo = tar_srv.idmutual");
-	
-	if(!$resultadoAdherentes1)
-	echo "Ocurrió un error en la consulta de los servicios del ADHERENTE en aportes por cuota";
+			
+			//NOTA: Para ver si funciona tienen que asociarle un adherente en la tabla socios, ya que en los datos de ejemplo todos son titulares
+			//NOTA: Lo que hice fue: en tabla socios en numero_soc=00044 cambiar el campo soc_titula de manera que quede soc_titula=00277
+			
+			//---------------CONSULTA QUE DEVUELVE TODA LA INFO DEL ASOCIADO TITULAR----------------
+			
+			$numero_socio = $_GET['num_soc']; //Es el número del socio titular que debe ser tomado del PASO 1
+			
+			$resultadoTitular = $GLOBALS['db']->select("SELECT * FROM socios, persona 
+									  WHERE soc_titula = '$numero_socio' 
+									  AND socios.id_persona = persona.id_persona
+									  AND numero_soc = soc_titula");
+			
+			if(!$resultadoTitular)
+			echo "Ocurrió un error en la consulta de la info del asociado titular";
+			
+			
+			//---------------CONSULTA QUE DEVUELVE TODA LA INFO DE LOS SERVICIOS DEL ASOCIADO TITULAR----------------
+			
+			//Por cuota
+			$resultadoTitularServicios1 = $GLOBALS['db']->select("SELECT * FROM fme_adhsrv, tar_srv,socios 
+									   WHERE socnumero = '$numero_socio' 
+									   AND fme_adhsrv.codigo = tar_srv.idmutual
+									   AND soc_titula = '$numero_socio'
+									   AND numero_soc = soc_titula");
+									   
+			if(!$resultadoTitularServicios1)
+			echo "Ocurrió un error en la consulta de los servicios del asociado titular en aportes por cuota";
+			
+			//Por tarjeta
+			$resultadoTitularServicios2 = $GLOBALS['db']->select("SELECT * FROM tar_srvadherentes, tar_srv, socios 
+										WHERE socnumero = '$numero_socio' 
+										AND tar_srvadherentes.codigo = tar_srv.codigo
+										AND soc_titula = '$numero_socio'
+										AND numero_soc = soc_titula");
+			
+			if(!$resultadoTitularServicios2)
+			echo "Ocurrió un error en la consulta de los servicios del asociado titular en aportes por tarjeta";
+			
+			
+			//---------------CONSULTA QUE DEVUELVE TODA LA INFO DE LOS ADHERENTES DEL ASOCIADO TITULAR CON APORTES POR CUOTA----------------
+			
+			$resultadoAdherentes1 = $GLOBALS['db']->select("SELECT * FROM socios, fme_adhsrv, tar_srv
+									   WHERE soc_titula = '$numero_socio' 
+									   AND socios.numero_soc <> '$numero_socio' 
+									   AND socios.numero_soc = fme_adhsrv.socnumero
+									   AND fme_adhsrv.codigo = tar_srv.idmutual");
+			
+			if(!$resultadoAdherentes1)
+			echo "Ocurrió un error en la consulta de los servicios del ADHERENTE en aportes por cuota";
 
-	//Esta consulta solo recoge los nombres
-	$resultadoAdherentes1Nombres = $GLOBALS['db']->select("SELECT * FROM socios, fme_adhsrv
-							   WHERE soc_titula = '$numero_socio' 
-							   AND socios.numero_soc <> '$numero_socio' 
-							   AND socios.numero_soc = fme_adhsrv.socnumero");
-	
-	if(!$resultadoAdherentes1Nombres)
-	echo "Ocurrió un error en la consulta del NOMBRE del ADHERENTE en aportes por cuota";
-	
-	
-	//---------------CONSULTA QUE DEVUELVE TODA LA INFO DE LOS ADHERENTES DEL ASOCIADO TITULAR CON APORTES POR TARJETA----------------
-	
-	$resultadoAdherentes2 = $GLOBALS['db']->select("SELECT * FROM socios, tar_srvadherentes, tar_srv 
-							   WHERE socios.soc_titula = '$numero_socio' 
-							   AND numero_soc <> '$numero_socio' 
-							   AND socios.numero_soc = tar_srvadherentes.socnumero
-							   AND tar_srvadherentes.codigo = tar_srv.codigo");
-	
-	if(!$resultadoAdherentes2)
-	echo "Ocurrió un error en la consulta de los servicios del ADHERENTE en aportes por tarjeta";
+			//Esta consulta solo recoge los nombres
+			$resultadoAdherentes1Nombres = $GLOBALS['db']->select("SELECT * FROM socios, fme_adhsrv
+									   WHERE soc_titula = '$numero_socio' 
+									   AND socios.numero_soc <> '$numero_socio' 
+									   AND socios.numero_soc = fme_adhsrv.socnumero");
+			
+			if(!$resultadoAdherentes1Nombres)
+			echo "Ocurrió un error en la consulta del NOMBRE del ADHERENTE en aportes por cuota";
+			
+			
+			//---------------CONSULTA QUE DEVUELVE TODA LA INFO DE LOS ADHERENTES DEL ASOCIADO TITULAR CON APORTES POR TARJETA----------------
+			
+			$resultadoAdherentes2 = $GLOBALS['db']->select("SELECT * FROM socios, tar_srvadherentes, tar_srv 
+									   WHERE socios.soc_titula = '$numero_socio' 
+									   AND numero_soc <> '$numero_socio' 
+									   AND socios.numero_soc = tar_srvadherentes.socnumero
+									   AND tar_srvadherentes.codigo = tar_srv.codigo");
+			
+			if(!$resultadoAdherentes2)
+			echo "Ocurrió un error en la consulta de los servicios del ADHERENTE en aportes por tarjeta";
 
-	//Esta consulta solo recoge los nombres
-	$resultadoAdherentes2Nombres = $GLOBALS['db']->select("SELECT * FROM socios, tar_srvadherentes 
-							   WHERE socios.soc_titula = '$numero_socio' 
-							   AND numero_soc <> '$numero_socio' 
-							   AND socios.numero_soc = tar_srvadherentes.socnumero");
-	
-	if(!$resultadoAdherentes2Nombres)
-	echo "Ocurrió un error en la consulta del NOMBRE del ADHERENTE en aportes por tarjeta";
-	
-	
-	
+			//Esta consulta solo recoge los nombres
+			$resultadoAdherentes2Nombres = $GLOBALS['db']->select("SELECT * FROM socios, tar_srvadherentes 
+									   WHERE socios.soc_titula = '$numero_socio' 
+									   AND numero_soc <> '$numero_socio' 
+									   AND socios.numero_soc = tar_srvadherentes.socnumero");
+			
+			if(!$resultadoAdherentes2Nombres)
+			echo "Ocurrió un error en la consulta del NOMBRE del ADHERENTE en aportes por tarjeta";
+		
+		
+		    
+			//---------------CONSULTA QUE DEVUELVE EL LISTADO DE TODAS LAS ASISTENCIAS----------------
+			
+			//NOTA: Para que puedan ver si funciona o no hacer la prueba con el siguiente ejemplo:
+			// En la tabla fme_asistencia modifiquen en cualquier lado y pongan alguno con doctitu = 06948018 (o busquen cualquier DNI de un socio titular y usen ese)
+			// Cuando prueben el sistema vayan al ver más de Barrionuevo Samuel y van a ver el listado de atenciones que tiene asociado
+			
+			$asistencias = $GLOBALS['db']->select("SELECT fme_asistencia.doctitu, fme_asistencia.numdoc, fme_asistencia.nombre,
+									  fme_asistencia.fec_pedido, fme_asistencia.hora_pedido, fme_asistencia.dessit, fme_asistencia.fec_ate,
+									  fme_asistencia.sintomas, fme_asistencia.diagnostico, fme_asistencia.tratamiento, fme_asistencia.hora_aten,
+									  fme_asistencia.profesional, fme_asistencia.feccanasis, fme_asistencia.horacanasis, fme_asistencia.motivo,
+									  fme_asistencia.cuenta, fme_asistencia.idafiliado
+									  FROM fme_asistencia, socios, persona 
+									  WHERE soc_titula = '$numero_socio' 
+									  AND socios.id_persona = persona.id_persona
+									  AND numero_soc = soc_titula
+									  AND persona.numdoc = fme_asistencia.doctitu");
+			
+			if(!$asistencias)
+			echo "Ocurrió un error en la consulta de las asistencias";
+			
+			
+			
 
-	echo $twig->render('/Atenciones/perfil.html', compact('resultadoTitular', 
-														  'resultadoTitularServicios1', 
-														  'resultadoTitularServicios2', 
-														  'resultadoAdherentes1',
-														  'resultadoAdherentes1Nombres',
-														  'resultadoAdherentes2',
-														  'resultadoAdherentes2Nombres'));	
-	
-	
-}
+			echo $twig->render('/Atenciones/perfil.html', compact('resultadoTitular', 
+																  'resultadoTitularServicios1', 
+																  'resultadoTitularServicios2', 
+																  'resultadoAdherentes1',
+																  'resultadoAdherentes1Nombres',
+																  'resultadoAdherentes2',
+																  'resultadoAdherentes2Nombres',
+																  'asistencias'));	
+			
+			
+		}
 	
 	
 //funcion mostrarFormulario, que debe mostrar el formulario con los datos del asociado seleccionado
