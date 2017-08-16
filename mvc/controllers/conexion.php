@@ -49,7 +49,7 @@
 
 		function  query($sql) 
 		{
-			if (!$this->query = @mysqli_query($sql,$this->dbConn)) {
+			if (!$this->query = @mysqli_query($this->dbConn,$sql)) {
 				$this->errorMsg = 'Query failed: ' . mysqli_error($this->dbConn) . ' SQL: ' . $sql;
 			}
 			return $this->query;
@@ -76,6 +76,9 @@
 		}
     
 }
+
+
+		
 
 		/*//abrir conexion
 		$link =mysql_connect("localhost","root","")or die('Error:No se pudo conectar'.mysql_error());

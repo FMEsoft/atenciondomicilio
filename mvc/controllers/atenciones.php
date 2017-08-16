@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 //Si la variable funcion no tiene ningun valor, se redirecciona al inicio------------
 	if(!isset($_GET['funcion']))
 	{
@@ -13,6 +10,14 @@
 		$twig = new Twig_Environment($loader, []);
 		
 		echo $twig->render('/Inicio/inicio.html');
+	}
+	else
+	{
+		require_once '../../vendor/autoload.php';
+
+		$loader = new Twig_Loader_Filesystem('../views');
+
+		$twig = new Twig_Environment($loader, []);
 	}
 	
 //array para la conexion de la bd
@@ -28,65 +33,10 @@
 	
 //Para acceder a cada funcion se debe pasar por parametro una variable de nombre funcion=nombrefuncion; por ejemeplo atenciones.php?funcion=nuevaAtencion		
 	
-//funcion nuevaAtencion (MODIFICAR BLANQUITO) debe mostrar todos los asociados titulares
-function nuevaAtencion()
-	{
-		require_once '../../vendor/autoload.php';
 		
 		
-
-		$loader = new Twig_Loader_Filesystem('../views');
-
-		$twig = new Twig_Environment($loader, []);
-		
-		//---------------CONSULTA DE PRUEBA----------------
-		
-		//$resultado = $GLOBALS['db']->select('SELECT * FROM fme_asistencia WHERE doctitu = 04191748');
-		/*if($resultado)
-		{
-				foreach($resultado as $res)
-					$pers =[
-					echo "IDNUM: " . $res['idnum'] . " " ;
-					echo "CODSER: " . $res['cod_ser'] . " ";
-					echo "NROORDATE: " . $res['nroordate'] . " ";
-					echo "DOCTITU: " . $res['doctitu'] . " ";
-					echo "NUMDOC: " . $res['numdoc'] . " ";
-					echo "NOMBRE: " . $res['nombre'] . " ";
-					];
-		}
-		else
-			echo "algo va mal";
-		
-		//---------------FIN CONSULTA DE PRUEBA---------------
-
-		echo $twig->render('/Atenciones/nueva_atencion_1.html',compact('pers'));	
-		
-	}*/
-
-		$resultado = $GLOBALS['db']->select('SELECT socios.beneficio,socios.soc_titula,socios.numero_soc,persona.sexo,persona.nombre,persona.numdoc 
-									FROM socios, persona 
-									WHERE socios.soc_titula=socios.numero_soc 
-									AND persona.id_persona=socios.id_persona;');
-
-		if($resultado)
-		{
-			foreach($resultado as $res)
-				{
-					$asociado =[
-						];				
-				}
-		}
-		else
-			echo "error al mostrar el listado de asociados";
-
-	
-		//---------------FIN CONSULTA DE PRUEBA---------------
-		echo $twig->render('/Atenciones/nueva_atencion_1.html', compact('asociado','resultado'));
-}
-		
-		
-	//funcion verMAS, el cual debe realizar la consulta del asociado seleccionado para mostrar toda su informacion
-		function verMas()	
+//funcion verMAS, el cual debe realizar la consulta del asociado seleccionado para mostrar toda su informacion
+function verMas()	
 			{
 			require_once '../../vendor/autoload.php';
 			
@@ -218,52 +168,114 @@ function nuevaAtencion()
 //funcion mostrarFormulario, que debe mostrar el formulario con los datos del asociado seleccionado
 //se debe pasar por parametro el la variable 
 
-/*function mostrarFormulario()
+function mostrarFormulario()
+{
+	if(!isset($_GET['num_soc']))
 	{
-	require_once '../../vendor/autoload.php';
+		echo "No se paso ningun parametro para realizar el formulario";
+		return;
+	}
+	
+	$numero_socio = $_GET['num_soc'];
 	
 
-	$loader = new Twig_Loader_Filesystem('../views');
+	$resultado = $GLOBALS['db']->select("SELECT * FROM socios, persona
+										WHERE socios.numero_soc = '$numero_socio'
+										AND socios.id_persona=persona.id_persona");
 
-	$twig = new Twig_Environment($loader, []);
-	
-	
-	$numero_socio = $_GET['num_soc']
-	$resultado = $GLOBALS['db']->select("SELECT * FROM socios, persona 
-							  WHERE soc_titula = '$numero_socio' 
-							  AND socios.id_persona = persona.id_persona");
-	
-	
 	if($resultado)
 	{
 		$fecha=getdate();
-            foreach($resultado as $res)
-				$persona =[
-					'fecha' 	=>	$fecha,
-					'doc' 		=>	$res['documento'],
+		foreach($resultado as $res)
+		{
+			$persona =[
+					'nro'		=>	$res['numero_soc'],
+					'sexo'		=>	$res['sexo'],
 					'nombre'	=>	$res['nombre'],
+					'doc' 		=>	$res['numdoc'],
+					'tel' 		=>	$res['tel_fijo'],
+					'cel'		=>	$res['tel_cel'],
+					'fecha' 	=>	$fecha,
 					'dom'		=>	$res['domicilio'],
-					
-				];
+					'nro_casa'		=>	$res['casa_nro'],
+					'barrio'		=>	$res['barrio'],
+					'localidad'		=>	$res['localidad'],
+					'cod_postal'		=>	$res['codpostal'],
+					'dpmto'		=>	$res['dpmto'],
+					];
+			if($res['numero_soc']==$res['soc_titula'])
+			{
+				$persona['doctit'] = $res['numdoc'];
+			}
+			else
+			{
+				$soc_titular=$res['soc_titula'];
+				$resultado2 = $GLOBALS['db']->select("SELECT * FROM socios, persona
+										WHERE socios.numero_soc='$soc_titular'
+										AND persona.id_persona=socios.id_persona");
+				foreach($resultado2 as $res2)
+				{
+					$persona['doctit'] = $res2['numdoc'];
+				}
+			}
+				
+		}	
 	}
 	else
-		echo "error";
+		echo "ERROR no se han encontrado resultados para el numero de socio '$numero_socio'";
 	
-	//---------------FIN CONSULTA DE PRUEBA---------------
 
-	echo $twig->render('/Atenciones/nueva_atencion_formulario.html', compact('persona'));
-}*/
+	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_formulario.html', compact('persona'));
+}
 	
 	
 //funcion generarAtencion, que se ejecuta tras completar el formulario
 function generarAtencion()
-	{
-	require_once '../../vendor/autoload.php';
+{
+	//variables q no conozco
+	$cod_ser;
+	$nroordate;
+	$cuenta;
+	$idafiliado;
 	
+	$doctitu=$_POST["doctit"];
+	$numdoc=$_POST["doc"];
+	$nombre=$_POST['nombre'];
+	$fec_pedido=$_POST['fecha'];
+	$hora_pedido=$_POST['hora'];
+	$dessit=$_POST['desc'];
+	$profesional=$_POST['prof'];
+	
+	$resultado=$GLOBALS['db']->query("INSERT INTO fme_asistencia (doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional)
+			VALUES ('$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional')");
 
-	$loader = new Twig_Loader_Filesystem('../views');
+	if(!$resultado)
+		echo "No se pudo insertar la fila";
 
-	$twig = new Twig_Environment($loader, []);
+	$pdf=[
+		'fecha'		=>	$fec_pedido,
+		'hora'		=>	$hora_pedido,
+		'nro'		=>	$_POST['nro'],
+		'nombre'	=>	$nombre,
+		'sexo'		=>	$_POST['sexo'],
+		'tel'		=>	$_POST['tel'],
+		'doc'		=>	$numdoc,
+		'doctit'	=>	$doctitu,
+		'dom'		=>	$_POST['dom'],
+		'nrocasa'		=>	$_POST['nrocasa'],
+		'barrio'		=>	$_POST['barrio'],
+		'localidad'		=>	$_POST['localidad'],
+		'codpostal'		=>	$_POST['codpostal'],
+		'dpto'			=>	$_POST['dpto'],
+		'prof'		=>	$profesional,
+		'desc'		=>	$dessit
+	];
+	
+	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_finalizar.html', compact('pdf'));
+}
+
+function generarPDF()
+	{
 	
 	
 	//---------------Generar PDF -------------------------------
@@ -360,7 +372,7 @@ function generarAtencion()
 	$pdf->output('nombre_pdf.pdf','I');
 	
 	
-	echo $twig->render('/Atenciones/new1.html');		
+	echo $GLOBALS['twig']->render('/Atenciones/new1.html');		
 }
 
 
