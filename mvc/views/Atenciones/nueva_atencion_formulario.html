@@ -25,49 +25,88 @@
 				<div class="row">
 					<div class="col-md-6 form-group">
 						<label for="fecha">Fecha pedido</label><br/>
-						<input type="text" class="form-control" id="fecha" name="fecha" disabled value="{{ persona.fecha['year'] }}-{{ persona.fecha['mon'] }}-{{ persona.fecha['mday'] }}"/>
+						<input type="text" class="form-control" id="fecha" name="fecha" readonly value="{{ persona.fecha['year'] }}-{{ persona.fecha['mon'] }}-{{ persona.fecha['mday'] }}"/>
 					</div>
 					
 					<div class="col-md-6 form-group">
 						<label for="hora">Hora pedido</label><br/>
-						<input type="text" class="form-control" id="hora" name="hora" disabled value="{{ persona.fecha['hours'] }}:{{ persona.fecha['minutes'] }}"/>
+						<input type="text" class="form-control" id="hora" name="hora" readonly value="{{ persona.fecha['hours'] }}:{{ persona.fecha['minutes'] }}"/>
 					</div>
 				</div>
 
 				<div class="row">
 					<div class="col-md-4 form-group">
-						<label for="doctitu">Documento titular</label><br/>
-						<input type="text" class="form-control" id="doctitu" name="doctitu" disabled />
+						<label for="nro">Numero de asociado</label><br/>
+						<input type="text" class="form-control" id="nro" name="nro" readonly value="{{ persona.nro }}"/>
 					</div>
 					
 					<div class="col-md-4 form-group">
-						<label for="doc">Documento</label><br/>
-						<input type="text" class="form-control" id="doc" name="doc" disabled value="{{ persona.doc }}"/>
+						<label for="nombre">Nombre y apellido</label><br/>
+						<input type="text" class="form-control" id="nombre" name="nombre" readonly value="{{ persona.nombre }}"/>
 					</div>
 					
 					<div class="col-md-4 form-group">
-						<label for="nombre">Nombre</label><br/>
-						<input type="text" class="form-control" id="nombre" name="nombre" disabled value="{{ persona.nombre }}"/>
+						<label for="sexo">Sexo</label><br/>
+						<input type="text" class="form-control" id="sexo" name="sexo" readonly value="{% if persona.sexo == 1 %}M{% else %}F{% endif %}"/>
 					</div>
 					
 					<div class="col-md-4 form-group">
-						<label for="nombre">Telefono</label><br/>
-						<input type="text" class="form-control" id="tel" name="tel disabled value="{{ persona.tel }}"/>
+						<label for="tel">telefono de contacto</label><br/>
+						<input type="text" class="form-control" id="tel" name="tel" readonly value="FIJO: {% if persona.tel == null %}-{% endif %}{{ persona.tel }} // CEL: {% if persona.cel == null %}-{% endif %}{{ persona.cel }}"/>
+					</div>
+					
+					<div class="col-md-4 form-group">
+						<label for="doc">Documento del asociado</label><br/>
+						<input type="text" class="form-control" id="doc" name="doc" readonly value="{{ persona.doc }}"/>
+					</div>
+					
+					<div class="col-md-4 form-group">
+						<label for="doctit">Documento del titular</label><br/>
+						<input type="text" class="form-control" id="doctit" name="doctit" readonly value="{{ persona.doctit }}"/>
 					</div>
 				</div>
+			</fieldset>
+			
+			<fieldset><legend>Domicilio</legend>
+				<div class="col-md-6 form-group">
+						<label for="dom">Domicilio</label>
+						<input type="text" class="form-control" name="dom" id="dom" value="{{ persona.dom }}"/>
+					</div>
+					
+					<div class="col-md-6 form-group">
+						<label for="nrocasa">Numero de casa</label>
+						<input type="text" class="form-control" name="nrocasa" id="nrocasa" value="{{ persona.nro_casa }}"/>
+					</div>
+					
+					<div class="col-md-6 form-group">
+						<label for="barrio">Barrio</label>
+						<input type="text" class="form-control" name="barrio" id="barrio" value="{{ persona.barrio }}"/>
+					</div>
+					
+					<div class="col-md-6 form-group">
+						<label for="localidad">Localidad</label>
+						<input type="text" class="form-control" name="localidad" id="localidad" value="{{ persona.localidad }}"/>
+					</div>
+					
+					<div class="col-md-6 form-group">
+						<label for="codpostal">Codigo postal</label>
+						<input type="text" class="form-control" name="codpostal" id="codpostal" value="{{ persona.cod_postal }}"/>
+					</div>
+					
+					<div class="col-md-6 form-group">
+						<label for="dpto">Departamento</label>
+						<input type="text" class="form-control" name="dpto" id="dpto" value="{{ persona.dpmto }}"/>
+					</div>
 			</fieldset>
 			
 			<fieldset><legend>Datos de la atención</legend>
 				<div class="row">
 					<div class="col-md-6 form-group">
 						<label for="prof">Profesional</label>
-						<input type="text" class="form-control" id="prof" name="prof"/>
-					</div>
-					<div class="col-md-6 form-group">
-						<label for="dom">Domicilio</label>
-						<input type="text" class="form-control" name="dom" id="domicilio" value="{{ persona.dom }}"/>
+						<input type="text" class="form-control" id="prof" name="prof" placeholder="Nombre completo del profesional..."/>
 					</div>
 				</div>
+				
 				<div class="form-group">
 					<label for="desc">Descripción de la situación</label><br/>
 					<textarea type="text" class="form-control" id="desc" name="desc" rows="5" placeholder="Describe la situacion.." /></textarea>
