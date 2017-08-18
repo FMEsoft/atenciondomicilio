@@ -95,16 +95,11 @@
                                 <h3 class="box-title">PAGO POR CUOTA</h3>
                             </div>
                         </div>
-                        {% for res33 in resultadoAdherentes1Nombres %}
-                            <div>
-                            <p> Nombre DEL ADHERENTE: {{ res33['nombre'] }} </p>
-                            </div>
-                        {% endfor %}
 
                         {% for res3 in resultadoAdherentes1 %}                                
                             <div class="box box-solid box-primary" >
                                 <div class="box-header">
-                                    <h3 class="box-title">NOMBRE ADHERENTE </h3>
+                                    <h3 class="box-title">NOMBRE ADHERENTE: {{ res3['nombrePersona'] }} </h3>
                                 </div>
                                 <div class="box-body">
                                     <p> Relación DEL ADHERENTE: {{ res3['parentesco'] }} </p>
@@ -121,13 +116,11 @@
                                 <h3 class="box-title">PAGO POR TARJETA</h3>
                             </div>
                         </div>                       
-                        {% for res44 in resultadoAdherentes2Nombres %}   
-                            <p> Nombre DEL ADHERENTE: {{ res44['nombre'] }} </p>
-                        {% endfor %}
+
                         {% for res4 in resultadoAdherentes2 %}
                             <div class="box box-solid box-primary" >
                                 <div class="box-header">
-                                    <h3 class="box-title">NOMBRE ADHERENTE</h3>
+                                    <h3 class="box-title">NOMBRE ADHERENTE: {{ res4['nombrePersona'] }}</h3>
                                 </div>
                                 <div class="box-body">  
                                     <p> Relación DEL ADHERENTE: {{ res4['parentezco'] }} </p>

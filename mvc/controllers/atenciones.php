@@ -105,6 +105,15 @@ function verMas()
 			
 			if(!$resultadoAdherentes1Nombres)
 			echo "Ocurrió un error en la consulta del NOMBRE del ADHERENTE en aportes por cuota";
+		
+			$i=0;
+			
+			foreach($resultadoAdherentes1Nombres as $res1)
+			{
+				$resultadoAdherentes1[$i]['nombrePersona']=$res1['nombre'];
+				$i=$i+1;
+			}	
+
 			
 			
 			//---------------CONSULTA QUE DEVUELVE TODA LA INFO DE LOS ADHERENTES DEL ASOCIADO TITULAR CON APORTES POR TARJETA----------------
@@ -126,7 +135,14 @@ function verMas()
 			
 			if(!$resultadoAdherentes2Nombres)
 			echo "Ocurrió un error en la consulta del NOMBRE del ADHERENTE en aportes por tarjeta";
-		
+			
+			$i=0;
+			
+			foreach($resultadoAdherentes2Nombres as $res2)
+			{
+				$resultadoAdherentes2[$i]['nombrePersona']=$res2['nombre'];
+				$i=$i+1;
+			}
 		
 		    
 			//---------------CONSULTA QUE DEVUELVE EL LISTADO DE TODAS LAS ASISTENCIAS----------------
