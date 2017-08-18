@@ -38,9 +38,9 @@
 			        <td>{{ asociado.nombre }}</td>
 			        <td>{{ asociado.numdoc }}</td>
 			        {% if asociado.sexo == 1 %}
-			        	<td>M</td>
+			        	<td>Masculino</td>
 			        {% else %}
-			        	<td>F</td>
+			        	<td>Femenino</td>
 			        {% endif %}
                     <td><a class="btn btn-success" href="../controllers/atenciones.php?funcion=verMas&num_soc={{ asociado.numero_soc }}">Ver más</a></td>
 		            <!--<td><a class="btn btn-success" href="../controllers/atenciones.php?funcion=mostrarFormulario&numeral=3">Ver más</a></td>-->
