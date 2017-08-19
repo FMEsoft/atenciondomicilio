@@ -108,11 +108,13 @@ function verMas()
 		
 			$i=0;
 			
-			foreach($resultadoAdherentes1Nombres as $res1)
-			{
-				$resultadoAdherentes1[$i]['nombrePersona']=$res1['nombre'];
-				$i=$i+1;
-			}	
+			if(is_array($resultadoAdherentes1Nombres)){
+				foreach($resultadoAdherentes1Nombres as $res1)
+				{
+					$resultadoAdherentes1[$i]['nombrePersona']=$res1['nombre'];
+					$i=$i+1;
+				}	
+			}
 
 			
 			
@@ -138,10 +140,12 @@ function verMas()
 			
 			$i=0;
 			
-			foreach($resultadoAdherentes2Nombres as $res2)
-			{
-				$resultadoAdherentes2[$i]['nombrePersona']=$res2['nombre'];
-				$i=$i+1;
+			if(is_array($resultadoAdherentes2Nombres)){
+				foreach($resultadoAdherentes2Nombres as $res2)
+				{
+					$resultadoAdherentes2[$i]['nombrePersona']=$res2['nombre'];
+					$i=$i+1;
+				}
 			}
 		
 		    
