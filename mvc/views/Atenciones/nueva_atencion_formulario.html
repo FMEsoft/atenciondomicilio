@@ -47,7 +47,7 @@
 					
 					<div class="col-md-4 form-group">
 						<label for="sexo">Sexo</label><br/>
-						<input type="text" class="form-control" id="sexo" name="sexo" readonly value="{% if persona.sexo == 1 %}M{% else %}F{% endif %}"/>
+						<input type="text" class="form-control" id="sexo" name="sexo" readonly value="{% if persona.sexo == 1 %}Masculino{% else %}Femenino{% endif %}"/>
 					</div>
 					
 					<div class="col-md-4 form-group">
@@ -118,9 +118,10 @@
 					<input class="btn btn-block btn-success" type="submit" name="enviar" value="Generar atencion" />
 				</div>
 				<div class="col-md-6">
-					<input class="btn btn-block btn-default" type="button" name="cancelar" value="Cancelar" />
+					<a href="../controllers/index.php"><input class="btn btn-block btn-default" type="button" name="cancelar" value="Cancelar" /></a>
 				</div>
 			</div>
+						<input style="display:none" type="text" class="form-control" name="cod_serv" id="cod_serv" value="{{ persona.cod_serv }}"/>
 		</form>
     </div>    
 </div>

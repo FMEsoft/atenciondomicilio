@@ -22,7 +22,7 @@
                   <li class="active"><a href="#datos" data-toggle="tab">Datos Titular</a></li>
                   <li><a href="#planes-titular" data-toggle="tab">Planes Titular</a></li>
                   <li><a href="#planes-adherentes" data-toggle="tab">Planes Adherentes</a></li>
-                  <li><a href="#planes-adherentes" data-toggle="tab">Atenciones</a></li>
+                  <li><a href="#atenciones" data-toggle="tab">Atenciones</a></li>
                 </ul>
 
                 <div class="tab-content">
@@ -69,6 +69,9 @@
                                         </div>
                                     </div>
                                 </div>
+								
+								<a class="btn btn-success" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res.numero_soc }}">GenerarAtenciónT</a>	<!-- LINEA DE BLANQUITO -->
+								
                             {% endfor %}
                         </div>
                     </div>
@@ -108,6 +111,8 @@
                                     <p> Nro de beneficio DEL ADHERENTE: {{ res3['beneficio'] }} </p>
                                 </div>
                             </div>
+							
+							<a class="btn btn-success" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res3.numero_soc }}">GenerarAtenciónS</a>	<!-- LINEA DE BLANQUITO -->
                        {% endfor %}
    
 
@@ -132,7 +137,12 @@
                         {% endfor %}
 					   
 					   
-					   {% for asistencia in asistencias %}   
+					  
+                    </div>
+
+                    <div class="tab-pane" id="atenciones">
+					
+						{% for asistencia in asistencias %}   
                             <p> -------------------------------------------- </p>
                             <p> Nombre de quien recibió la asistencia: {{ asistencia['nombre'] }} </p>
 							<p> Fecha pedido de la asistencia: {{ asistencia['fec_pedido'] }} </p>
@@ -140,9 +150,6 @@
 							<p> Dessit: {{ asistencia['dessit'] }} </p>
                             <p> -------------------------------------------- </p>
 						{% endfor %}
-                    </div>
-
-                    <div class="active tab-pane" id="atenciones">
                     </div>
                 </div>
             </div>

@@ -65,7 +65,7 @@
 			   array_push($resultado,$row);
 			   }
 			 }else{
-				return "algo va mal";
+				return null;
 			 }
 			 return $resultado;
 		}

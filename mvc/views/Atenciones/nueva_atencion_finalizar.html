@@ -18,18 +18,54 @@
     <div class="box-header">
       	<h3 class="box-title">Atencion generada con exito</h3>
     </div>
-    
-    <div class="box-body">
-		<div class="row"><br><br>
-			<div class="col-md-6">
-				<a class="btn btn-success" href="#">Finalizada</a>
-				<a class="btn btn-warning" href="#">En curso</a>
+	<div class="box-body">
+	
+		<form action="../controllers/atenciones.php?funcion=generarPDF" method="post" target="_blank">
+			<div style="display:none">
+				<input type="text" class="form-control" id="fecha" name="fecha" readonly value="{{ persona.fecha }}"/>
+			
+				<input type="text" class="form-control" id="hora" name="hora" readonly value="{{ persona.hora }}"/>
+
+				<input type="text" class="form-control" id="nro" name="nro" readonly value="{{ persona.nro }}"/>
+
+				<input type="text" class="form-control" id="nombre" name="nombre" readonly value="{{ persona.nombre }}"/>
+
+				<input type="text" class="form-control" id="sexo" name="sexo" readonly value="{{ persona.sexo }}"/>
+
+				<input type="text" class="form-control" id="tel" name="tel" readonly value="{{ persona.tel }}"/>
+
+				<input type="text" class="form-control" id="doc" name="doc" readonly value="{{ persona.doc }}"/>
+
+				<input type="text" class="form-control" id="doctit" name="doctit" readonly value="{{ persona.doctit }}"/>
+
+				<input type="text" class="form-control" name="dom" id="dom" value="{{ persona.dom }}"/>
+
+				<input type="text" class="form-control" name="nrocasa" id="nrocasa" value="{{ persona.nro_casa }}"/>
+
+				<input type="text" class="form-control" name="barrio" id="barrio" value="{{ persona.barrio }}"/>
+
+				<input type="text" class="form-control" name="localidad" id="localidad" value="{{ persona.localidad }}"/>
+
+				<input type="text" class="form-control" name="codpostal" id="codpostal" value="{{ persona.cod_postal }}"/>
+
+				<input type="text" class="form-control" name="dpto" id="dpto" value="{{ persona.dpmto }}"/>
+
+				<input type="text" class="form-control" id="prof" name="prof" value="{{ persona.prof }}"/>
+
+				<input type="text" class="form-control" id="desc" name="desc" value="{{ persona.desc }}" /></textarea>
+
+				<input  type="text" class="form-control" name="cod_serv" id="cod_serv" value="{{ persona.cod_serv }}"/>
 			</div>
-			<div class="col-md-6">
-				<a class="btn btn-success" href="#">Finalizada</a>
-				<a class="btn btn-warning" href="#">En curso</a>
+
+			<div class="row"><br><br>
+				<div class="col-md-6">
+				<input class="btn btn-block btn-success" type="submit" name="enviar" value="Generar PDF" />
+				</div>
+				<div class="col-md-6">
+				<a href="../controllers/index.php"><input class="btn btn-block btn-default" type="button" name="cancelar" value="Volver al listado" /></a>
+				</div>
 			</div>
-		</div>
+		</form>
     </div>    
 </div>
 {% endblock %}

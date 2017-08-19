@@ -32,7 +32,14 @@ if($resultado)
 	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_1.html', compact('asociado','resultado'));
 }
 else
-	echo "No se han encontrado resultados en la Base de Datos";
+{
+	$error=[
+				'menu'			=>"Atenciones",
+				'funcion'		=>"Listado de asociados",
+				'descripcion'	=>"No se encontraron resultados."
+				];
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
+}
 
 
 ?>

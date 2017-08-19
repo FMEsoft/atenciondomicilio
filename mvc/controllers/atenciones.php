@@ -10,6 +10,7 @@
 		$twig = new Twig_Environment($loader, []);
 		
 		echo $twig->render('/Inicio/inicio.html');
+		
 	}
 	else
 	{
@@ -37,13 +38,7 @@
 		
 //funcion verMAS, el cual debe realizar la consulta del asociado seleccionado para mostrar toda su informacion
 function verMas()	
-			{
-			require_once '../../vendor/autoload.php';
-			
-
-			$loader = new Twig_Loader_Filesystem('../views');
-
-			$twig = new Twig_Environment($loader, []);
+		{
 			
 
 			
@@ -106,9 +101,10 @@ function verMas()
 			if(!$resultadoAdherentes1Nombres)
 			echo "Ocurrió un error en la consulta del NOMBRE del ADHERENTE en aportes por cuota";
 		
-			$i=0;
-			
+
+
 			if(is_array($resultadoAdherentes1Nombres)){
+				$i=0;
 				foreach($resultadoAdherentes1Nombres as $res1)
 				{
 					$resultadoAdherentes1[$i]['nombrePersona']=$res1['nombre'];
@@ -138,9 +134,10 @@ function verMas()
 			if(!$resultadoAdherentes2Nombres)
 			echo "Ocurrió un error en la consulta del NOMBRE del ADHERENTE en aportes por tarjeta";
 			
-			$i=0;
+			
 			
 			if(is_array($resultadoAdherentes2Nombres)){
+				$i=0;
 				foreach($resultadoAdherentes2Nombres as $res2)
 				{
 					$resultadoAdherentes2[$i]['nombrePersona']=$res2['nombre'];
@@ -172,7 +169,7 @@ function verMas()
 			
 			
 
-			echo $twig->render('/Atenciones/perfil.html', compact('resultadoTitular', 
+			echo $GLOBALS['twig']->render('/Atenciones/perfil.html', compact('resultadoTitular', 
 																  'resultadoTitularServicios1', 
 																  'resultadoTitularServicios2', 
 																  'resultadoAdherentes1',
@@ -192,12 +189,29 @@ function mostrarFormulario()
 {
 	if(!isset($_GET['num_soc']))
 	{
-		echo "No se paso ningun parametro para realizar el formulario";
+		$error=[
+				'menu'			=>"Atenciones",
+				'funcion'		=>"mostrarFormulario",
+				'descripcion'	=>"No se recibió num_soc como parametro de la función"
+				];
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
 		return;
 	}
 	
-	$numero_socio = $_GET['num_soc'];
+	if(!isset($_GET['cod_servicio']))
+	{
+		$error=[
+				'menu'			=>"Atenciones",
+				'funcion'		=>"mostrarFormulario",
+				'descripcion'	=>"No se recibió cod_servicio como parametro de la función"
+				];
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
+		return;
+	}
 	
+	
+	$numero_socio = $_GET['num_soc'];
+	$cod_servicio = $_GET['cod_servicio'];
 
 	$resultado = $GLOBALS['db']->select("SELECT * FROM socios, persona
 										WHERE socios.numero_soc = '$numero_socio'
@@ -222,6 +236,7 @@ function mostrarFormulario()
 					'localidad'		=>	$res['localidad'],
 					'cod_postal'		=>	$res['codpostal'],
 					'dpmto'		=>	$res['dpmto'],
+					'cod_serv'	=>	$cod_servicio
 					];
 			if($res['numero_soc']==$res['soc_titula'])
 			{
@@ -242,7 +257,16 @@ function mostrarFormulario()
 		}	
 	}
 	else
-		echo "ERROR no se han encontrado resultados para el numero de socio '$numero_socio'";
+	{
+		$error=[
+				'menu'			=>"Atenciones",
+				'funcion'		=>"mostrarFormulario",
+				'descripcion'	=>"No se encontraron datos para el socio '$numero_socio'"
+				];
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
+		return;
+	}
+	
 	
 
 	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_formulario.html', compact('persona'));
@@ -252,51 +276,87 @@ function mostrarFormulario()
 //funcion generarAtencion, que se ejecuta tras completar el formulario
 function generarAtencion()
 {
-	//variables q no conozco
-	$cod_ser;
+	//variables q no conozco	
 	$nroordate;
 	$cuenta;
 	$idafiliado;
 	
-	$doctitu=$_POST["doctit"];
-	$numdoc=$_POST["doc"];
+	
+	$cod_ser=$_POST['cod_serv'];
+	$doctitu=$_POST['doctit'];
+	$numdoc=$_POST['doc'];
 	$nombre=$_POST['nombre'];
 	$fec_pedido=$_POST['fecha'];
 	$hora_pedido=$_POST['hora'];
 	$dessit=$_POST['desc'];
 	$profesional=$_POST['prof'];
+	$sexo=$_POST['sexo'];
+	$tel=$_POST['tel'];
+	$dom=$_POST['dom'];
+	$nrocasa=$_POST['nrocasa'];
+	$barrio=$_POST['barrio'];
+	$localidad=$_POST['localidad'];
+	$cod_postal=$_POST['codpostal'];
+	$dpto=$_POST['dpto'];
+	$nro=$_POST['nro'];		//nro es el numero de asociado
 	
-	$resultado=$GLOBALS['db']->query("INSERT INTO fme_asistencia (doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional)
-			VALUES ('$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional')");
+	$resultado=$GLOBALS['db']->query("INSERT INTO fme_asistencia (cod_ser,doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional)
+			VALUES ('$cod_ser','$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional')");
 
 	if(!$resultado)
-		echo "No se pudo insertar la fila";
+	{
+		$error=[
+				'menu'			=>"Atenciones",
+				'funcion'		=>"generarAtencion",
+				'descripcion'	=>"No se pudo insertar la consulta: INSERT INTO fme_asistencia (doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional)
+			VALUES ('$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional')"
+				];
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
+		return;
+	}
 
-	$pdf=[
+	$persona=[
+		'cod_serv'	=>	$cod_ser,
 		'fecha'		=>	$fec_pedido,
 		'hora'		=>	$hora_pedido,
-		'nro'		=>	$_POST['nro'],
+		'nro'		=>	$nro,
 		'nombre'	=>	$nombre,
-		'sexo'		=>	$_POST['sexo'],
-		'tel'		=>	$_POST['tel'],
+		'sexo'		=>	$sexo,
+		'tel'		=>	$tel,
 		'doc'		=>	$numdoc,
 		'doctit'	=>	$doctitu,
-		'dom'		=>	$_POST['dom'],
-		'nrocasa'		=>	$_POST['nrocasa'],
-		'barrio'		=>	$_POST['barrio'],
-		'localidad'		=>	$_POST['localidad'],
-		'codpostal'		=>	$_POST['codpostal'],
-		'dpto'			=>	$_POST['dpto'],
+		'dom'		=>	$dom,
+		'nro_casa'		=>	$nrocasa,
+		'barrio'		=>	$barrio,
+		'localidad'		=>	$localidad,
+		'cod_postal'	=>	$cod_postal,
+		'dpmto'			=>	$dpto,
 		'prof'		=>	$profesional,
 		'desc'		=>	$dessit
 	];
-	
-	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_finalizar.html', compact('pdf'));
+
+	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_finalizar.html', compact('persona'));
 }
 
 function generarPDF()
 	{
-	
+		$cod_ser=$_POST['cod_serv'];
+		$doctitu=$_POST['doctit'];	
+		$numdoc=$_POST['doc'];		
+		$nombre=$_POST['nombre'];	
+		$fec_pedido=$_POST['fecha'];
+		$hora_pedido=$_POST['hora'];
+		$dessit=$_POST['desc'];
+		$profesional=$_POST['prof'];
+		$sexo=$_POST['sexo'];		
+		$tel=$_POST['tel'];
+		$dom=$_POST['dom'];
+		$nrocasa=$_POST['nrocasa'];
+		$barrio=$_POST['barrio'];
+		$localidad=$_POST['localidad'];
+		$cod_postal=$_POST['codpostal'];
+		$dpto=$_POST['dpto'];
+		$nro=$_POST['nro'];
 	
 	//---------------Generar PDF -------------------------------
 	
@@ -307,92 +367,59 @@ function generarPDF()
 	
 	//Texto de Título
 	$pdf->SetXY(60, 25);
-	$pdf->MultiCell(65, 5, utf8_decode('Atencion domiciliaria'), 0, 'C');
+	$pdf->SetFont('Arial','B',18);
+	$pdf->Cell(0,20,'Solicitud de asistencia','0','0','C');
 	 
 	
 	//De aqui en adelante se colocan distintos métodos
 	//para diseñar el formato.
 	 
-	//Fecha
+
 	$pdf->SetFont('Arial','', 12);
-	$pdf->SetXY(145,60);
-	$pdf->Cell(15, 8, 'FECHA:', 0, 'L');
-	$pdf->Line(163, 65.5, 185, 65.5);
+	
+	$pdf->SetXY(25,60);
+	$pdf->Cell(15, 8, utf8_decode('Fecha y hora: '.$fec_pedido.' '.$hora_pedido), 0, 'L');
 	 
-	//Nombre //Apellidos //DNI //TELEFONO
 	$pdf->SetXY(25, 80);
-	$pdf->Cell(20, 8, 'NOMBRE(S):', 0, 'L');
-	$pdf->Line(52, 85.5, 120, 85.5);
-	//*****
+	$pdf->Cell(20, 8, utf8_decode('DNI Titular: '.$doctitu), 0, 'L');
+
 	$pdf->SetXY(25,100);
-	$pdf->Cell(19, 8, 'APELLIDOS:', 0, 'L');
-	$pdf->Line(52, 105.5, 180, 105.5);
-	//*****
+	$pdf->Cell(19, 8, utf8_decode('DNI: '.$numdoc), 0, 'L');
+
 	$pdf->SetXY(25, 120);
-	$pdf->Cell(10, 8, 'DNI:', 0, 'L');
-	$pdf->Line(35, 125.5, 90, 125.5);
-	//*****
-	$pdf->SetXY(110, 120);
-	$pdf->Cell(10, 8, utf8_decode('TELÉFONO:'), 0, 'L');
-	$pdf->Line(135, 125.5, 170, 125.5);
-	 
-	//LICENCIATURA  //CARGO   //CÓDIGO POSTAL
+	$pdf->Cell(10, 8, utf8_decode('Nombre y apellido: '.$nombre), 0, 'L');
+
 	$pdf->SetXY(25, 140);
-	$pdf->Cell(10, 8, 'LINCECIATURA EN:', 0, 'L');
-	$pdf->Line(27, 154, 65, 154);
-	//*****
-	$pdf->SetXY(80, 140);
-	$pdf->Cell(10, 8, 'CARGO:', 0, 'L');
-	$pdf->Line(75, 154, 105, 154);
-	//*****
-	$pdf->SetXY(125, 140);
-	$pdf->Cell(10, 8, utf8_decode('CÓDIGO POSTAL:'), 0, 'L');
-	$pdf->Line(120, 154, 170, 154);
-	 
-	$pdf->Output(); //Salida al navegador
+	$pdf->Cell(10, 8, utf8_decode('Sexo: '.$sexo), 0, 'L');
 	
+	$pdf->SetXY(25, 160);
+	$pdf->Cell(10, 8, utf8_decode('Domicilio: '.$dom), 0, 'L');
 	
+	$pdf->SetXY(25, 180);
+	$pdf->Cell(10, 8, utf8_decode('Nº Casa: '.$nrocasa), 0, 'L');
 	
-	$pdf->SetFont('Arial','B',15);
-	$pdf->Cell(0,20,'Solicitud de asistencia','0','0','C');
+	$pdf->SetXY(25, 200);
+	$pdf->Cell(10, 8, utf8_decode('Barrio: '.$barrio), 0, 'L');
 	
-	$pdf->Ln();	//salto de linea
+	$pdf->SetXY(25, 220);
+	$pdf->Cell(10, 8, utf8_decode('Localidad: '.$localidad), 0, 'L');
 	
-	$pdf->SetFont('Arial','B',12);
-	$pdf->Cell(10,150,'Fecha de solicitud: ','0','0','L');
-	$pdf->Ln();
+	$pdf->SetXY(25, 240);
+	$pdf->Cell(10, 8, utf8_decode('Codigo postal: '.$cod_postal), 0, 'L');
 	
-	$pdf->Cell(10,150,'Hora de solicitud: ','0','0','L');
+	$pdf->SetXY(25, 260);
+	$pdf->Cell(10, 8, utf8_decode('Dpto: '.$dpto), 0, 'L');
 	
-	$pdf->Ln();
+	$pdf->SetXY(25, 280);
+	$pdf->Cell(10, 8, utf8_decode($tel), 0, 'L');
 	
-	$pdf->Cell(10,150,'Telefono de contacto: ','0','0','L');
+	$pdf->SetXY(25, 300);
+	$pdf->Cell(10, 8, utf8_decode('Profesional: '.$profesional), 0, 'L');
 	
-	$pdf->Ln();
-	
-	$pdf->Cell(10,150,'Situacion: ','0','0','L');
-	
-	$pdf->Ln();
-	
-	$pdf->Cell(10,150,'Profesional:  ','0','0','L');
-	
-	$pdf->Ln();
-	
-	$pdf->Cell(10,150,'Domicilio: ','0','0','L');
-	
-	$pdf->Ln();
-	
-	$pdf->Cell(10,150,'Fecha de asistencia: ','0','0','L');
-	
-	$pdf->Ln();
-	
-	$pdf->Cell(10,150,'Hora de asistencia: ','0','0','L');
-	
-	
-	$pdf->output('nombre_pdf.pdf','I');
-	
-	
-	echo $GLOBALS['twig']->render('/Atenciones/new1.html');		
+	$pdf->SetXY(25, 320);
+	$pdf->Cell(10, 8, utf8_decode('Situacion: '.$dessit), 0, 'L');
+
+	$pdf->Output(); //Salida al navegador	
 }
 
 
