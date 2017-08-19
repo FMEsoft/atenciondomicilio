@@ -365,59 +365,74 @@ function generarPDF()
 	$pdf=new FPDF('P', 'pt', 'A4');
 	$pdf->AddPage();
 	
+	$pdf->AddFont('Century','','CENTURY.php');
+
 	//Texto de Título
-	$pdf->SetXY(60, 25);
-	$pdf->SetFont('Arial','B',18);
-	$pdf->Cell(0,20,'Solicitud de asistencia','0','0','C');
-	 
+	$pdf->SetXY(70, 100);
+	$pdf->AddFont('Roboto','','Roboto-Regular.php');
+	$pdf->SetFont('Roboto','',22);
+	$pdf->Cell(0,20,'SOLICITUD DE ASISTENCIA','0','0','');
+
+	$pdf->SetFont('Roboto','',14);
+
+	$pdf->SetXY(70,130);
+	$pdf->Cell(15, 8, utf8_decode('Fecha: '.$fec_pedido), 0, '');
+
+	$pdf->SetXY(70,150);
+	$pdf->Cell(15, 8, utf8_decode('Hora: '.$hora_pedido), 0, '');	
 	
 	//De aqui en adelante se colocan distintos métodos
 	//para diseñar el formato.
 	 
-
-	$pdf->SetFont('Arial','', 12);
 	
-	$pdf->SetXY(25,60);
-	$pdf->Cell(15, 8, utf8_decode('Fecha y hora: '.$fec_pedido.' '.$hora_pedido), 0, 'L');
+	$pdf->SetFont('Century','',12);
+
+	//$pdf->SetFont('Century','', 12);
 	 
-	$pdf->SetXY(25, 80);
-	$pdf->Cell(20, 8, utf8_decode('DNI Titular: '.$doctitu), 0, 'L');
+	$pdf->SetXY(70,220);
+	$pdf->Cell(10, 8, utf8_decode('Nombre del paciente: '.$nombre), 0, 'L');
 
-	$pdf->SetXY(25,100);
-	$pdf->Cell(19, 8, utf8_decode('DNI: '.$numdoc), 0, 'L');
+	$pdf->SetXY(70,240);
+	$pdf->Cell(19, 8, utf8_decode('D.N.I. del paciente: '.$numdoc), 0, 'L');
 
-	$pdf->SetXY(25, 120);
-	$pdf->Cell(10, 8, utf8_decode('Nombre y apellido: '.$nombre), 0, 'L');
+	$pdf->SetXY(70,260);
+	$pdf->Cell(20, 8, utf8_decode('D.N.I. del titular: '.$doctitu), 0, 'L');
 
-	$pdf->SetXY(25, 140);
-	$pdf->Cell(10, 8, utf8_decode('Sexo: '.$sexo), 0, 'L');
-	
-	$pdf->SetXY(25, 160);
-	$pdf->Cell(10, 8, utf8_decode('Domicilio: '.$dom), 0, 'L');
-	
-	$pdf->SetXY(25, 180);
-	$pdf->Cell(10, 8, utf8_decode('Nº Casa: '.$nrocasa), 0, 'L');
-	
-	$pdf->SetXY(25, 200);
-	$pdf->Cell(10, 8, utf8_decode('Barrio: '.$barrio), 0, 'L');
-	
-	$pdf->SetXY(25, 220);
-	$pdf->Cell(10, 8, utf8_decode('Localidad: '.$localidad), 0, 'L');
-	
-	$pdf->SetXY(25, 240);
-	$pdf->Cell(10, 8, utf8_decode('Codigo postal: '.$cod_postal), 0, 'L');
-	
-	$pdf->SetXY(25, 260);
-	$pdf->Cell(10, 8, utf8_decode('Dpto: '.$dpto), 0, 'L');
-	
-	$pdf->SetXY(25, 280);
+	$pdf->SetXY(70,280);
+	$pdf->Cell(10, 8, utf8_decode('Sexo del paciente: '.$sexo), 0, 'L');
+
+	$pdf->SetXY(70,300);
 	$pdf->Cell(10, 8, utf8_decode($tel), 0, 'L');
 	
-	$pdf->SetXY(25, 300);
+	$pdf->SetXY(70,340);
+	$pdf->Cell(10, 8, utf8_decode('Domicilio: '.$dom), 0, 'L');
+	
+	$pdf->SetXY(70,360);
+	$pdf->Cell(10, 8, utf8_decode('Nº Casa: '.$nrocasa), 0, 'L');
+	
+	$pdf->SetXY(70,380);
+	$pdf->Cell(10, 8, utf8_decode('Barrio: '.$barrio), 0, 'L');
+	
+	$pdf->SetXY(70,400);
+	$pdf->Cell(10, 8, utf8_decode('Localidad: '.$localidad), 0, 'L');
+	
+	$pdf->SetXY(70,420);
+	$pdf->Cell(10, 8, utf8_decode('Codigo postal: '.$cod_postal), 0, 'L');
+	
+	$pdf->SetXY(70,440);
+	$pdf->Cell(10, 8, utf8_decode('Dpto: '.$dpto), 0, 'L');
+	
+	$pdf->SetXY(70,480);
 	$pdf->Cell(10, 8, utf8_decode('Profesional: '.$profesional), 0, 'L');
 	
-	$pdf->SetXY(25, 320);
+	$pdf->SetXY(70,500);
 	$pdf->Cell(10, 8, utf8_decode('Situacion: '.$dessit), 0, 'L');
+
+	$pdf->Line(70,320,525,320);
+	$pdf->Line(70,460,525,460);
+
+	$pdf->Image('../../static/images/logo_mutual.png','425','100','100','100','PNG');	
+	$pdf->Image('../../static/images/back.png','0','0','595','841','PNG');	
 
 	$pdf->Output(); //Salida al navegador	
 }
