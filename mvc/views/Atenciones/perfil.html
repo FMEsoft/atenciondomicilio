@@ -75,21 +75,29 @@
                             {% endfor %}
                         </div>
                     </div>
-                  
-                    <div class="tab-pane" id="planes-titular">
+					
+					<div class="tab-pane" id="planes-titular">
                         <div class="row">
                             <div class="col-md-12">
-                            {% for res2 in resultadoTitularServicios1 %}  
-                                <p><label>Relación DEL TITULAR POR CUOTA: </label> {{ res2.parentesco }} </p>
-                                <p><label>Plan DEL TITULAR POR CUOTA: </label> {{ res.nombre }} </p>
-                            {% endfor %}
+                            {% if estado[0] == '1' %}
+								{% for res2 in resultadoTitularServicios1 %}  
+									<p><label>Relación DEL TITULAR POR CUOTA: </label> {{ res2.parentesco }} </p>
+									<p><label>Plan DEL TITULAR POR CUOTA: </label> {{ res2.nombre }} </p>
+								{% endfor %}
+							{% else %}
+								<p>Ocurrió un error en la consulta de los servicios del asociado titular en aportes por cuota</p>
+							{% endif %}
                             </div>
                         </div>
+						{% if estado[1] == '1' %}
+							{% for res22 in resultadoTitularServicios2 %}
+								<p><label>Relación DEL TITULAR POR TARJETA: </label>{{ res22.parentezco }} </p>
+								<p><label>Plan DEL TITULAR POR TARJETA : </label>{{ res22.nombre }} </p>
+							{% endfor %}
+						{% else %}
+							<p>Ocurrió un error en la consulta de los servicios del asociado titular en aportes por tarjeta</p>
+						{% endif %}
 
-                        {% for res22 in resultadoTitularServicios2 %}
-                            <p><label>Relación DEL TITULAR POR TARJETA: </label>{{ res22.parentezco }} </p>
-                            <p><label>Plan DEL TITULAR POR TARJETA : </label>{{ res22.nombre }} </p>
-                        {% endfor %}
                     </div>
 
                     <div class="tab-pane" id="planes-adherentes">
@@ -98,22 +106,25 @@
                                 <h3 class="box-title">PAGO POR CUOTA</h3>
                             </div>
                         </div>
-
-                        {% for res3 in resultadoAdherentes1 %}                                
-                            <div class="box box-solid box-primary" >
-                                <div class="box-header">
-                                    <h3 class="box-title">NOMBRE ADHERENTE: {{ res3['nombrePersona'] }} </h3>
-                                </div>
-                                <div class="box-body">
-                                    <p> Relación DEL ADHERENTE: {{ res3['parentesco'] }} </p>
-                                    <p> Plan DEL ADHERENTE: {{ res3['nombre'] }} </p>
-                                    <p> Número de socio DEL ADHERENTE: {{ res3['numero_soc'] }} </p>
-                                    <p> Nro de beneficio DEL ADHERENTE: {{ res3['beneficio'] }} </p>
-                                </div>
-                            </div>
-							
-							<a class="btn btn-success" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res3.numero_soc }}">GenerarAtenciónS</a>	<!-- LINEA DE BLANQUITO -->
-                       {% endfor %}
+						{% if estado[2] == '1' %}
+							{% for res3 in resultadoAdherentes1 %}                                
+								<div class="box box-solid box-primary" >
+									<div class="box-header">
+										<h3 class="box-title">{{ res3['nombrePersona'] }} </h3>
+									</div>
+									<div class="box-body">
+										<p> Relación DEL ADHERENTE: {{ res3['parentesco'] }} </p>
+										<p> Plan DEL ADHERENTE: {{ res3['nombre'] }} </p>
+										<p> Número de socio DEL ADHERENTE: {{ res3['numero_soc'] }} </p>
+										<p> Nro de beneficio DEL ADHERENTE: {{ res3['beneficio'] }} </p>
+									</div>
+								</div>
+								
+								<a class="btn btn-success" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res3.numero_soc }}">GenerarAtenciónS</a>	<!-- LINEA DE BLANQUITO -->
+						   {% endfor %}
+						{% else %}
+							<p>Ocurrió un error en la consulta de los servicios del ADHERENTE en aportes por cuota</p>
+						{% endif %}
    
 
                        <div class="box box-danger">
@@ -121,35 +132,39 @@
                                 <h3 class="box-title">PAGO POR TARJETA</h3>
                             </div>
                         </div>                       
-
-                        {% for res4 in resultadoAdherentes2 %}
-                            <div class="box box-solid box-primary" >
-                                <div class="box-header">
-                                    <h3 class="box-title">NOMBRE ADHERENTE: {{ res4['nombrePersona'] }}</h3>
-                                </div>
-                                <div class="box-body">  
-                                    <p> Relación DEL ADHERENTE: {{ res4['parentezco'] }} </p>
-                                    <p> Plan DEL ADHERENTE: {{ res4['nombre'] }} </p>
-                                    <p> Número de socio DEL ADHERENTE: {{ res4['numero_soc'] }} </p>
-                                    <p> Nro de beneficio DEL ADHERENTE: {{ res4['beneficio'] }} </p>
-                                </div>
-                            </div>
-                        {% endfor %}
-					   
-					   
+						{% if estado[3] == '1' %}
+							{% for res4 in resultadoAdherentes2 %}
+								<div class="box box-solid box-primary" >
+									<div class="box-header">
+										<h3 class="box-title">{{ res4['nombrePersona'] }}</h3>
+									</div>
+									<div class="box-body">  
+										<p> Relación DEL ADHERENTE: {{ res4['parentezco'] }} </p>
+										<p> Plan DEL ADHERENTE: {{ res4['nombre'] }} </p>
+										<p> Número de socio DEL ADHERENTE: {{ res4['numero_soc'] }} </p>
+										<p> Nro de beneficio DEL ADHERENTE: {{ res4['beneficio'] }} </p>
+									</div>
+								</div>
+							{% endfor %}
+						{% else %}
+							<p>Ocurrió un error en la consulta de los servicios del ADHERENTE en aportes por tarjeta</p>
+						{% endif %}
 					  
                     </div>
 
                     <div class="tab-pane" id="atenciones">
-					
-						{% for asistencia in asistencias %}   
-                            <p> -------------------------------------------- </p>
-                            <p> Nombre de quien recibió la asistencia: {{ asistencia['nombre'] }} </p>
-							<p> Fecha pedido de la asistencia: {{ asistencia['fec_pedido'] }} </p>
-							<p> Diagnostico: {{ asistencia['diagnostico'] }} </p>
-							<p> Dessit: {{ asistencia['dessit'] }} </p>
-                            <p> -------------------------------------------- </p>
-						{% endfor %}
+						{% if estado[4] == '1' %}
+							{% for asistencia in asistencias %}   
+								<p> -------------------------------------------- </p>
+								<p> Nombre de quien recibió la asistencia: {{ asistencia['nombre'] }} </p>
+								<p> Fecha pedido de la asistencia: {{ asistencia['fec_pedido'] }} </p>
+								<p> Diagnostico: {{ asistencia['diagnostico'] }} </p>
+								<p> Dessit: {{ asistencia['dessit'] }} </p>
+								<p> -------------------------------------------- </p>
+							{% endfor %}
+						{% else %}
+							<p>Ocurrió un error en la consulta de las asistencias</p>
+						{% endif %}
                     </div>
                 </div>
             </div>

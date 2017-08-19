@@ -101,6 +101,7 @@ echo $GLOBALS['twig']->render('/Atenciones/listado_atencion.html',compact ('asis
 
 function verMas()
 {
+
 	if(!isset($_GET['num_asist']))
 	{
 		$error=[
@@ -111,15 +112,85 @@ function verMas()
 		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
 		return;
 	}
+	$numero_asistencia=$_GET['num_asist'];
 	
 	
+	
+		$asistencia = $GLOBALS['db']->select("SELECT fme_asistencia.cod_ser, fme_asistencia.fec_pedido, fme_asistencia.hora_pedido, 
+													 fme_asistencia.nombre, persona.sexo, fme_asistencia.numdoc, fme_asistencia.doctitu,
+													 fme_asistencia.profesional, fme_asistencia.dessit, fme_asistencia.fec_ate, fme_asistencia.hora_aten,
+													 fme_asistencia.sintomas, fme_asistencia.tratamiento, fme_asistencia.diagnostico
+									  FROM fme_asistencia, persona 
+									  WHERE fme_asistencia.idnum='$numero_asistencia' AND persona.numdoc = fme_asistencia.numdoc");
+
+		if(!$asistencia)
+		{
+			$error=[
+			'menu'			=>"Atenciones",
+			'funcion'		=>"verMas",
+			'descripcion'	=>"No se encontraron resultados para la atencion '$numero_asistencia'."
+			];
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
+			return;
+		}
+	
+		if($asistencia[0]['fec_ate']=="0000-00-00")
+			$estado=0;
+		else
+			$estado=1;
+
+		$persona=[
+		'cod_serv'	=>	$asistencia[0]['cod_ser'],
+		'fecha'		=>	$asistencia[0]['fec_pedido'],
+		'hora'		=>	$asistencia[0]['hora_pedido'],
+		'nombre'	=>	$asistencia[0]['nombre'],
+		'doc'		=>	$asistencia[0]['numdoc'],
+		'doctit'	=>	$asistencia[0]['doctitu'],
+		'prof'		=>	$asistencia[0]['profesional'],
+		'desc'		=>	$asistencia[0]['dessit'],
+		'fech_ate'		=>	$asistencia[0]['fec_ate'],
+		'hora_ate'		=>	$asistencia[0]['hora_aten'],
+		'sintomas'		=>	$asistencia[0]['sintomas'],
+		'tratamiento'		=>	$asistencia[0]['tratamiento'],
+		'diagnostico'		=>	$asistencia[0]['diagnostico'],
+		'num_asistencia'	=>	$numero_asistencia
+	];
+	if($asistencia[0]['sexo']==1)
+		$persona['sexo']='Masculino';
+	else
+		$persona['sexo']='Femenino';
+
+echo $GLOBALS['twig']->render('/Atenciones/listado_atencion_formulario.html',compact ('persona','estado'));
 }
 
-/*
-function completarAtencion()
+
+function finalizarAtencion()
 {
+	$num_asistencia=$_POST['num_asistencia'];
+	$fecha_ate=$_POST['fech_ate'];		
+	$hora_ate=$_POST['hora_ate'];
+	$sintomas=$_POST['sintomas'];
+	$diagnostico=$_POST['diagnostico'];
+	$tratamiento=$_POST['tratamiento'];
+	$resultado=$GLOBALS['db']->query("UPDATE fme_asistencia SET fec_ate='$fecha_ate',sintomas='$sintomas',diagnostico='$diagnostico',tratamiento='$tratamiento',hora_aten='$hora_ate'
+										WHERE idnum='$num_asistencia'");
+	
+	if(!$resultado)
+	{
+		$error=[
+				'menu'			=>"Atenciones",
+				'funcion'		=>"FinalizarAtencion",
+				'descripcion'	=>"No se pudo realizar la consulta: UPDATE fme_asistencia SET fec_ate='$fecha_ate',sintomas='$sintomas',diagnostico='$diagnostico',tratamiento='$tratamiento',hora_aten='$hora_ate'
+										WHERE idnum='$num_asistencia'"
+				];
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
+		return;
+	}
+	
+	$_GET['num_asist']=$num_asistencia;
+	verMas();
 }
-*/
+
 
 //llamada a la funcion con el parametro pasado por la url.	
 	$_GET['funcion']();

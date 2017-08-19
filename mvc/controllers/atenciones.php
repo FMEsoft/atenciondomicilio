@@ -55,9 +55,22 @@ function verMas()
 									  AND numero_soc = soc_titula");
 			
 			if(!$resultadoTitular)
-			echo "Ocurrió un error en la consulta de la info del asociado titular";
+			{
+				$error=[
+				'menu'			=>"Atenciones",
+				'funcion'		=>"verMas",
+				'descripcion'	=>"No se encuentra al titular $numero_socio"
+				];
+				echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
+				return;
+			}
 			
 			
+			$estado[0]='1';
+			$estado[1]='1';
+			$estado[2]='1';
+			$estado[3]='1';
+			$estado[4]='1';
 			//---------------CONSULTA QUE DEVUELVE TODA LA INFO DE LOS SERVICIOS DEL ASOCIADO TITULAR----------------
 			
 			//Por cuota
@@ -68,7 +81,7 @@ function verMas()
 									   AND numero_soc = soc_titula");
 									   
 			if(!$resultadoTitularServicios1)
-			echo "Ocurrió un error en la consulta de los servicios del asociado titular en aportes por cuota";
+				$estado[0]='0';
 			
 			//Por tarjeta
 			$resultadoTitularServicios2 = $GLOBALS['db']->select("SELECT * FROM tar_srvadherentes, tar_srv, socios 
@@ -78,7 +91,7 @@ function verMas()
 										AND numero_soc = soc_titula");
 			
 			if(!$resultadoTitularServicios2)
-			echo "Ocurrió un error en la consulta de los servicios del asociado titular en aportes por tarjeta";
+				$estado[1]='0';
 			
 			
 			//---------------CONSULTA QUE DEVUELVE TODA LA INFO DE LOS ADHERENTES DEL ASOCIADO TITULAR CON APORTES POR CUOTA----------------
@@ -90,7 +103,7 @@ function verMas()
 									   AND fme_adhsrv.codigo = tar_srv.idmutual");
 			
 			if(!$resultadoAdherentes1)
-			echo "Ocurrió un error en la consulta de los servicios del ADHERENTE en aportes por cuota";
+				$estado[2]='0';
 
 			//Esta consulta solo recoge los nombres
 			$resultadoAdherentes1Nombres = $GLOBALS['db']->select("SELECT * FROM socios, fme_adhsrv
@@ -98,11 +111,6 @@ function verMas()
 									   AND socios.numero_soc <> '$numero_socio' 
 									   AND socios.numero_soc = fme_adhsrv.socnumero");
 			
-			if(!$resultadoAdherentes1Nombres)
-			echo "Ocurrió un error en la consulta del NOMBRE del ADHERENTE en aportes por cuota";
-		
-
-
 			if(is_array($resultadoAdherentes1Nombres)){
 				$i=0;
 				foreach($resultadoAdherentes1Nombres as $res1)
@@ -123,19 +131,14 @@ function verMas()
 									   AND tar_srvadherentes.codigo = tar_srv.codigo");
 			
 			if(!$resultadoAdherentes2)
-			echo "Ocurrió un error en la consulta de los servicios del ADHERENTE en aportes por tarjeta";
+				$estado[3]='0';
 
 			//Esta consulta solo recoge los nombres
 			$resultadoAdherentes2Nombres = $GLOBALS['db']->select("SELECT * FROM socios, tar_srvadherentes 
 									   WHERE socios.soc_titula = '$numero_socio' 
 									   AND numero_soc <> '$numero_socio' 
 									   AND socios.numero_soc = tar_srvadherentes.socnumero");
-			
-			if(!$resultadoAdherentes2Nombres)
-			echo "Ocurrió un error en la consulta del NOMBRE del ADHERENTE en aportes por tarjeta";
-			
-			
-			
+				
 			if(is_array($resultadoAdherentes2Nombres)){
 				$i=0;
 				foreach($resultadoAdherentes2Nombres as $res2)
@@ -164,7 +167,7 @@ function verMas()
 									  AND persona.numdoc = fme_asistencia.doctitu");
 			
 			if(!$asistencias)
-			echo "Ocurrió un error en la consulta de las asistencias";
+				$estado[4]='1';
 			
 			
 			
@@ -173,10 +176,9 @@ function verMas()
 																  'resultadoTitularServicios1', 
 																  'resultadoTitularServicios2', 
 																  'resultadoAdherentes1',
-																  'resultadoAdherentes1Nombres',
 																  'resultadoAdherentes2',
-																  'resultadoAdherentes2Nombres',
-																  'asistencias'));	
+																  'asistencias',
+																  'estado'));	
 			
 			
 		}
@@ -308,7 +310,7 @@ function generarAtencion()
 		$error=[
 				'menu'			=>"Atenciones",
 				'funcion'		=>"generarAtencion",
-				'descripcion'	=>"No se pudo insertar la consulta: INSERT INTO fme_asistencia (doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional)
+				'descripcion'	=>"No se pudo realizar la consulta: INSERT INTO fme_asistencia (doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional)
 			VALUES ('$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional')"
 				];
 		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
