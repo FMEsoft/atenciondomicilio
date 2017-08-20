@@ -64,38 +64,68 @@
                                                 <p><label>Número de socio : </label>{{ res.numero_soc }}
                                                 </p>
                                                 <p><label>ID persona del titular : </label>{{ res.id_persona }}
-                                                </p>                                                
+                                                </p>
+
+                                                <!-- LINEA DE BLANQUITO -->
+                                                <a class="btn btn-primary" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res.numero_soc }}">Generar Atención</a> 
+                                                <!-- LINEA DE BLANQUITO -->                                                
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 								
-								<a class="btn btn-success" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res.numero_soc }}">GenerarAtenciónT</a>	<!-- LINEA DE BLANQUITO -->
+								
 								
                             {% endfor %}
                         </div>
                     </div>
 					
 					<div class="tab-pane" id="planes-titular">
+                        <div class="box box-primary">
+                            <div class="box-header">
+                                <h3 class="box-title">PAGO POR CUOTA</h3>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-12">
                             {% if estado[0] == '1' %}
-								{% for res2 in resultadoTitularServicios1 %}  
-									<p><label>Relación DEL TITULAR POR CUOTA: </label> {{ res2.parentesco }} </p>
-									<p><label>Plan DEL TITULAR POR CUOTA: </label> {{ res2.nombre }} </p>
+								{% for res2 in resultadoTitularServicios1 %}
+                                    <div class="box box-solid box-primary" >
+                                        <div class="box-header">
+                                            <h3 class="box-title">Titular </h3>
+                                        </div>
+                                        <div class="box-body">
+                                            <p><label>Plan: </label> {{ res2.nombre }} </p>
+                                        </div>
+                                    </div>
 								{% endfor %}
 							{% else %}
-								<p>Ocurrió un error en la consulta de los servicios del asociado titular en aportes por cuota</p>
+								<div class="callout callout-danger lead">
+                                <p>No se encontraron PLANES.</p>
+                            </div>
 							{% endif %}
                             </div>
                         </div>
+                        <div class="box box-danger">
+                            <div class="box-header">
+                                <h3 class="box-title">PAGO POR TARJETA</h3>
+                            </div>
+                        </div> 
 						{% if estado[1] == '1' %}
 							{% for res22 in resultadoTitularServicios2 %}
-								<p><label>Relación DEL TITULAR POR TARJETA: </label>{{ res22.parentezco }} </p>
-								<p><label>Plan DEL TITULAR POR TARJETA : </label>{{ res22.nombre }} </p>
+                                <div class="box box-solid box-primary" >
+                                    <div class="box-header">
+                                        <h3 class="box-title">TITULAR</h3>
+                                    </div>
+                                    <div class="box-body">  
+                                        <p><label>Plan: </label>{{ res22.nombre }} </p>
+                                    </div>
+                                </div>								
 							{% endfor %}
 						{% else %}
-							<p>Ocurrió un error en la consulta de los servicios del asociado titular en aportes por tarjeta</p>
+							<div class="callout callout-danger lead">
+                                <p>No se encontraron PLANES.</p>
+                            </div>
 						{% endif %}
 
                     </div>
@@ -110,60 +140,79 @@
 							{% for res3 in resultadoAdherentes1 %}                                
 								<div class="box box-solid box-primary" >
 									<div class="box-header">
-										<h3 class="box-title">{{ res3['nombrePersona'] }} </h3>
+										<h3 class="box-title">Nombre del adherente: {{ res3['nombrePersona'] }} </h3>
 									</div>
 									<div class="box-body">
-										<p> Relación DEL ADHERENTE: {{ res3['parentesco'] }} </p>
-										<p> Plan DEL ADHERENTE: {{ res3['nombre'] }} </p>
-										<p> Número de socio DEL ADHERENTE: {{ res3['numero_soc'] }} </p>
-										<p> Nro de beneficio DEL ADHERENTE: {{ res3['beneficio'] }} </p>
-									</div>
-								</div>
-								
-								<a class="btn btn-success" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res3.numero_soc }}">GenerarAtenciónS</a>	<!-- LINEA DE BLANQUITO -->
+									   <p> Relación DEL ADHERENTE: {{ res3['parentesco'] }} </p>
+									   <p> Plan DEL ADHERENTE: {{ res3['nombre'] }} </p>
+									   <p> Número de socio DEL ADHERENTE: {{ res3['numero_soc'] }} </p>
+									   <p> Nro de beneficio DEL ADHERENTE: {{ res3['beneficio'] }} </p>
+									   
+                                       <!-- LINEA DE BLANQUITO -->
+                                       <a class="btn btn-primary" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res3.numero_soc }}">Generar Atención</a>
+                                       <!-- LINEA DE BLANQUITO -->
+
+
+                                    </div>
+                                </div>
 						   {% endfor %}
 						{% else %}
-							<p>Ocurrió un error en la consulta de los servicios del ADHERENTE en aportes por cuota</p>
+							<div class="callout callout-danger lead">
+                                <p>No se encontraron ADHERENTES.</p>
+                            </div>
 						{% endif %}
    
 
-                       <div class="box box-danger">
+                        <div class="box box-danger">
                             <div class="box-header">
                                 <h3 class="box-title">PAGO POR TARJETA</h3>
                             </div>
                         </div>                       
 						{% if estado[3] == '1' %}
 							{% for res4 in resultadoAdherentes2 %}
-								<div class="box box-solid box-primary" >
+								<div class="box box-solid box-danger" >
 									<div class="box-header">
-										<h3 class="box-title">{{ res4['nombrePersona'] }}</h3>
+										<h3 class="box-title">Nombre del adherente: {{ res4['nombrePersona'] }}</h3>
 									</div>
 									<div class="box-body">  
 										<p> Relación DEL ADHERENTE: {{ res4['parentezco'] }} </p>
 										<p> Plan DEL ADHERENTE: {{ res4['nombre'] }} </p>
 										<p> Número de socio DEL ADHERENTE: {{ res4['numero_soc'] }} </p>
 										<p> Nro de beneficio DEL ADHERENTE: {{ res4['beneficio'] }} </p>
-									</div>
+
+                                        <!-- LINEA DE BLANQUITO -->
+                                        <a class="btn btn-danger" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res3.numero_soc }}">Generar Atención</a>
+                                        <!-- LINEA DE BLANQUITO -->
+									
+                                    </div>
 								</div>
 							{% endfor %}
 						{% else %}
-							<p>Ocurrió un error en la consulta de los servicios del ADHERENTE en aportes por tarjeta</p>
+                            <div class="callout callout-danger lead">
+                                <p>No se encontraron ADHERENTES.</p>
+                            </div>
 						{% endif %}
 					  
                     </div>
 
                     <div class="tab-pane" id="atenciones">
 						{% if estado[4] == '1' %}
-							{% for asistencia in asistencias %}   
-								<p> -------------------------------------------- </p>
-								<p> Nombre de quien recibió la asistencia: {{ asistencia['nombre'] }} </p>
-								<p> Fecha pedido de la asistencia: {{ asistencia['fec_pedido'] }} </p>
-								<p> Diagnostico: {{ asistencia['diagnostico'] }} </p>
-								<p> Dessit: {{ asistencia['dessit'] }} </p>
-								<p> -------------------------------------------- </p>
+							{% for asistencia in asistencias %}
+                                <div class="box box-solid box-success" >
+                                    <div class="box-header">
+                                        <h3 class="box-title"> Nombre del paciente: {{ asistencia['nombre'] }}</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <p> Fecha pedido de la asistencia: {{ asistencia['fec_pedido'] }} </p>
+                                        <p> Diagnostico: {{ asistencia['diagnostico'] }} </p>
+                                        <p> Dessit: {{ asistencia['dessit'] }} </p>
+                                    </div>
+                                </div>
 							{% endfor %}
 						{% else %}
-							<p>Ocurrió un error en la consulta de las asistencias</p>
+                            <div class="callout callout-danger lead">
+                                <p>No se encontraron ASISTENCIAS REALIZADAS.</p>
+                            </div>
 						{% endif %}
                     </div>
                 </div>
