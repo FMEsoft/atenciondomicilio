@@ -49,11 +49,17 @@ function verMas()
 			
 			$numero_socio = $_GET['num_soc']; //Es el número del socio titular que debe ser tomado del PASO 1
 			
-			$resultadoTitular = $GLOBALS['db']->select("SELECT * FROM socios, persona 
-									  WHERE soc_titula = '$numero_socio' 
+
+				$resultadoTitular = $GLOBALS['db']->select("SELECT socios.id_persona,socios.numero_soc,socios.beneficio,socios.fec_alt,socios.fec_baja,socios.lugar_pago,socios.soc_titula
+				,persona.id_persona,persona.nombre,persona.numdoc,persona.cuil,persona.sexo,persona.fecnacim,persona.domicilio,persona.casa_nro,persona.barrio,persona.localidad,persona.codpostal
+				,persona.dpmto,persona.tel_fijo,persona.tel_cel,persona.fec_alta AS fec_alta2,persona.fec_baja AS fec_baja2,persona.cbu,persona.banco,persona.usualta
+				,fme_adhsrv.codigo,fme_adhsrv.parentesco,fme_adhsrv.periodoini,fme_adhsrv.periodofin,fme_adhsrv.motivobaja,fme_adhsrv.documento
+				,tar_srv.nombre AS nombreplan,tar_srv.idmutual FROM socios,persona,fme_adhsrv,tar_srv WHERE socios.soc_titula = '$numero_socio' 
 									  AND socios.id_persona = persona.id_persona
-									  AND numero_soc = soc_titula");
-			
+									  AND persona.numdoc = fme_adhsrv.documento
+									  AND fme_adhsrv.codigo = tar_srv.idmutual
+                                      AND socios.numero_soc= socios.soc_titula");
+
 			if(!$resultadoTitular)
 			{
 				$error=[
@@ -96,57 +102,41 @@ function verMas()
 			
 			//---------------CONSULTA QUE DEVUELVE TODA LA INFO DE LOS ADHERENTES DEL ASOCIADO TITULAR CON APORTES POR CUOTA----------------
 			
-			$resultadoAdherentes1 = $GLOBALS['db']->select("SELECT * FROM socios, fme_adhsrv, tar_srv
-									   WHERE soc_titula = '$numero_socio' 
-									   AND socios.numero_soc <> '$numero_socio' 
+
+		   $resultadoAdherentes1 = $GLOBALS['db']->select("SELECT socios.id_persona,socios.numero_soc,socios.beneficio,socios.fec_alt,socios.fec_baja,socios.lugar_pago,socios.soc_titula
+				,persona.id_persona,persona.nombre,persona.numdoc,persona.cuil,persona.sexo,persona.fecnacim,persona.domicilio,persona.casa_nro,persona.barrio,persona.localidad,persona.codpostal
+				,persona.dpmto,persona.tel_fijo,persona.tel_cel,persona.fec_alta AS fec_alta2,persona.fec_baja AS fec_baja2,persona.cbu,persona.banco,persona.usualta
+				,fme_adhsrv.codigo,fme_adhsrv.parentesco,fme_adhsrv.periodoini,fme_adhsrv.periodofin,fme_adhsrv.motivobaja,fme_adhsrv.documento
+				,tar_srv.nombre AS nombreplan,tar_srv.idmutual FROM socios,persona,fme_adhsrv,tar_srv
+									 WHERE soc_titula = '$numero_socio' 
+									   AND socios.numero_soc != '$numero_socio'
+                                       AND socios.id_persona = persona.id_persona
 									   AND socios.numero_soc = fme_adhsrv.socnumero
-									   AND fme_adhsrv.codigo = tar_srv.idmutual");
+									   AND fme_adhsrv.codigo = tar_srv.idmutual;");
 			
 			if(!$resultadoAdherentes1)
 				$estado[2]='0';
-
-			//Esta consulta solo recoge los nombres
-			$resultadoAdherentes1Nombres = $GLOBALS['db']->select("SELECT * FROM socios, fme_adhsrv
-									   WHERE soc_titula = '$numero_socio' 
-									   AND socios.numero_soc <> '$numero_socio' 
-									   AND socios.numero_soc = fme_adhsrv.socnumero");
-			
-			if(is_array($resultadoAdherentes1Nombres)){
-				$i=0;
-				foreach($resultadoAdherentes1Nombres as $res1)
-				{
-					$resultadoAdherentes1[$i]['nombrePersona']=$res1['nombre'];
-					$i=$i+1;
-				}	
-			}
-
-			
 			
 			//---------------CONSULTA QUE DEVUELVE TODA LA INFO DE LOS ADHERENTES DEL ASOCIADO TITULAR CON APORTES POR TARJETA----------------
-			
-			$resultadoAdherentes2 = $GLOBALS['db']->select("SELECT * FROM socios, tar_srvadherentes, tar_srv 
+
+//esta consulta habria q revisarla con mas datos una vez q el señor ip nos pase ++DB.
+
+			$resultadoAdherentes2 = $GLOBALS['db']->select("SELECT socios.id_persona,socios.numero_soc,socios.beneficio,socios.fec_alt,socios.fec_baja,socios.lugar_pago,socios.soc_titula
+				,persona.id_persona,persona.nombre,persona.numdoc,persona.cuil,persona.sexo,persona.fecnacim,persona.domicilio,persona.casa_nro,persona.barrio,persona.localidad,persona.codpostal
+				,persona.dpmto,persona.tel_fijo,persona.tel_cel,persona.fec_alta AS fec_alta2,persona.fec_baja AS fec_baja2,persona.cbu,persona.banco,persona.usualta
+				,fme_adhsrv.codigo,fme_adhsrv.parentesco,fme_adhsrv.periodoini,fme_adhsrv.periodofin,fme_adhsrv.motivobaja,fme_adhsrv.documento
+				,tar_srv.nombre AS nombreplan,tar_srv.idmutual FROM socios,persona,fme_adhsrv,tar_srv,tar_srvadherentes
 									   WHERE socios.soc_titula = '$numero_socio' 
 									   AND numero_soc <> '$numero_socio' 
 									   AND socios.numero_soc = tar_srvadherentes.socnumero
-									   AND tar_srvadherentes.codigo = tar_srv.codigo");
+									   AND tar_srvadherentes.codigo = tar_srv.codigo");	
+
+			
+
+								   
 			
 			if(!$resultadoAdherentes2)
 				$estado[3]='0';
-
-			//Esta consulta solo recoge los nombres
-			$resultadoAdherentes2Nombres = $GLOBALS['db']->select("SELECT * FROM socios, tar_srvadherentes 
-									   WHERE socios.soc_titula = '$numero_socio' 
-									   AND numero_soc <> '$numero_socio' 
-									   AND socios.numero_soc = tar_srvadherentes.socnumero");
-				
-			if(is_array($resultadoAdherentes2Nombres)){
-				$i=0;
-				foreach($resultadoAdherentes2Nombres as $res2)
-				{
-					$resultadoAdherentes2[$i]['nombrePersona']=$res2['nombre'];
-					$i=$i+1;
-				}
-			}
 		
 		    
 			//---------------CONSULTA QUE DEVUELVE EL LISTADO DE TODAS LAS ASISTENCIAS----------------

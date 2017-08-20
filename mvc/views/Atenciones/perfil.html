@@ -65,10 +65,9 @@
                                                 </p>
                                                 <p><label>ID persona del titular : </label>{{ res.id_persona }}
                                                 </p>
-
-                                                <!-- LINEA DE BLANQUITO -->
-                                                <a class="btn btn-primary" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res.numero_soc }}">Generar Atención</a> 
-                                                <!-- LINEA DE BLANQUITO -->                                                
+                                                
+                                                <a class="btn btn-primary" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res.numero_soc }}&cod_servicio={{ res.codigo}}">Generar Atención</a> 
+                                                                                               
                                             </div>
                                         </div>
                                     </div>
@@ -140,17 +139,16 @@
 							{% for res3 in resultadoAdherentes1 %}                                
 								<div class="box box-solid box-primary" >
 									<div class="box-header">
-										<h3 class="box-title">Nombre del adherente: {{ res3['nombrePersona'] }} </h3>
-									</div>
+										<h3 class="box-title">Nombre del adherente: {{ res3['nombre'] }} </h3>
+                                    </div>
 									<div class="box-body">
 									   <p> Relación DEL ADHERENTE: {{ res3['parentesco'] }} </p>
-									   <p> Plan DEL ADHERENTE: {{ res3['nombre'] }} </p>
+									   <p> Plan DEL ADHERENTE: {{ res3['nombreplan'] }} </p>
 									   <p> Número de socio DEL ADHERENTE: {{ res3['numero_soc'] }} </p>
 									   <p> Nro de beneficio DEL ADHERENTE: {{ res3['beneficio'] }} </p>
 									   
-                                       <!-- LINEA DE BLANQUITO -->
-                                       <a class="btn btn-primary" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res3.numero_soc }}">Generar Atención</a>
-                                       <!-- LINEA DE BLANQUITO -->
+                                       <a class="btn btn-primary" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res3.numero_soc }}&cod_servicio={{ res3.codigo}}">Generar Atención</a>
+                                       
 
 
                                     </div>
@@ -172,17 +170,16 @@
 							{% for res4 in resultadoAdherentes2 %}
 								<div class="box box-solid box-danger" >
 									<div class="box-header">
-										<h3 class="box-title">Nombre del adherente: {{ res4['nombrePersona'] }}</h3>
+										<h3 class="box-title">Nombre del adherente: {{ res4['nombre'] }}</h3>
 									</div>
 									<div class="box-body">  
-										<p> Relación DEL ADHERENTE: {{ res4['parentezco'] }} </p>
-										<p> Plan DEL ADHERENTE: {{ res4['nombre'] }} </p>
+										<p> Relación DEL ADHERENTE: {{ res4['parentesco'] }} </p>
+										<p> Plan DEL ADHERENTE: {{ res4['nombreplan'] }} </p>
 										<p> Número de socio DEL ADHERENTE: {{ res4['numero_soc'] }} </p>
 										<p> Nro de beneficio DEL ADHERENTE: {{ res4['beneficio'] }} </p>
 
-                                        <!-- LINEA DE BLANQUITO -->
-                                        <a class="btn btn-danger" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res3.numero_soc }}">Generar Atención</a>
-                                        <!-- LINEA DE BLANQUITO -->
+                                        <a class="btn btn-danger" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res4.numero_soc }}&cod_servicio={{ res4.codigo}}">Generar Atención</a>
+                                        
 									
                                     </div>
 								</div>
