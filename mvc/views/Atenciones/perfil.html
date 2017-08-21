@@ -17,203 +17,222 @@
     <section class="content">
         <div class="row">
             <div class="col-md-12">
-            <div class="nav-tabs-custom">
-                <ul class="nav nav-tabs">
-                  <li class="active"><a href="#datos" data-toggle="tab">Datos Titular</a></li>
-                  <li><a href="#planes-titular" data-toggle="tab">Planes Titular</a></li>
-                  <li><a href="#planes-adherentes" data-toggle="tab">Planes Adherentes</a></li>
-                  <li><a href="#atenciones" data-toggle="tab">Atenciones</a></li>
-                </ul>
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a href="#datos" data-toggle="tab">Datos Titular</a></li>
+                      <li><a href="#planes-titular" data-toggle="tab">Planes Titular</a></li>
+                      <li><a href="#planes-adherentes" data-toggle="tab">Planes Adherentes</a></li>
+                      <li><a href="#atenciones" data-toggle="tab">Atenciones</a></li>
+                    </ul>
 
-                <div class="tab-content">
-                    <div class="active tab-pane" id="datos">
-                        <div class="post">
-                            {% for res in resultadoTitular %}
-                                <div class="box box-solid box-primary" >  
-                                    <div class="box-header">                                  
-                                        <div class="user-block">
-                                            {% if res.sexo == 1 %}
-                                                <img class="img-circle img-bordered-sm" src="../../static/images/user.png" alt="user image">                 
-                                            {% else %}
-                                                <img class="img-circle img-bordered-sm" src="../../static/images/user_fem.png" alt="user image">
-                                            {% endif %}
-                                            <span class="username">
-                                              <h4 class="box-title"><b><a href="#">{{ res.nombre }}</a></b></h4>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="box-body">
-                                                <p><label>Número de documento del titular :</label> {{ res.numdoc }}
-                                                </p>
+                    <div class="tab-content">
+                        <div class="active tab-pane" id="datos">
+                            <div class="post">
+                                {% for res in resultadoTitular %}
+                                    <div class="box box-solid box-primary" >  
+                                        <div class="box-header">                                  
+                                            <div class="user-block">
                                                 {% if res.sexo == 1 %}
-                                                    <p><label>Sexo :</label> Masculino
-                                                    </p>                    
+                                                    <img class="img-circle img-bordered-sm" src="../../static/images/user.png" alt="user image">                 
                                                 {% else %}
-                                                    <p><label>Sexo :</label> Femenino
-                                                    </p> 
+                                                    <img class="img-circle img-bordered-sm" src="../../static/images/user_fem.png" alt="user image">
                                                 {% endif %}
-                                                <p><label>Fecha de nacimiento del titular : </label>{{ res.fecnacim }}
-                                                </p>
-                                                <p><label>Domicilio del titular : </label>{{ res.domicilio }}</p>
-                                                <div class="box box-primary"></div>
-                                                <p><label>Número de beneficio del titular : </label>{{ res.beneficio }}
-                                                </p>
-                                                <p><label>Número de socio : </label>{{ res.numero_soc }}
-                                                </p>
-                                                <p><label>ID persona del titular : </label>{{ res.id_persona }}
-                                                </p>
-                                                
-                                                <a class="btn btn-primary" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res.numero_soc }}&cod_servicio={{ res.codigo}}">Generar Atención</a> 
-                                                                                               
+                                                <span class="username">
+                                                  <h4 class="box-title"><b><a href="#">{{ res.nombre }}</a></b></h4>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="box-body">
+                                                    <p><label>Número de documento del titular :</label> {{ res.numdoc }}
+                                                    </p>
+                                                    {% if res.sexo == 1 %}
+                                                        <p><label>Sexo :</label> Masculino
+                                                        </p>                    
+                                                    {% else %}
+                                                        <p><label>Sexo :</label> Femenino
+                                                        </p> 
+                                                    {% endif %}
+                                                    <p><label>Fecha de nacimiento del titular : </label>{{ res.fecnacim }}
+                                                    </p>
+                                                    <p><label>Domicilio del titular : </label>{{ res.domicilio }}</p>
+                                                    <div class="box box-primary"></div>
+                                                    <p><label>Número de beneficio del titular : </label>{{ res.beneficio }}
+                                                    </p>
+                                                    <p><label>Número de socio : </label>{{ res.numero_soc }}
+                                                    </p>
+                                                    <p><label>ID persona del titular : </label>{{ res.id_persona }}
+                                                    </p>
+                                                    
+                                                    <a class="btn btn-primary" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res.numero_soc }}&cod_servicio={{ res.codigo}}">Generar Atención</a>                                        
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-								
-								
-								
-                            {% endfor %}
-                        </div>
-                    </div>
-					
-					<div class="tab-pane" id="planes-titular">
-                        <div class="box box-primary">
-                            <div class="box-header">
-                                <h3 class="box-title">PAGO POR CUOTA</h3>
+                                {% endfor %}
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                            {% if estado[0] == '1' %}
-								{% for res2 in resultadoTitularServicios1 %}
+    					
+    					<div class="tab-pane" id="planes-titular">
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h3 class="box-title">PAGO POR CUOTA</h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                {% if estado[0] == '1' %}
+    								{% for res2 in resultadoTitularServicios1 %}
+                                        <div class="box box-solid box-primary" >
+                                            <div class="box-header">
+                                                <h3 class="box-title">Titular </h3>
+                                            </div>
+                                            <div class="box-body">
+                                                <p><label>Plan: </label> {{ res2.nombre }} </p>
+                                            </div>
+                                        </div>
+    								{% endfor %}
+    							{% else %}
+    								<div class="callout callout-danger lead">
+                                    <p>No se encontraron PLANES.</p>
+                                </div>
+    							{% endif %}
+                                </div>
+                            </div>
+                            <div class="box box-danger">
+                                <div class="box-header">
+                                    <h3 class="box-title">PAGO POR TARJETA</h3>
+                                </div>
+                            </div> 
+    						{% if estado[1] == '1' %}
+    							{% for res22 in resultadoTitularServicios2 %}
                                     <div class="box box-solid box-primary" >
                                         <div class="box-header">
-                                            <h3 class="box-title">Titular </h3>
+                                            <h3 class="box-title">TITULAR</h3>
                                         </div>
-                                        <div class="box-body">
-                                            <p><label>Plan: </label> {{ res2.nombre }} </p>
+                                        <div class="box-body">  
+                                            <p><label>Plan: </label>{{ res22.nombre }} </p>
+                                        </div>
+                                    </div>								
+    							{% endfor %}
+    						{% else %}
+    							<div class="callout callout-danger lead">
+                                    <p>No se encontraron PLANES.</p>
+                                </div>
+    						{% endif %}
+
+                        </div>
+
+                        <div class="tab-pane" id="planes-adherentes">
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h3 class="box-title">PAGO POR CUOTA</h3>
+                                </div>
+                            </div>
+    						{% if estado[2] == '1' %}
+    							{% for res3 in resultadoAdherentes1 %}                                
+    								<div class="box box-solid box-primary" >
+    									<div class="box-header">
+    										<h3 class="box-title">Nombre del adherente: {{ res3['nombre'] }} </h3>
+                                        </div>
+    									<div class="box-body">
+    									   <p> Relación DEL ADHERENTE: {{ res3['parentesco'] }} </p>
+    									   <p> Plan DEL ADHERENTE: {{ res3['nombreplan'] }} </p>
+    									   <p> Número de socio DEL ADHERENTE: {{ res3['numero_soc'] }} </p>
+    									   <p> Nro de beneficio DEL ADHERENTE: {{ res3['beneficio'] }} </p>
+    									   
+                                           <a class="btn btn-primary" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res3.numero_soc }}&cod_servicio={{ res3.codigo}}">Generar Atención</a>
+                                           
+
+
                                         </div>
                                     </div>
-								{% endfor %}
-							{% else %}
-								<div class="callout callout-danger lead">
-                                <p>No se encontraron PLANES.</p>
-                            </div>
-							{% endif %}
-                            </div>
-                        </div>
-                        <div class="box box-danger">
-                            <div class="box-header">
-                                <h3 class="box-title">PAGO POR TARJETA</h3>
-                            </div>
-                        </div> 
-						{% if estado[1] == '1' %}
-							{% for res22 in resultadoTitularServicios2 %}
-                                <div class="box box-solid box-primary" >
-                                    <div class="box-header">
-                                        <h3 class="box-title">TITULAR</h3>
-                                    </div>
-                                    <div class="box-body">  
-                                        <p><label>Plan: </label>{{ res22.nombre }} </p>
-                                    </div>
-                                </div>								
-							{% endfor %}
-						{% else %}
-							<div class="callout callout-danger lead">
-                                <p>No se encontraron PLANES.</p>
-                            </div>
-						{% endif %}
-
-                    </div>
-
-                    <div class="tab-pane" id="planes-adherentes">
-                        <div class="box box-primary">
-                            <div class="box-header">
-                                <h3 class="box-title">PAGO POR CUOTA</h3>
-                            </div>
-                        </div>
-						{% if estado[2] == '1' %}
-							{% for res3 in resultadoAdherentes1 %}                                
-								<div class="box box-solid box-primary" >
-									<div class="box-header">
-										<h3 class="box-title">Nombre del adherente: {{ res3['nombre'] }} </h3>
-                                    </div>
-									<div class="box-body">
-									   <p> Relación DEL ADHERENTE: {{ res3['parentesco'] }} </p>
-									   <p> Plan DEL ADHERENTE: {{ res3['nombreplan'] }} </p>
-									   <p> Número de socio DEL ADHERENTE: {{ res3['numero_soc'] }} </p>
-									   <p> Nro de beneficio DEL ADHERENTE: {{ res3['beneficio'] }} </p>
-									   
-                                       <a class="btn btn-primary" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res3.numero_soc }}&cod_servicio={{ res3.codigo}}">Generar Atención</a>
-                                       
-
-
-                                    </div>
+    						   {% endfor %}
+    						{% else %}
+    							<div class="callout callout-danger lead">
+                                    <p>No se encontraron ADHERENTES.</p>
                                 </div>
-						   {% endfor %}
-						{% else %}
-							<div class="callout callout-danger lead">
-                                <p>No se encontraron ADHERENTES.</p>
-                            </div>
-						{% endif %}
-   
+    						{% endif %}
+       
 
-                        <div class="box box-danger">
-                            <div class="box-header">
-                                <h3 class="box-title">PAGO POR TARJETA</h3>
-                            </div>
-                        </div>                       
-						{% if estado[3] == '1' %}
-							{% for res4 in resultadoAdherentes2 %}
-								<div class="box box-solid box-danger" >
-									<div class="box-header">
-										<h3 class="box-title">Nombre del adherente: {{ res4['nombre'] }}</h3>
-									</div>
-									<div class="box-body">  
-										<p> Relación DEL ADHERENTE: {{ res4['parentesco'] }} </p>
-										<p> Plan DEL ADHERENTE: {{ res4['nombreplan'] }} </p>
-										<p> Número de socio DEL ADHERENTE: {{ res4['numero_soc'] }} </p>
-										<p> Nro de beneficio DEL ADHERENTE: {{ res4['beneficio'] }} </p>
-
-                                        <a class="btn btn-danger" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res4.numero_soc }}&cod_servicio={{ res4.codigo}}">Generar Atención</a>
-                                        
-									
-                                    </div>
-								</div>
-							{% endfor %}
-						{% else %}
-                            <div class="callout callout-danger lead">
-                                <p>No se encontraron ADHERENTES.</p>
-                            </div>
-						{% endif %}
-					  
-                    </div>
-
-                    <div class="tab-pane" id="atenciones">
-						{% if estado[4] == '1' %}
-							{% for asistencia in asistencias %}
-                                <div class="box box-solid box-success" >
-                                    <div class="box-header">
-                                        <h3 class="box-title"> Nombre del paciente: {{ asistencia['nombre'] }}</h3>
-                                    </div>
-                                    <div class="box-body">
-                                        <p> Fecha pedido de la asistencia: {{ asistencia['fec_pedido'] }} </p>
-                                        <p> Diagnostico: {{ asistencia['diagnostico'] }} </p>
-                                        <p> Dessit: {{ asistencia['dessit'] }} </p>
-                                    </div>
+                            <div class="box box-danger">
+                                <div class="box-header">
+                                    <h3 class="box-title">PAGO POR TARJETA</h3>
                                 </div>
-							{% endfor %}
-						{% else %}
-                            <div class="callout callout-danger lead">
-                                <p>No se encontraron ASISTENCIAS REALIZADAS.</p>
+                            </div>                       
+    						{% if estado[3] == '1' %}
+    							{% for res4 in resultadoAdherentes2 %}
+    								<div class="box box-solid box-danger" >
+    									<div class="box-header">
+    										<h3 class="box-title">Nombre del adherente: {{ res4['nombre'] }}</h3>
+    									</div>
+    									<div class="box-body">  
+    										<p> Relación DEL ADHERENTE: {{ res4['parentesco'] }} </p>
+    										<p> Plan DEL ADHERENTE: {{ res4['nombreplan'] }} </p>
+    										<p> Número de socio DEL ADHERENTE: {{ res4['numero_soc'] }} </p>
+    										<p> Nro de beneficio DEL ADHERENTE: {{ res4['beneficio'] }} </p>
+
+                                            <a class="btn btn-danger" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res4.numero_soc }}&cod_servicio={{ res4.codigo}}">Generar Atención</a>  
+                                        </div>
+    								</div>
+    							{% endfor %}
+    						{% else %}
+                                <div class="callout callout-danger lead">
+                                    <p>No se encontraron ADHERENTES.</p>
+                                </div>
+    						{% endif %}
+                        </div>
+
+                        <div class="tab-pane" id="atenciones">
+                            <div class="box-body">
+                                <table id="tabla" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 20%">Nombre y Apellido</th>
+                                            <th style="width: 4%">Fecha</th>
+                                            <th style="width: 32%">Diagnóstico</th>
+                                            <th style="width: 32%">Síntomas</th>
+                                            <th style="width: 8%">Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if estado[4] == '1' %}
+                                            {% for asistencia in asistencias %}
+                                                <tr>
+                                                    <td>{{ asistencia['nombre'] }}</td>
+                                                    <td>{{ asistencia['fec_pedido'] }}</td>
+                                                    <td>{{ asistencia['diagnostico'] }}</td>
+                                                    <td>{{ asistencia['dessit'] }}</td>
+                                                    <td></td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <div class="callout callout-danger lead">
+                                                <p>No se encontraron ASISTENCIAS REALIZADAS.</p>
+                                            </div>
+                                        {% endif %}                                        
+                                    </tbody>
+                                </table>
                             </div>
-						{% endif %}
+                            {% block javascript %}
+                                <script>
+                                    $('#tabla').DataTable({
+                                        "language": {
+                                            "lengthMenu": "Mostrando _MENU_ registros por página",
+                                            "search": "Buscar",
+                                            "zeroRecords": "Ningún registro coincide con lo ingresado",
+                                            "info": "Mostrando página _PAGE_ de _PAGES_",
+                                            "infoEmpty": "No hay resultados",
+                                            "infoFiltered": "(de un total de _MAX_ total registros)"
+                                        }
+                                    });
+                                </script>
+                            {% endblock %}
+                        </div>
                     </div>
                 </div>
-            </div>
             </div>
         </div>
 

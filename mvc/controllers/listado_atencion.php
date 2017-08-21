@@ -177,6 +177,7 @@ function finalizarAtencion()
 	
 	if(!$resultado)
 	{
+		echo "hola";
 		$error=[
 				'menu'			=>"Atenciones",
 				'funcion'		=>"FinalizarAtencion",
