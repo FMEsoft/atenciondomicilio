@@ -211,7 +211,12 @@ function mostrarFormulario()
 
 	if($resultado)
 	{
-		$fecha=getdate();
+		date_default_timezone_set('America/Argentina/Catamarca');
+		$fecha['year']=date("Y");
+		$fecha['mon']=date("m");
+		$fecha['mday']=date("d");
+		$fecha['hours']=date("H");
+		$fecha['minutes']=date("i");
 		foreach($resultado as $res)
 		{
 			$persona =[
