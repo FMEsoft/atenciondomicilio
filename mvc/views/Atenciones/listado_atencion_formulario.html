@@ -87,18 +87,27 @@
 					
 					<fieldset><legend>Datos para finalizar la atención</legend>
 						<div class="row">
-							<div class="col-md-6 form-group">
+							<div class="col-md-2 form-group">
 								<label for="prof">Fecha de atencion</label>
-								<input type="date" class="form-control" id="fech_ate" name="fech_ate"  />
+								
+								<div class="input-group date" data-provide="datepicker" data-date-format="yyyy/mm/dd">
+									<input type="text" class="form-control" readonly id="fech_ate" name="fech_ate">
+									<div class="input-group-addon">
+										<span class="glyphicon glyphicon-calendar"></span>
+									</div>
+								</div>
+								
+								<label for="prof">Hora de atencion</label>
+								<div class="input-group date" data-provide="timepicker" data-minute-step="1" data-show-meridian="false" data-max-hours="24">
+									<input type="text" class="form-control" readonly id="timepicker1" name="hora_ate" >
+									<div class="input-group-addon">
+										<span class="glyphicon glyphicon-time"></span>
+									</div>
+								</div>
 							</div>
 						</div>
 						
-						<div class="row">
-							<div class="col-md-6 form-group">
-								<label for="prof">Hora de atencion</label>
-								<input type="time" class="form-control" id="hora_ate" name="hora_ate" />
-							</div>
-						</div>
+
 						
 						<div class="form-group">
 							<label for="desc">Sintomas</label><br/>
@@ -190,14 +199,9 @@
 						</div>
 
 						<div class="row">
-							<div class="col-md-6 form-group">
+							<div class="col-md-2 form-group">
 								<label for="prof">Fecha de atencion</label>
 								<input type="text" class="form-control" id="fech_ate" name="fech_ate" readonly value="{{ persona.fech_ate }}" />
-							</div>
-						</div>
-						
-						<div class="row">
-							<div class="col-md-6 form-group">
 								<label for="prof">Hora de atencion</label>
 								<input type="text" class="form-control" id="hora_ate" name="hora_ate" readonly value="{{ persona.hora_ate }}" />
 							</div>
