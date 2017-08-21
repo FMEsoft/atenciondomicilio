@@ -157,7 +157,7 @@ function verMas()
 									  AND persona.numdoc = fme_asistencia.doctitu");
 			
 			if(!$asistencias)
-				$estado[4]='1';
+				$estado[4]='0';
 			
 			
 			
