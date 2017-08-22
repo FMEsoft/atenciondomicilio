@@ -37,35 +37,35 @@
 					<fieldset><legend>Datos básicos</legend>
 						<div class="row">
 							<div class="col-md-6 form-group">
-								<label for="fecha">Fecha pedido</label><br/>
-								<input type="text" class="form-control" id="fecha" name="fecha" readonly value="{{ persona.fecha }}"/>
-							</div>
-							
-							<div class="col-md-6 form-group">
-								<label for="hora">Hora pedido</label><br/>
-								<input type="text" class="form-control" id="hora" name="hora" readonly value="{{ persona.hora }}"/>
-							</div>
-						</div>
-
-							
-							<div class="col-md-4 form-group">
 								<label for="nombre">Nombre y apellido</label><br/>
 								<input type="text" class="form-control" id="nombre" name="nombre" readonly value="{{ persona.nombre }}"/>
 							</div>
 							
-							<div class="col-md-4 form-group">
-								<label for="sexo">Sexo</label><br/>
-								<input type="text" class="form-control" id="sexo" name="sexo" readonly value="{{ persona.sexo }}"/>
-							</div>
-							
-							<div class="col-md-4 form-group">
+							<div class="col-md-3 form-group">
 								<label for="doc">Documento del asociado</label><br/>
 								<input type="text" class="form-control" id="doc" name="doc" readonly value="{{ persona.doc }}"/>
 							</div>
-							
-							<div class="col-md-4 form-group">
+
+							<div class="col-md-3 form-group">
 								<label for="doctit">Documento del titular</label><br/>
 								<input type="text" class="form-control" id="doctit" name="doctit" readonly value="{{ persona.doctit }}"/>
+							</div>
+
+						</div>
+						<div class="row">
+							<div class="col-md-2 form-group">
+								<label for="sexo">Sexo</label><br/>
+								<input type="text" class="form-control" id="sexo" name="sexo" readonly value="{{ persona.sexo }}"/>
+							</div>
+
+							<div class="col-md-2 form-group">
+								<label for="fecha">Fecha pedido</label><br/>
+								<input type="text" class="form-control" id="fecha" name="fecha" readonly value="{{ persona.fecha }}"/>
+							</div>
+							
+							<div class="col-md-2 form-group">
+								<label for="hora">Hora pedido</label><br/>
+								<input type="text" class="form-control" id="hora" name="hora" readonly value="{{ persona.hora }}"/>
 							</div>
 						</div>
 					</fieldset>
@@ -81,7 +81,7 @@
 						
 						<div class="form-group">
 							<label for="desc">Descripción de la situación</label><br/>
-							<textarea type="text" class="form-control" id="desc" name="desc" rows="5" readonly  />{{ persona.desc }}</textarea>
+							<textarea type="text" style="resize: none;" class="form-control" id="desc" name="desc" rows="5" readonly  />{{ persona.desc }}</textarea>
 						</div>
 					</fieldset>
 					
@@ -105,27 +105,27 @@
 						</div>
 						<div class="form-group">
 							<label for="desc">Sintomas</label><br/>
-							<textarea type="text" class="form-control" id="sintomas" name="sintomas"  rows="5" required/></textarea>
+							<textarea type="text" style="resize: none;" class="form-control" id="sintomas" name="sintomas"  rows="5" required/></textarea>
 						</div>
 						
 						<div class="form-group">
 							<label for="desc">Diagnostico</label><br/>
-							<textarea type="text" class="form-control" id="diagnostico" name="diagnostico"  rows="5"  required/></textarea>
+							<textarea type="text" style="resize: none;" class="form-control" id="diagnostico" name="diagnostico"  rows="5"  required/></textarea>
 						</div>
 						
 						<div class="form-group">
 							<label for="desc">Tratamiento</label><br/>
-							<textarea type="text" class="form-control" id="tratamiento" name="tratamiento"  rows="5" required/></textarea>
+							<textarea type="text" style="resize: none;" class="form-control" id="tratamiento" name="tratamiento"  rows="5" required/></textarea>
 						</div>
 					</fieldset>
 
 					<div class="row"><br><br>
-						<div class="col-md-6">
-							<input class="btn btn-block btn-success" type="submit" name="enviar" value="Finalizar"/>
+						<div class="col-md-3">
+							<input class="btn btn-block btn-success btn-lg" type="submit" name="enviar" value="Finalizar"/>
 						</div>
 						
-						<div class="col-md-6">
-							<a href="../controllers/listado_atencion.php?funcion=mostrarListado"><input class="btn btn-block btn-default" type="button" name="cancelar" value="Atras" /></a>
+						<div class="col-md-3">
+							<a href="../controllers/listado_atencion.php?funcion=mostrarListado"><input class="btn btn-block btn-danger btn-lg" type="button" name="cancelar" value="Atras" /></a>
 						</div>
 						
 					</div>
@@ -220,8 +220,10 @@
 					</fieldset>
 
 					<div class="row"><br><br>
-						<div class="col-md-6 text-center">
-							<a href="../controllers/listado_atencion.php?funcion=mostrarListado"><input class="btn btn-block btn-default" type="button" name="cancelar" value="Atras" /></a>
+						<div class="col-md-3 text-center">
+							<a href="../controllers/listado_atencion.php?funcion=mostrarListado">
+								<input class="btn btn-block btn-danger btn-lg" type="button" name="cancelar" value="Atras" />
+							</a>
 						</div>
 					</div>
 								<input style="display:none" type="text" class="form-control" name="cod_serv" id="cod_serv" value="{{ persona.cod_serv }}"/>

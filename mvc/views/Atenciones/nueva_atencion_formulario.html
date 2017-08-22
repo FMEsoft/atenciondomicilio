@@ -24,45 +24,47 @@
 			<fieldset><legend>Datos básicos</legend>
 				<div class="row">
 					<div class="col-md-6 form-group">
+						<label for="nombre">Nombre y apellido</label><br/>
+						<input type="text" class="form-control" id="nombre" name="nombre" readonly value="{{ persona.nombre }}"/>
+					</div>
+
+					<div class="col-md-3 form-group">
+						<label for="doc">Documento del asociado</label><br/>
+						<input type="text" class="form-control" id="doc" name="doc" readonly value="{{ persona.doc }}"/>
+					</div>
+
+					<div class="col-md-3 form-group">
+						<label for="doctit">Documento del titular</label><br/>
+						<input type="text" class="form-control" id="doctit" name="doctit" readonly value="{{ persona.doctit }}"/>
+					</div>
+
+				</div>
+
+
+				<div class="row">
+					<div class="col-md-2 form-group">
 						<label for="fecha">Fecha pedido</label><br/>
 						<input type="text" class="form-control" id="fecha" name="fecha" readonly value="{{ persona.fecha['year'] }}-{{ persona.fecha['mon'] }}-{{ persona.fecha['mday'] }}"/>
 					</div>
 					
-					<div class="col-md-6 form-group">
+					<div class="col-md-2 form-group">
 						<label for="hora">Hora pedido</label><br/>
 						<input type="text" class="form-control" id="hora" name="hora" readonly value="{{ persona.fecha['hours'] }}:{{ persona.fecha['minutes'] }}"/>
 					</div>
-				</div>
 
-				<div class="row">
-					<div class="col-md-4 form-group">
-						<label for="nro">Numero de asociado</label><br/>
-						<input type="text" class="form-control" id="nro" name="nro" readonly value="{{ persona.nro }}"/>
-					</div>
-					
-					<div class="col-md-4 form-group">
-						<label for="nombre">Nombre y apellido</label><br/>
-						<input type="text" class="form-control" id="nombre" name="nombre" readonly value="{{ persona.nombre }}"/>
-					</div>
-					
-					<div class="col-md-4 form-group">
+					<div class="col-md-2 form-group">
 						<label for="sexo">Sexo</label><br/>
 						<input type="text" class="form-control" id="sexo" name="sexo" readonly value="{% if persona.sexo == 1 %}Masculino{% else %}Femenino{% endif %}"/>
 					</div>
-					
-					<div class="col-md-4 form-group">
+
+					<div class="col-md-3 form-group">
 						<label for="tel">telefono de contacto</label><br/>
 						<input type="text" class="form-control" id="tel" name="tel" readonly value="FIJO: {% if persona.tel == null %}-{% endif %}{{ persona.tel }} // CEL: {% if persona.cel == null %}-{% endif %}{{ persona.cel }}"/>
 					</div>
-					
-					<div class="col-md-4 form-group">
-						<label for="doc">Documento del asociado</label><br/>
-						<input type="text" class="form-control" id="doc" name="doc" readonly value="{{ persona.doc }}"/>
-					</div>
-					
-					<div class="col-md-4 form-group">
-						<label for="doctit">Documento del titular</label><br/>
-						<input type="text" class="form-control" id="doctit" name="doctit" readonly value="{{ persona.doctit }}"/>
+
+					<div class="col-md-3 form-group">
+						<label for="nro">Numero de asociado</label><br/>
+						<input type="text" class="form-control" id="nro" name="nro" readonly value="{{ persona.nro }}"/>
 					</div>
 				</div>
 			</fieldset>
@@ -121,7 +123,7 @@
 					<a href="../controllers/index.php"><input class="btn btn-block btn-default" type="button" name="cancelar" value="Cancelar" /></a>
 				</div>
 			</div>
-						<input style="display:none" type="text" class="form-control" name="cod_serv" id="cod_serv" value="{{ persona.cod_serv }}"/>
+				<input style="display:none" type="text" class="form-control" name="cod_serv" id="cod_serv" value="{{ persona.cod_serv }}"/>
 		</form>
     </div>    
 </div>
