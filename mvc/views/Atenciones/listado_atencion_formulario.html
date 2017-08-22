@@ -87,7 +87,7 @@
 					
 					<fieldset><legend>Datos para finalizar la atención</legend>
 						<div class="row">
-							<div class="col-md-2 form-group">
+							<div class="col-md-2 form-group" id="div1">
 								<label for="prof">Fecha de atencion</label>
 								
 								<div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-highlight="true" data-date-start-date="{{ persona.fecha }}" data-date-language='es'>
@@ -98,12 +98,9 @@
 								</div>
 
 								<label for="prof">Hora de atencion</label>
-								<div class="input-group bootstrap-timepicker timepicker">
-									<input id="timepicker1" type="text" name="hora_ate" class="form-control input-small" data-provide="timepicker" data-minute-step="1" data-show-meridian="false" data-max-hours="24" required>
-									<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+								<div class="input-group time">
+									<input id="timepicker1" type="text" name="hora_ate" class="form-control input-small" data-provide="timepicker" data-show-inputs="false" data-minute-step="1" data-show-meridian="false" data-max-hours="24" required>
 								</div>
-								
-								
 							</div>
 						</div>
 						<div class="form-group">
@@ -140,8 +137,8 @@
 	{% else %}
 	
 		<div class="box">
-			<div class="box-header">
-				<h3 class="box-title">Consultar atención</h3>
+			<div class="box-header text-center">
+				<h1><span class="label label-success">Atencion finalizada con exito</span></h1>
 			</div>
 			
 			<div class="box-body">
@@ -222,7 +219,7 @@
 					</fieldset>
 
 					<div class="row"><br><br>
-						<div class="col-md-6">
+						<div class="col-md-6 text-center">
 							<a href="../controllers/listado_atencion.php?funcion=mostrarListado"><input class="btn btn-block btn-default" type="button" name="cancelar" value="Atras" /></a>
 						</div>
 					</div>
@@ -232,6 +229,5 @@
 				</form>
 			</div>    
 		</div>
-	{% endif %}
-
+	{% endif %}	
 {% endblock %}

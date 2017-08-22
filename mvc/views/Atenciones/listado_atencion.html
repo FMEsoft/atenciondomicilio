@@ -28,6 +28,7 @@
 			        <th>Sexo</th>
 					<th>Fecha</th>
 		            <th>Estado</th>
+					<th>Acción</th>
 		        </tr>
         	</thead>
 	        <tbody>
@@ -40,10 +41,12 @@
 					<td>{{ res1.sexo }}</td>
 					<td>{{ res1.fecha }}</td>
 					{% if res1.estado == '0' %}
-						<td><a class="btn btn-warning" href="../controllers/listado_atencion.php?funcion=verMas&num_asist={{ res1.nro }}">En curso</a></td>
+						<td><span class="label label-warning">En progreso</span></td>
+						<td><a class="" href="../controllers/listado_atencion.php?funcion=verMas&num_asist={{ res1.nro }}">Finalizar</a></td>
 					{% else %}
-						<td><a class="btn btn-success" href="../controllers/listado_atencion.php?funcion=verMas&num_asist={{ res1.nro }}">Finalizada</a>
-					{% endif %}		
+						<td><span class="label label-success">Finalizada</span></td>
+						<td></td>
+					{% endif %}
 				</tr>
 				{% endfor %}
 					

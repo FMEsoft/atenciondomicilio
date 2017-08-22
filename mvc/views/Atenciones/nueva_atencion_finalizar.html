@@ -15,9 +15,8 @@
 {% block content %}
 
 <div class="box">
-    <div class="box-header">
-      	<!-- <h3 class="box-title">Atencion generada con exito</h3> -->
-      	<h3><span class="label label-info">Atencion generada con exito</span></h3>
+    <div class="box-header text-center">
+      	<h1><span class="label label-success">Atencion generada con exito</span></h1>
     </div>
 	<div class="box-body">
 		<form action="../controllers/atenciones.php?funcion=generarPDF" method="post" target="_blank" >
@@ -56,15 +55,12 @@
 
 				<input  type="text" class="form-control" name="cod_serv" id="cod_serv" value="{{ persona.cod_serv }}"/>
 			</div>
-
-			<div class="row"><br><br>
-				<div class="col-md-6">
+			
+			<div class="col-md-6 text-center">
 				<input class="btn btn-block btn-success" type="submit" name="enviar" value="Generar PDF"  />
-				</div>
-				<div class="col-md-6">
-
-				<a href="../controllers/index.php"><input class="btn btn-block btn-default" type="button" name="cancelar" value="Volver al listado" /></a>
-				</div>
+			</div>
+			<div class="col-md-6 text-center">
+				<a href="../controllers/listado_atencion.php?funcion=mostrarListado"><input class="btn btn-block btn-default" type="button" name="cancelar" value="Volver al listado" /></a>
 			</div>
 		</form>
     </div>    
