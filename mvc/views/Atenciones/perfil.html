@@ -49,10 +49,12 @@
                                                     <p><label>Número de documento del titular :</label> {{ res.numdoc }}
                                                     </p>
                                                     {% if res.sexo == 1 %}
-                                                        <p><label>Sexo :</label> Masculino
+                                                        <p><label>Sexo :</label> Masculino 
+														<label style="color:white">_______</label><label>edad : </label>{{ res.edad }}
                                                         </p>                    
                                                     {% else %}
-                                                        <p><label>Sexo :</label> Femenino
+                                                        <p><label>Sexo :</label> Femenino 
+														<label style="color:white">_______</label><label>edad : </label>{{ res.edad }}
                                                         </p> 
                                                     {% endif %}
                                                     <p><label>Fecha de nacimiento del titular : </label>{{ res.fecnacim }}
@@ -62,8 +64,6 @@
                                                     <p><label>Número de beneficio del titular : </label>{{ res.beneficio }}
                                                     </p>
                                                     <p><label>Número de socio : </label>{{ res.numero_soc }}
-                                                    </p>
-                                                    <p><label>ID persona del titular : </label>{{ res.id_persona }}
                                                     </p>
                                                     
                                                     <a class="btn btn-primary" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res.numero_soc }}&cod_servicio={{ res.codigo}}">Generar Atención</a>                                        

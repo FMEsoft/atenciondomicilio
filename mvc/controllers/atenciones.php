@@ -71,6 +71,11 @@ function verMas()
 				return;
 			}
 			
+			$fecha=$resultadoTitular[0]['fecnacim'];
+			$dias = explode("-", $fecha, 3);
+			$dias = mktime(0,0,0,$dias[2],$dias[1],$dias[0]);
+			$edad = (int)((time()-$dias)/31556926 );
+			$resultadoTitular[0]['edad']=$edad;
 			
 			$estado[0]='1';
 			$estado[1]='1';
