@@ -1,0 +1,83 @@
+{% extends 'Base/base.html' %}
+{% block wrapper %}
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>AdminLTE 2 | Log in</title>
+
+
+
+</head>
+{% endblock %}
+{% block content %}
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="../../index.html"><b>Iniciar Sesion</b></a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="login-box-body">
+    <p class="login-box-msg">Iniciar Sesion</p>
+
+    <form action="../controllers/login.php" method="post" name="login">
+      <div class="form-group has-feedback">
+        <input type="text" class="form-control" name="usuario" placeholder="Ingrese nombre de usuario" required>
+        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="password" class="form-control" name="password" placeholder="Escribe contraseña" required>
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+      </div>
+
+
+      <div class="box-header text-center">
+      <span class="label label-danger" >{{errores}}</span>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-8">
+
+        </div>
+        <!-- /.col -->
+        <div class="col-xs-4">
+          
+          <button type="submit" class="btn btn-primary btn-block btn-flat" >Acceder</button>
+        </div>
+        <!-- /.col -->
+      </div>
+
+
+
+    </form>
+
+    
+    <!-- /.social-auth-links -->
+
+    <a href="#">Recuperar contraseña</a><br>
+    <a href="registrar.php" class="text-center">Crear Cuenta</a>
+
+  </div>
+  <!-- /.login-box-body -->
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery 2.2.3 -->
+{% endblock %}
+
+{% block javascript %}
+<script src="../../plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="../../bootstrap/js/bootstrap.min.js"></script>
+<!-- iCheck -->
+<script src="../../plugins/iCheck/icheck.min.js"></script>
+<script>
+  $(function () {
+    $('input').iCheck({
+      checkboxClass: 'icheckbox_square-blue',
+      radioClass: 'iradio_square-blue',
+      increaseArea: '20%' // optional
+    });
+  });
+</script>
+{% endblock %}
+
