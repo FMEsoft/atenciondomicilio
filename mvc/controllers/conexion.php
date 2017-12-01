@@ -11,6 +11,7 @@
 		var $dbConn;
 		var $connectError;
 		var $errorMsg;
+		
 	
 		function CONEXION($host,$dbUser,$dbPass,$dbName)
 		{

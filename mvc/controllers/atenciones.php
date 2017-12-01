@@ -59,6 +59,7 @@ function verMas()
 									  AND persona.numdoc = fme_adhsrv.documento
 									  AND fme_adhsrv.codigo = tar_srv.idmutual
                                       AND socios.numero_soc= socios.soc_titula");
+									 
 
 			if(!$resultadoTitular)
 			{

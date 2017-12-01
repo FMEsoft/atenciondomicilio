@@ -1,0 +1,143 @@
+{% extends 'Base/base.html' %}
+{% block wrapper %}
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>AdminLTE 2 | Log in</title>
+
+
+
+</head>
+{% endblock %}
+{% block content %}
+  <div class="content-wrapper">
+    
+		<h3 class="text-primary text-center">
+			Estadisticas
+		</h3>
+		
+		<div class="row">
+			<div class="col-md-6">
+			  <!-- Asociados que solicitan más atenciones-->
+			  <div class="box box-primary">
+				<div class="box-header with-border">
+				  <h3 class="box-title">Asociados que solicitan más atenciones (Titulares)</h3>
+				  
+				  <!-- VERIFICAR COMO ES LA MEJOR FORMA DE ENVIAR LA INFORMACION, YO LO HICE ASI SOLO PARA PROBAR QUE FUNCIONABA -->
+				  
+				  <!-- AL PRESIONAR ESTE BOTON TRAE LA INFORMACION VARIAS VECES, VERIFICAR -->
+				  
+				  <button type="button" onclick="getData()">Estadistica por año</button>
+				  <select id="select-datos" onchange="asociados(this.value)" style='display:none;'></select>
+				  
+				  <!-- FALTAN LOS SELECT PARA EL MES Y EL DIA -->
+				  <button type="button" onclick="asociados(2016, 00, 00)">POR AÑO</button>
+				  <button type="button" onclick="asociados(2016, 03, 00)">POR MES</button>
+				  <button type="button" onclick="asociados(2016, 03, 11)">POR DIA</button>
+
+				  <div class="box-tools pull-right">
+					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+					</button>
+					<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+				  </div>
+				</div>
+				<div class="box-body chart-responsive">
+				  <div class="chart" id="asociados-estadisticas" style="height: 300px;"></div>
+				</div>
+				<!-- /.box-body -->
+			  </div>
+			  <!-- /.box -->
+			  
+			  <label>DATOS</label></br>
+			  <label>Total de atenciones: </label><p id="tot-atenciones"></p>
+			  <label>Total de asociados: </label><p id="tot-asociados"></p>
+
+			</div>
+			
+      </div>
+      <!-- /.row -->
+		
+	
+  </div>
+  
+{% endblock %}
+
+{% block javascript %}
+<script> 
+	
+	//Función que rellena los datos del select, trae todos los años encontrados en la base de datos
+	function getData()
+	{
+		//Método POST de ajax para mandar:
+		//1.- El PHP donde se va a procesar todo que es proceso_cantatenciones.php
+		//2.- El o los datos, en este caso no requerimos datos
+		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
+		$.post( "../controllers/proceso_cantatenciones.php", 0).done(function( data ) 
+		{
+			var data = $.parseJSON(data);
+			console.log(data);
+			
+			$.each(data,function(key, registro) {
+			$("#select-datos").append('<option value='+registro.anio+'>'+registro.anio+'</option>');
+			}); 
+		});
+		
+		document.getElementById('select-datos').style.display = 'block';
+	}
+	
+	function asociados(anio, mes, dia)
+	{
+		var datos = {};
+		
+		if(mes==00 && dia==00)
+		 datos = {'anio': anio};
+		else 
+			if(dia==00)
+				datos = {'anio': anio, 'mes': mes};
+			else
+				datos = {'anio': anio, 'mes': mes, 'dia': dia};
+		
+		//Método POST de ajax para mandar:
+		//1.- El PHP donde se va a procesar todo que es proceso_asociados.php
+		//2.- El o los datos
+		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
+		$.post( "../controllers/proceso_asociados.php", datos).done(function( data ) 
+		{
+			var data = $.parseJSON(data);
+			var total_atenciones = 0;
+			
+			// NOTA: Esta grafica hay que revisarla, puede ser ilegible si hay muchos datos, para poder acotarla en un futuro le puse el order by en la consulta
+			
+			//Información para manejar el Donut chart de Morris.js
+			donut_chart_data=[];
+			
+			var tot_asociados = "";
+			
+			//Recorremos para calcular el total de atenciones de los asociados en el dia y para rellenar la info del Donut chart
+			for(x=0; x<data.length; x++)
+			{
+				total_atenciones = total_atenciones + parseInt(data[x].cantidad);
+				
+				var nombre= data[x].nombre;
+				var cantidad= data[x].cantidad;
+				
+				tot_asociados = tot_asociados+" "+nombre+" contó con: "+cantidad+" de atenciones. ";
+
+				donut_chart_data[x]= {
+										label:nombre,
+										value:cantidad
+									 };
+			}
+			
+			$("#tot-atenciones").text(total_atenciones);
+			$("#tot-asociados").text(tot_asociados);
+			
+			//Grafico Donut de Morris.js
+			Morris.Donut({
+							element: 'asociados-estadisticas',
+							data: donut_chart_data
+						 });
+		});
+	}
+</script>
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends 'Base/base.html' %}
+{% block wrapper %}
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>AdminLTE 2 | Log in</title>
+
+
+
+</head>
+{% endblock %}
+{% block content %}
+  <div class="content-wrapper">
+    
+		<h3 class="text-primary text-center">
+			Estadisticas
+		</h3>
+		
+		<div class="row">
+			<div class="col-md-6">
+			  <!-- Asociados que solicitan más atenciones-->
+			  <div class="box box-primary">
+				<div class="box-header with-border">
+				  <h3 class="box-title">ANTES DE USAR ESTA ESTADISTICA TIENEN QUE MODIFICAR LA BASE DE DATOS -- CAMBIAR hora_pedido a tipo time de longitud 6</h3>
+				  <h3 class="box-title">Horario en que se solicitan más atenciones</h3>
+				  
+				  <!-- VERIFICAR COMO ES LA MEJOR FORMA DE ENVIAR LA INFORMACION, YO LO HICE ASI SOLO PARA PROBAR QUE FUNCIONABA -->
+				  
+				  <!-- AL PRESIONAR ESTE BOTON TRAE LA INFORMACION VARIAS VECES, VERIFICAR -->
+				  
+				  <button type="button" onclick="getData()">Estadistica por año</button>
+				  <select id="select-datos" onchange="horarios(this.value)" style='display:none;'></select>
+				  
+				  <!-- FALTAN LOS SELECT PARA EL MES Y EL DIA -->
+				  
+				  <button type="button" onclick="horarios(2016, 00, 00)">POR AÑO</button>
+				  <button type="button" onclick="horarios(2017, 08, 00)">POR MES</button>
+				  <button type="button" onclick="horarios(2016, 03, 11)">POR DIA</button>
+
+				  <div class="box-tools pull-right">
+					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+					</button>
+					<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+				  </div>
+				</div>
+				<div class="box-body chart-responsive">
+				  <div class="chart" id="horario-estadisticas" style="height: 300px;"></div>
+				</div>
+				<!-- /.box-body -->
+			  </div>
+			  <!-- /.box -->
+			  
+			  <label>DATOS</label></br>
+			  <label>Total de atenciones: </label><p id="tot-atenciones"></p>
+			  <label>Total de horarios en que se solicitaron atenciones: </label><p id="tot-horarios"></p>
+
+			</div>
+			
+      </div>
+      <!-- /.row -->
+		
+	
+  </div>
+  
+{% endblock %}
+
+{% block javascript %}
+<script> 
+	
+	//Función que rellena los datos del select, trae todos los años encontrados en la base de datos
+	function getData()
+	{
+		//Método POST de ajax para mandar:
+		//1.- El PHP donde se va a procesar todo que es proceso_horario.php
+		//2.- El o los datos, en este caso no requerimos datos
+		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
+		$.post( "../controllers/proceso_horario.php", 0).done(function( data ) 
+		{
+			var data = $.parseJSON(data);
+			console.log(data);
+			
+			$.each(data,function(key, registro) {
+			$("#select-datos").append('<option value='+registro.anio+'>'+registro.anio+'</option>');
+			}); 
+		});
+		
+		document.getElementById('select-datos').style.display = 'block';
+	}
+	
+	function horarios(anio, mes, dia)
+	{
+		var datos = {};
+		
+		if(mes==00 && dia==00)
+		 datos = {'anio': anio};
+		else 
+			if(dia==00)
+				datos = {'anio': anio, 'mes': mes};
+			else
+				datos = {'anio': anio, 'mes': mes, 'dia': dia};
+			
+		//Método POST de ajax para mandar:
+		//1.- El PHP donde se va a procesar todo que es proceso_horario.php
+		//2.- El o los datos,
+		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
+		$.post( "../controllers/proceso_horario.php", datos).done(function( data ) 
+		{
+			//Hacemos un parse para poder trabajar con la info enviada
+			var data = $.parseJSON(data);
+			
+			//Creamos una variable que tendrá el total de las atenciones
+			var total_atenciones = 0;
+			
+			//Información para manejar el Donut chart de Morris.js
+			donut_chart_data=[];
+			
+			var tot_horarios = "";
+			
+			//Recorremos para calcular el total de atenciones en el año y para rellenar la info del Donut chart
+			for(x=0; x<data.length; x++)
+			{
+				total_atenciones = total_atenciones + parseInt(data[x].cantidad);
+				
+				var hora= "Hora: "+data[x].hora;
+				var cantidad= data[x].cantidad;
+				
+				tot_horarios = tot_horarios+" En la "+hora+" se solicitaron: "+cantidad+" de atenciones. ";
+
+				donut_chart_data[x]= {
+										label:hora,
+										value:cantidad
+									 };
+			}
+			
+			$("#tot-atenciones").text(total_atenciones);
+			$("#tot-horarios").text(tot_horarios);
+			
+			//Grafico Donut de Morris.js
+			Morris.Donut({
+							element: 'horario-estadisticas',
+							data: donut_chart_data
+						 });
+		});
+	}
+</script>
+{% endblock %}
