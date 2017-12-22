@@ -69,7 +69,7 @@
 		//1.- El PHP donde se va a procesar todo que es proceso_cantatenciones.php
 		//2.- El o los datos, en este caso no requerimos datos
 		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
-		$.post( "../controllers/proceso_cantatenciones.php", 0).done(function( data ) 
+		$.post( "../controllers/estadisticas.php?funcion=cantidadAtencionesProceso", 0).done(function( data ) 
 		{
 			var data = $.parseJSON(data);
 			console.log(data);
@@ -88,7 +88,7 @@
 		//1.- El PHP donde se va a procesar todo que es proceso_cantatenciones.php
 		//2.- El o los datos, en este caso el año seleccionado, aqui esa info se ve en {'anio': anio}
 		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
-		$.post( "../controllers/proceso_cantatenciones.php", {'anio': anio}).done(function( data ) 
+		$.post( "../controllers/estadisticas.php?funcion=cantidadAsociadosProceso.php", {'anio': anio}).done(function( data ) 
 		{
 			var data = $.parseJSON(data);
 			var total_atenciones = 0;

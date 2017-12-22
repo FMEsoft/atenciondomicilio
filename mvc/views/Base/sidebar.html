@@ -15,23 +15,20 @@
             </li>
             
             <li>
-                <a href="../controllers/reportes.php">
-                    <i class="fa fa-th"></i> <span>Reportes</span>
-                </a>
-            </li>
-            <li>
                 <a href="../controllers/registrar.php">
                     <i class="fa fa-th"></i> <span>Registro de Usuarios</span>
+                </a>
             </li>
+			
 			<li class="treeview">
                 <a href="#">
                     <i class="fa fa-files-o"></i>
                     <span>Estadisticas</span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="../controllers/estadisticas_cantatenciones.php"><i class="fa fa-circle-o"></i> Cantidad de atenciones</a></li>
-                    <li><a href="../controllers/estadisticas_asociados.php"><i class="fa fa-circle-o"></i>Asociados que más atenciones solicitan</a></li>
-					<li><a href="../controllers/estadisticas_horario.php"><i class="fa fa-circle-o"></i>Horario en que más atenciones se realizan</a></li>
+                    <li><a href="../controllers/estadisticas.php?funcion=cantidadAtenciones"><i class="fa fa-circle-o"></i>Cantidad de atenciones</a></li>
+                    <li><a href="../controllers/estadisticas.php?funcion=atencionesAsociados"><i class="fa fa-circle-o"></i>Asociados que más atenciones</a></li>
+					<li><a href="../controllers/estadisticas.php?funcion=horarioAtenciones"><i class="fa fa-circle-o"></i>Horarios de mayor atención</a></li>
                 </ul>
             </li>
         </ul>

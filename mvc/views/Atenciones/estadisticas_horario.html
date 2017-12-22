@@ -74,7 +74,7 @@
 		//1.- El PHP donde se va a procesar todo que es proceso_horario.php
 		//2.- El o los datos, en este caso no requerimos datos
 		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
-		$.post( "../controllers/proceso_horario.php", 0).done(function( data ) 
+		$.post( "../controllers/estadisticas.php?funcion=horarioAtencionesProceso", 0).done(function( data ) 
 		{
 			var data = $.parseJSON(data);
 			console.log(data);
@@ -103,7 +103,7 @@
 		//1.- El PHP donde se va a procesar todo que es proceso_horario.php
 		//2.- El o los datos,
 		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
-		$.post( "../controllers/proceso_horario.php", datos).done(function( data ) 
+		$.post( "../controllers/estadisticas.php?funcion=horarioAtencionesProceso", datos).done(function( data ) 
 		{
 			//Hacemos un parse para poder trabajar con la info enviada
 			var data = $.parseJSON(data);
