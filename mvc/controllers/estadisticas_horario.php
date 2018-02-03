@@ -5,6 +5,14 @@
 
 	$twig = new Twig_Environment($loader, []);
 
-	echo $twig->render('/Atenciones/estadisticas_horario.html', compact(''));
+	session_start();
+
+	if (!isset($_SESSION['usuario'])||($_SESSION['tipo']!='admin')) {
+
+	header('location:login.php');
+	# code...
+	}
+	$use=$_SESSION['usuario'];
+	echo $twig->render('/Atenciones/estadisticas_horario.html', compact('use'));
 
 ?>
