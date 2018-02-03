@@ -21,6 +21,16 @@
 		$twig = new Twig_Environment($loader, []);
 	}
 	
+
+	session_start();
+
+	if (!isset($_SESSION['usuario'])) {
+
+	header('location:login.php');
+	# code...
+	}
+
+	
 //array para la conexion de la bd
 	include ('conexion.php');
 	$config['db']='fme_mutual';
@@ -40,7 +50,7 @@
 function verMas()	
 		{
 			
-
+			$use=$_SESSION['usuario'];
 			
 			//NOTA: Para ver si funciona tienen que asociarle un adherente en la tabla socios, ya que en los datos de ejemplo todos son titulares
 			//NOTA: Lo que hice fue: en tabla socios en numero_soc=00044 cambiar el campo soc_titula de manera que quede soc_titula=00277
@@ -68,7 +78,7 @@ function verMas()
 				'funcion'		=>"verMas",
 				'descripcion'	=>"No se encuentra al titular $numero_socio"
 				];
-				echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
+				echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
 				return;
 			}
 			
@@ -174,7 +184,7 @@ function verMas()
 																  'resultadoAdherentes1',
 																  'resultadoAdherentes2',
 																  'asistencias',
-																  'estado'));	
+																  'estado','use'));	
 			
 			
 		}
@@ -184,7 +194,7 @@ function verMas()
 //se debe pasar por parametro el la variable 
 
 function mostrarFormulario()
-{
+{$use=$_SESSION['usuario'];
 	if(!isset($_GET['num_soc']))
 	{
 		$error=[
@@ -192,7 +202,7 @@ function mostrarFormulario()
 				'funcion'		=>"mostrarFormulario",
 				'descripcion'	=>"No se recibió num_soc como parametro de la función"
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
 		return;
 	}
 	
@@ -203,7 +213,7 @@ function mostrarFormulario()
 				'funcion'		=>"mostrarFormulario",
 				'descripcion'	=>"No se recibió cod_servicio como parametro de la función"
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
 		return;
 	}
 	
@@ -266,19 +276,19 @@ function mostrarFormulario()
 				'funcion'		=>"mostrarFormulario",
 				'descripcion'	=>"No se encontraron datos para el socio '$numero_socio'"
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
 		return;
 	}
 	
 	
 
-	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_formulario.html', compact('persona'));
+	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_formulario.html', compact('persona','use'));
 }
 	
 	
 //funcion generarAtencion, que se ejecuta tras completar el formulario
 function generarAtencion()
-{
+{   $use=$_SESSION['usuario'];
 	//variables q no conozco	
 	$nroordate;
 	$cuenta;
@@ -314,7 +324,7 @@ function generarAtencion()
 				'descripcion'	=>"No se pudo realizar la consulta: INSERT INTO fme_asistencia (doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional)
 			VALUES ('$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional')"
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
 		return;
 	}
 
@@ -338,7 +348,7 @@ function generarAtencion()
 		'desc'		=>	$dessit
 	];
 
-	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_finalizar.html', compact('persona'));
+	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_finalizar.html', compact('persona','use'));
 }
 
 function generarPDF()

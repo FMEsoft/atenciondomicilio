@@ -7,7 +7,24 @@ $twig = new Twig_Environment($loader, []);
 
 
 
+
+//---------------Esto se repetiria para cada uno de los php que añadimos//
 session_start();
+
+if (!isset($_SESSION['usuario'])) {
+
+	header('location:login.php');
+	# code...
+}
+
+$use=$_SESSION['usuario'];
+
+
+
+$tipo=$_SESSION['tipo'];
+
+//echo $tipo;
+
 
 
 
@@ -40,7 +57,7 @@ if($resultado)
 				];				
 		}
 		
-	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_1.html', compact('asociado','resultado'));
+	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_1.html', compact('asociado','resultado','use'));
 }
 else
 {
@@ -52,5 +69,5 @@ else
 		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
 }
 
-
+//
 ?>

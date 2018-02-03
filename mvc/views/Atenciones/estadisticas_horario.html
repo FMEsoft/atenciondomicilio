@@ -21,7 +21,6 @@
 			  <!-- Asociados que solicitan más atenciones-->
 			  <div class="box box-primary">
 				<div class="box-header with-border">
-				  <h3 class="box-title">ANTES DE USAR ESTA ESTADISTICA TIENEN QUE MODIFICAR LA BASE DE DATOS -- CAMBIAR hora_pedido a tipo time de longitud 6</h3>
 				  <h3 class="box-title">Horario en que se solicitan más atenciones</h3>
 				  
 				  <!-- VERIFICAR COMO ES LA MEJOR FORMA DE ENVIAR LA INFORMACION, YO LO HICE ASI SOLO PARA PROBAR QUE FUNCIONABA -->
@@ -29,13 +28,15 @@
 				  <!-- AL PRESIONAR ESTE BOTON TRAE LA INFORMACION VARIAS VECES, VERIFICAR -->
 				  
 				  <button type="button" onclick="getData()">Estadistica por año</button>
-				  <select id="select-datos" onchange="horarios(this.value)" style='display:none;'></select>
+				  
 				  
 				  <!-- FALTAN LOS SELECT PARA EL MES Y EL DIA -->
 				  
 				  <button type="button" onclick="horarios(2016, 00, 00)">POR AÑO</button>
 				  <button type="button" onclick="horarios(2017, 08, 00)">POR MES</button>
 				  <button type="button" onclick="horarios(2016, 03, 11)">POR DIA</button>
+				  
+				  <select id="select-datos" onchange="horarios(this.value)" style='display:none;'></select>
 
 				  <div class="box-tools pull-right">
 					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -70,6 +71,7 @@
 	//Función que rellena los datos del select, trae todos los años encontrados en la base de datos
 	function getData()
 	{
+		$("#select-datos").empty();
 		//Método POST de ajax para mandar:
 		//1.- El PHP donde se va a procesar todo que es proceso_horario.php
 		//2.- El o los datos, en este caso no requerimos datos
@@ -81,10 +83,10 @@
 			
 			$.each(data,function(key, registro) {
 			$("#select-datos").append('<option value='+registro.anio+'>'+registro.anio+'</option>');
-			}); 
+			});
+			document.getElementById('select-datos').style.display = 'block';			
 		});
 		
-		document.getElementById('select-datos').style.display = 'block';
 	}
 	
 	function horarios(anio, mes, dia)

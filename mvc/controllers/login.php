@@ -1,20 +1,23 @@
 <?php
+
+	
+
 	require_once '../../vendor/autoload.php';
 
 	$loader = new Twig_Loader_Filesystem('../views');
 
 	$twig = new Twig_Environment($loader, []);
-
+	
 
 
 
 session_start();
 
-//if (isset($_SESSION['usuario'])) {
-//	header('location:index.php');
-//}
+if (isset($_SESSION['usuario'])) {
+	header('location:index.php');
+}
 
-$errores = '';
+$errore = '';
 
 //para comprobar que enviemos informacion.
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -45,22 +48,25 @@ $statement->execute(array(
 
 $resultado = $statement->fetch();
 
+
+
 if ( $resultado != false) {
 
 	$_SESSION ['usuario'] = $usuario;
+	$_SESSION ['tipo'] = $resultado['tipo'];
 
 	//header('Location:index.php');
 	//echo $GLOBALS['twig']->render('/Base/header.html',compact('usuario'));
 	//echo $GLOBALS['twig']->render('/controllers/index.php',compact('resultado'));
 	header('Location:index.php');
-
+	return;
 	
 } else{
 
 	//Seria mostrarlo abajo  los errores ...porque el cuadro de alert es molesto...
-		$errores.= 'El usuario y/o la contraseña son incorrectos';
-		echo $GLOBALS['twig']->render('/Atenciones/login.html', compact('errores'));	
-			return;
+		$errore.= 'El usuario y/o la contraseña son incorrectos';
+		echo $GLOBALS['twig']->render('/Atenciones/login.html', compact('errore'));	
+		return;
 
 
 	//	echo '<script type="text/javascript">'; echo 'alert("El usuario y/o la contraseña son incorrectos")'; echo '</script>';
@@ -74,5 +80,6 @@ if ( $resultado != false) {
 
 	
 	echo $twig->render('/Atenciones/login.html', compact('usuario'));
+
 
 ?>

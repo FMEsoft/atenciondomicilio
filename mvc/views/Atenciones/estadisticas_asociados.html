@@ -30,12 +30,13 @@
 				  <!-- AL PRESIONAR ESTE BOTON TRAE LA INFORMACION VARIAS VECES, VERIFICAR -->
 				  
 				  <button type="button" onclick="getData()">Estadistica por año</button>
-				  <select id="select-datos" onchange="asociados(this.value)" style='display:none;'></select>
+				  
 				  
 				  <!-- FALTAN LOS SELECT PARA EL MES Y EL DIA -->
 				  <button type="button" onclick="asociados(2016, 00, 00)">POR AÑO</button>
 				  <button type="button" onclick="asociados(2016, 03, 00)">POR MES</button>
 				  <button type="button" onclick="asociados(2016, 03, 11)">POR DIA</button>
+				  <select id="select-datos" onchange="asociados(this.value)" style='display:none;'></select>
 
 				  <div class="box-tools pull-right">
 					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -70,6 +71,7 @@
 	//Función que rellena los datos del select, trae todos los años encontrados en la base de datos
 	function getData()
 	{
+		$("#select-datos").empty();
 		//Método POST de ajax para mandar:
 		//1.- El PHP donde se va a procesar todo que es proceso_cantatenciones.php
 		//2.- El o los datos, en este caso no requerimos datos
