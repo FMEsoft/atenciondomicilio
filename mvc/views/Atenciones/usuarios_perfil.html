@@ -1,0 +1,129 @@
+{% extends 'Base/base.html' %}
+
+{% block wrapper %}
+    <section class="content-header">
+        <h1>
+            Usuarios
+            <small>Ver mas</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Perfil de usuario</li>
+        </ol>
+    </section>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a href="#datos_persona" data-toggle="tab">Datos personales</a></li>
+                      <li><a href="#datos_cuenta" data-toggle="tab">Datos de la cuenta</a></li>
+                      <li><a href="#permisos" data-toggle="tab">Permisos</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="active tab-pane" id="datos_persona">
+                            <div class="post">
+                                {% for res in usuario %}
+                                    <div class="box box-solid box-primary" >  
+                                        <div class="box-header">                                  
+                                            <div class="user-block">
+                                                {% if res.sexo == 'M' %}
+                                                    <img class="img-circle img-bordered-sm" src="../../static/images/user.png" alt="user image">                 
+                                                {% else %}
+                                                    <img class="img-circle img-bordered-sm" src="../../static/images/user_fem.png" alt="user image">
+                                                {% endif %}
+                                                <span class="username">
+                                                  <h4 class="box-title"><b><a href="#">{{ res.nombre }}</a></b></h4>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="box-body">
+                                                    <p><label>Número de documento :</label> {{ res.numdoc }}
+                                                    </p>
+                                                    {% if res.sexo == 'M' %}
+                                                        <p><label>Sexo :</label> Masculino 
+														<label style="color:white">_______</label><label>edad : </label>{{ res.edad }}
+                                                        </p>                    
+                                                    {% else %}
+                                                        <p><label>Sexo :</label> Femenino 
+														<label style="color:white">_______</label><label>edad : </label>{{ res.edad }}
+                                                        </p> 
+                                                    {% endif %}
+                                                    <p><label>Fecha de nacimiento : </label>{{ res.fecnacim }}
+                                                    </p>
+                                                    <p><label>Domicilio : </label>{{ res.domicilio }}</p>                                                                                        
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+    					
+    					<div class="tab-pane" id="datos_cuenta">
+                            <div class="box box-primary">
+                                <form action="../controllers/atenciones.php?funcion=generarAtencion" method="post">
+									{% for res in usuario %}
+										<div class="row">
+											<div class="col-md-6 form-group">
+												<label for="nombre">Usuario</label><br/>
+												<input type="text" class="form-control" id="usuario" name="usuario" readonly value="{{ res.usuario }}"/>
+											</div>
+											
+											<div class="col-md-2 form-group">
+												<label for="fecha">Fecha creacion</label><br/>
+												<input type="text" class="form-control" id="fecha" name="fecha" readonly value="{{ res.fech_creacion }}"/>
+											</div>
+
+											<div class="col-md-3 form-group">
+												<label for="doc">Password</label><br/>
+												<input type="text" class="form-control" id="pass" name="pass" value="{{ res.password }}"/>
+											</div>
+											<input style="display:none" type="text" class="form-control" name="id_usuario" id="id_usuario" value="{{ res.id_usuario }}"/>
+											
+											<div class="col-md-4">
+												<input class="btn btn-block btn-success" type="submit" name="guardar_contraseña" value="Guardar Password" />
+											</div>
+										</div>
+									{% endfor %}
+								</form>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="permisos">
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h3 class="box-title">AUN NO LISTO</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                            {% block javascript %}
+                                <script>
+                                    $('#tabla').DataTable({
+                                        "language": {
+                                            "lengthMenu": "Mostrando _MENU_ registros por página",
+                                            "search": "Buscar",
+                                            "zeroRecords": "Ningún registro coincide con lo ingresado",
+                                            "info": "Mostrando página _PAGE_ de _PAGES_",
+                                            "infoEmpty": "No hay resultados",
+                                            "infoFiltered": "(de un total de _MAX_ total registros)"
+                                        }
+                                    });
+                                </script>
+                            {% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+{% endblock %}

@@ -30,6 +30,7 @@
 		        </tr>
         	</thead>
 	        <tbody>
+				
 	        	{% for asociado in resultado %}
 				<tr>
 					
@@ -45,6 +46,23 @@
 		            <!--<td><a class="btn btn-success" href="../controllers/atenciones.php?funcion=mostrarFormulario&numeral=3">Ver más</a></td>-->
 		        </tr>
 		        {% endfor %}
+				
+				{% for particular in resultado_particulares %}
+				<tr>
+					
+			        <td></td>
+			        <td>{{ particular.nombre }}</td>
+			        <td>{{ particular.documento }}</td>
+			        {% if particular.sexo == 1 %}
+			        	<td>Masculino</td>
+			        {% else %}
+			        	<td>Femenino</td>
+			        {% endif %}
+                    <td><a class="btn btn-success" href="../controllers/atenciones.php?funcion=verMasParticular&persona={{ particular.id_persona }}">Ver más</a></td>
+		            <!--<td><a class="btn btn-success" href="../controllers/atenciones.php?funcion=mostrarFormulario&numeral=3">Ver más</a></td>-->
+		        </tr>
+		        {% endfor %}
+
 	        </tbody>
       	</table>
     </div>    

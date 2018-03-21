@@ -28,14 +28,9 @@
 						<input type="text" class="form-control" id="nombre" name="nombre" readonly value="{{ persona.nombre }}"/>
 					</div>
 
-					<div class="col-md-3 form-group">
-						<label for="doc">Documento del asociado</label><br/>
+					<div class="col-md-6 form-group">
+						<label for="doc">Documento del particular</label><br/>
 						<input type="text" class="form-control" id="doc" name="doc" readonly value="{{ persona.doc }}"/>
-					</div>
-
-					<div class="col-md-3 form-group">
-						<label for="doctit">Documento del titular</label><br/>
-						<input type="text" class="form-control" id="doctit" name="doctit" readonly value="{{ persona.doctit }}"/>
 					</div>
 
 				</div>
@@ -57,14 +52,9 @@
 						<input type="text" class="form-control" id="sexo" name="sexo" readonly value="{% if persona.sexo == 1 %}Masculino{% else %}Femenino{% endif %}"/>
 					</div>
 
-					<div class="col-md-3 form-group">
+					<div class="col-md-6 form-group">
 						<label for="tel">telefono de contacto</label><br/>
 						<input type="text" class="form-control" id="tel" name="tel" readonly value="FIJO: {% if persona.tel == null %}-{% endif %}{{ persona.tel }} // CEL: {% if persona.cel == null %}-{% endif %}{{ persona.cel }}"/>
-					</div>
-
-					<div class="col-md-3 form-group">
-						<label for="nro">Numero de asociado</label><br/>
-						<input type="text" class="form-control" id="nro" name="nro" readonly value="{{ persona.nro }}"/>
 					</div>
 				</div>
 			</fieldset>

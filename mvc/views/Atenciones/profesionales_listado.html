@@ -1,0 +1,59 @@
+{% extends 'Base/base.html' %}
+{% block wrapper %}
+    <section class="content-header">
+        <h1>
+            Profesionales
+        </h1>
+    </section>
+{% endblock %}
+
+{% block content %}
+<div class="box">
+    <div class="box-header">
+      	<h3 class="box-title">Listado de Profesionales</h3>
+    </div>
+    
+    <div class="box-body">
+      	<table id="tabla" class="table table-bordered table-striped">
+        	<thead>
+		        <tr>
+			        <th>Matricula</th>
+			        <th>Nombre y Apellido</th>
+			        <th>DNI</th>
+			        <th>Sexo</th>
+		            <th>Acciones</th>
+		        </tr>
+        	</thead>
+	        <tbody>
+				
+	        	{% for profesional in profesionales %}
+				<tr>
+					
+			        <td>{{ profesional.matricula }}</td>
+			        <td>{{ profesional.nombre }}</td>
+			        <td>{{ profesional.numdoc }}</td>
+			        <td>{{ profesional.sexo }}</td>
+
+                    <td><a class="btn btn-success" href="../controllers/profesionales.php?funcion=verMas&id_profesional={{ profesional.id_profesional }}">Ver más</a></td>
+		        </tr>
+		        {% endfor %}
+				
+	        </tbody>
+      	</table>
+    </div>    
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+ 	$('#tabla').DataTable({
+ 		"language": {
+            "lengthMenu": "Mostrando _MENU_ registros por página",
+            "zeroRecords": "Ningún registro coincide con lo ingresado",
+            "info": "Mostrando página _PAGE_ de _PAGES_",
+            "infoEmpty": "No hay resultados",
+            "infoFiltered": "(de un total de _MAX_ total registros)"
+        }
+ 	});
+</script>
+{% endblock %}

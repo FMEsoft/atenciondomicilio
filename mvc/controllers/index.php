@@ -15,7 +15,7 @@ if (!isset($_SESSION['usuario'])) {
 
 	header('location:login.php');
 	# code...
-}
+	}
 
 $use=$_SESSION['usuario'];
 
@@ -47,17 +47,14 @@ $resultado = $db->select('SELECT socios.beneficio,socios.soc_titula,socios.numer
 							AND persona.id_persona=socios.id_persona;');
 
 							
-		
+$resultado_particulares = $db->select('SELECT fme_adhsrv.nombre, fme_adhsrv.documento, persona.sexo, fme_adhsrv.id_persona 
+							FROM fme_adhsrv, persona 
+							WHERE fme_adhsrv.codigo=021 
+							AND persona.id_persona=fme_adhsrv.id_persona;');		
 							
-if($resultado)
+if($resultado || $resultado_particulares)
 {
-	foreach($resultado as $res)
-		{
-			$asociado =[
-				];				
-		}
-		
-	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_1.html', compact('asociado','resultado','use'));
+	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_1.html', compact('asociado','resultado','use','resultado_particulares'));
 }
 else
 {

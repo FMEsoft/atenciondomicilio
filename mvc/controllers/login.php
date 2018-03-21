@@ -1,12 +1,9 @@
 <?php
+require_once '../../vendor/autoload.php';
 
-	
+$loader = new Twig_Loader_Filesystem('../views');
 
-	require_once '../../vendor/autoload.php';
-
-	$loader = new Twig_Loader_Filesystem('../views');
-
-	$twig = new Twig_Environment($loader, []);
+$twig = new Twig_Environment($loader, []);
 	
 
 
@@ -23,37 +20,29 @@ $errore = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	$usuario = filter_var( strtolower($_POST['usuario']), FILTER_SANITIZE_STRING);
 	$password = $_POST['password'];
-	$password = hash('sha512', $password);
+	//$password = hash('sha512', $password);
 
 
-try
-{//Base de datos ejemplo
+//array para la conexion de la bd
+	include ('conexion.php');
+	$config['db']='fme_mutual';
+	$config['dbuser']='root';
+	$config['dbpass']='';
+	$config['dbhost']='localhost';
+	$config['dbEngine']='MYSQL';
+//para acceder a la variable $db en el ambito de una funcion, se usará la variable super global $GLOBALS['db'], de manera tal queda definida una unica vez la bd
+	$db = new CONEXION($config['dbhost'],$config['dbuser'],$config['dbpass'],$config['db']);
 
-$conexion = new PDO('mysql:host=localhost;dbname=fme_mutual','root','');
-
-}catch(PDOException $e){
-
-	echo "Error:" . $e->getMessage();
-}
-
-$statement= $conexion->prepare('
-	SELECT * FROM usuarios WHERE usuario = :usuario AND password = :password LIMIT 1'
+$resultado = $GLOBALS['db']->select("
+	SELECT * FROM usuarios WHERE usuario = '$usuario' AND password = '$password' LIMIT 1"
 );
 
-$statement->execute(array(
-':usuario' => $usuario,
-':password' => $password
-
-));
-
-$resultado = $statement->fetch();
 
 
+if ( $resultado != false && $resultado[0]['activa']==1) {
 
-if ( $resultado != false) {
-
-	$_SESSION ['usuario'] = $usuario;
-	$_SESSION ['tipo'] = $resultado['tipo'];
+	$_SESSION['usuario'] = $usuario;
+	$_SESSION['tipo'] = $usuario;
 
 	//header('Location:index.php');
 	//echo $GLOBALS['twig']->render('/Base/header.html',compact('usuario'));
