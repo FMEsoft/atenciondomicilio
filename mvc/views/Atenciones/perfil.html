@@ -20,8 +20,8 @@
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
                       <li class="active"><a href="#datos" data-toggle="tab">Datos Titular</a></li>
-                      <li><a href="#planes-titular" data-toggle="tab">Planes Titular</a></li>
-                      <li><a href="#planes-adherentes" data-toggle="tab">Planes Adherentes</a></li>
+                      <li><a href="#planes-titular" data-toggle="tab">Planes del titular</a></li>
+                      <li><a href="#planes-adherentes" data-toggle="tab">Planes de los adherentes</a></li>
                       <li><a href="#atenciones" data-toggle="tab">Atenciones</a></li>
                     </ul>
 
@@ -65,8 +65,6 @@
                                                     </p>
                                                     <p><label>Número de socio : </label>{{ res.numero_soc }}
                                                     </p>
-                                                    
-                                                    <a class="btn btn-primary" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res.numero_soc }}&cod_servicio={{ res.codigo}}">Generar Atención</a>                                        
                                                 </div>
                                             </div>
                                         </div>
@@ -90,7 +88,11 @@
                                                 <h3 class="box-title">Titular </h3>
                                             </div>
                                             <div class="box-body">
-                                                <p><label>Plan: </label> {{ res2.nombre }} </p>
+                                                <p><label>Plan: </label> {{ res2.nombreplan }} </p>
+												
+												<!-- Este es el botón nuevo, envía el número de socio y el código que saca de fme_adhsrv por ser PAGO POR CUOTA -->
+												<a class="btn btn-primary" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res2.numero_soc }}&cod_servicio={{ res2.codigo}}">Generar Atención</a>
+												
                                             </div>
                                         </div>
     								{% endfor %}
@@ -113,7 +115,11 @@
                                             <h3 class="box-title">TITULAR</h3>
                                         </div>
                                         <div class="box-body">  
-                                            <p><label>Plan: </label>{{ res22.nombre }} </p>
+                                            <p><label>Plan: </label>{{ res22.nombreplan }} </p>
+											
+											<!-- Este es el segundo botón nuevo, envía el número de socio y el código que saca de tar_srvadherentes por ser PAGO POR TARJETA -->
+											<a class="btn btn-primary" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res22.numero_soc }}&cod_servicio={{ res22.codigo}}">Generar Atención</a>
+												
                                         </div>
                                     </div>								
     							{% endfor %}
@@ -138,10 +144,10 @@
     										<h3 class="box-title">Nombre del adherente: {{ res3['nombre'] }} </h3>
                                         </div>
     									<div class="box-body">
-    									   <p> Relación DEL ADHERENTE: {{ res3['parentesco'] }} </p>
-    									   <p> Plan DEL ADHERENTE: {{ res3['nombreplan'] }} </p>
-    									   <p> Número de socio DEL ADHERENTE: {{ res3['numero_soc'] }} </p>
-    									   <p> Nro de beneficio DEL ADHERENTE: {{ res3['beneficio'] }} </p>
+    									   <p> Relación que guarda con el titular: {{ res3['parentesco'] }} </p>
+    									   <p> Plan del adherente: {{ res3['nombreplan'] }} </p>
+    									   <p> Número de socio del adherente: {{ res3['numero_soc'] }} </p>
+    									   <p> Número de beneficio del adherente: {{ res3['beneficio'] }} </p>
     									   
                                            <a class="btn btn-primary" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res3.numero_soc }}&cod_servicio={{ res3.codigo}}">Generar Atención</a>
                                            
@@ -169,10 +175,10 @@
     										<h3 class="box-title">Nombre del adherente: {{ res4['nombre'] }}</h3>
     									</div>
     									<div class="box-body">  
-    										<p> Relación DEL ADHERENTE: {{ res4['parentesco'] }} </p>
-    										<p> Plan DEL ADHERENTE: {{ res4['nombreplan'] }} </p>
-    										<p> Número de socio DEL ADHERENTE: {{ res4['numero_soc'] }} </p>
-    										<p> Nro de beneficio DEL ADHERENTE: {{ res4['beneficio'] }} </p>
+    										<p> Relación que guarda con el titular: {{ res4['parentesco'] }} </p>
+    										<p> Plan del adherente: {{ res4['nombreplan'] }} </p>
+    										<p> Número de socio del adherente: {{ res4['numero_soc'] }} </p>
+    										<p> Nro de beneficio del adherente: {{ res4['beneficio'] }} </p>
 
                                             <a class="btn btn-danger" href="../controllers/atenciones.php?funcion=mostrarFormulario&num_soc={{ res4.numero_soc }}&cod_servicio={{ res4.codigo}}">Generar Atención</a>  
                                         </div>
@@ -203,9 +209,16 @@
                                                 <tr>
                                                     <td>{{ asistencia['nombre'] }}</td>
                                                     <td>{{ asistencia['fec_pedido'] }} {{ asistencia['hora_pedido'] }}</td>
-                                                    <td>{{ asistencia['fec_ate'] }} {{ asistencia['hora_aten'] }}</td>
+													
+													{% if asistencia.fec_ate == '0000-00-00' %}
+														<td>Todavía no finaliza</td>
+													{% else %}
+														<td>{{ asistencia['fec_ate'] }} {{ asistencia['hora_aten'] }}</td>
+													{% endif %}
+													
 													<td>{{ asistencia['diagnostico'] }}</td>
-                                                    {% if asistencia.fec_ate == '0000-00-00' %}
+                                                    
+													{% if asistencia.fec_ate == '0000-00-00' %}
 														<td><span class="label label-warning">En progreso</span></td>
 													{% else %}
 														<td><span class="label label-success">Finalizada</span></td>
