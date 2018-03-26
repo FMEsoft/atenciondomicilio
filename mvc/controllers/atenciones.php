@@ -80,11 +80,21 @@ function verMas()
 				return;
 			}
 			
+			///---FUNCIÓN PARA CALCULAR EDAD----
+			
 			$fecha=$resultadoTitular[0]['fecnacim'];
 			$dias = explode("-", $fecha, 3);
-			$dias = mktime(0,0,0,$dias[2],$dias[1],$dias[0]);
+			
+			// $dias[0] es el año
+			// $dias[1] es el mes
+			// $dias[2] es el dia
+			
+			// mktime toma los datos en el orden (0,0,0, mes, dia, año) 
+			$dias = mktime(0,0,0,$dias[1],$dias[2],$dias[0]);
 			$edad = (int)((time()-$dias)/31556926 );
 			$resultadoTitular[0]['edad']=$edad;
+			
+			///---FIN FUNCIÓN PARA CALCULAR EDAD----
 			
 			$estado[0]='1';
 			$estado[1]='1';
