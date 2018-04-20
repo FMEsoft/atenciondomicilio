@@ -88,6 +88,7 @@ function cantidadAtencionesProceso(){
 												GROUP BY MONTH(fec_ate)");
 				 
 				//Devuelvo los datos solicitados por el metodo ajax
+				echo var_dump($data);
 				echo json_encode($data);
 			}
 		else
@@ -99,6 +100,7 @@ function cantidadAtencionesProceso(){
 												GROUP BY MONTH(fec_ate)");
 				 
 				//Devuelvo los datos solicitados por el metodo ajax
+				echo var_dump($data);
 				echo json_encode($data);
 			}
 	}
@@ -108,6 +110,7 @@ function cantidadAtencionesProceso(){
 				$data = $GLOBALS['db']->select("SELECT fec_ate AS fecha, YEAR(fec_ate) AS anio FROM fme_asistencia GROUP BY YEAR(fec_ate) ASC");
 				 
 				//Devuelvo los datos solicitados por el metodo ajax
+				echo var_dump($data);
 				echo json_encode($data);
 			}
 }
@@ -137,6 +140,7 @@ function atencionesAsociadosProceso(){
 														INNER JOIN persona on persona.numdoc = tablaAUX.doctitu ORDER BY cantidad DESC");
 						 
 						//Devuelvo los datos solicitados por el metodo ajax
+						
 						echo json_encode($data);
 				}
 				else
@@ -150,6 +154,7 @@ function atencionesAsociadosProceso(){
 													INNER JOIN persona on persona.numdoc = tablaAUX.doctitu ORDER BY cantidad DESC");
 					 
 					//Devuelvo los datos solicitados por el metodo ajax
+					
 					echo json_encode($data);
 				}
 			}
@@ -161,6 +166,7 @@ function atencionesAsociadosProceso(){
 												INNER JOIN persona on persona.numdoc = tablaAUX.doctitu ORDER BY cantidad DESC");
 				 
 				//Devuelvo los datos solicitados por el metodo ajax
+				
 				echo json_encode($data);
 			}
 	}

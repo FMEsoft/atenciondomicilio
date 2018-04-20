@@ -421,8 +421,19 @@ function mostrarFormularioParticular()
 		return;
 	}
 	
+	if(!isset($_GET['cod_servicio']))
+	{
+		$error=[
+				'menu'			=>"Atenciones",
+				'funcion'		=>"mostrarFormulario",
+				'descripcion'	=>"No se recibió cod_servicio como parametro de la función"
+				];
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+		return;
+	}
 	
 	$id_persona = $_GET['id_persona'];
+	$cod_servicio = $_GET['cod_servicio'];
 
 	$resultado = $GLOBALS['db']->select("SELECT * FROM persona, fme_adhsrv
 										WHERE persona.id_persona = '$id_persona'
@@ -548,8 +559,8 @@ function generarAtencion()
 
 		$nro=$_POST['nro'];		//nro es el numero de asociado
 		
-		$resultado=$GLOBALS['db']->query("INSERT INTO fme_asistencia (cod_ser,doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional)
-				VALUES ('$cod_ser','$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional')");
+		$resultado=$GLOBALS['db']->query("INSERT INTO fme_asistencia (cod_ser,doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional,domicilio,casa_nro,barrio,localidad,codpostal,dpmto)
+				VALUES ('$cod_ser','$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional','$dom','$nrocasa','$barrio','$localidad','$cod_postal','$dpto')");
 
 		if(!$resultado)
 		{
@@ -684,8 +695,8 @@ function generarAtencion()
 		$tel=$_POST['tel'];
 		$nro='';		//nro es el numero de asociado
 		
-		$resultado=$GLOBALS['db']->query("INSERT INTO fme_asistencia (cod_ser,doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional)
-				VALUES ('$cod_ser','$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional')");
+		$resultado=$GLOBALS['db']->query("INSERT INTO fme_asistencia (cod_ser,doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional,domicilio,casa_nro,barrio,localidad,codpostal,dpmto)
+				VALUES ('$cod_ser','$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional','$dom','$nrocasa','$barrio','$localidad','$cod_postal','$dpto')");
 
 		if(!$resultado)
 		{

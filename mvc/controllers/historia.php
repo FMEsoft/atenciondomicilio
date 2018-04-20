@@ -44,27 +44,27 @@
 	
 function mostrarListado(){
 	
-	$profesionales = $GLOBALS['db']->select('SELECT * FROM profesionales, persona_sistema
-								WHERE profesionales.id_persona=persona_sistema.id_persona');								
-	if($profesionales)
+	$usuarios = $GLOBALS['db']->select('SELECT * FROM usuarios, persona_sistema
+								WHERE usuarios.id_persona=persona_sistema.id_persona');								
+	if($usuarios)
 	{
 		$i=0;
-		foreach($profesionales as $res){
+		foreach($usuarios as $res){
 			if($res['sexo']=='M'){
-				$profesionales[$i]['sexo']='Masculino';
+				$usuarios[$i]['sexo']='Masculino';
 			}
 			else{
-				$profesionales[$i]['sexo']='Femenino';
+				$usuarios[$i]['sexo']='Femenino';
 			}
 			$i++;
 		}
-		echo $GLOBALS['twig']->render('/Atenciones/profesionales_listado.html', compact('profesionales'));
+		echo $GLOBALS['twig']->render('/Atenciones/usuarios_listado.html', compact('usuarios'));
 	}
 	else
 	{
 		$error=[
-				'menu'			=>"Profesionales",
-				'funcion'		=>"Listado de profesionales",
+				'menu'			=>"Usuarios",
+				'funcion'		=>"Listado de usuarios",
 				'descripcion'	=>"No se encontraron resultados."
 				];
 		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
@@ -73,36 +73,36 @@ function mostrarListado(){
 
 function verMas(){
 	
-	if(!isset($_GET['id_profesional']))
+	if(!isset($_GET['id_usuario']))
 	{
 		$error=[
-				'menu'			=>"Profesionales",
-				'funcion'		=>"Perfil del profesional",
+				'menu'			=>"Usuarios",
+				'funcion'		=>"Perfil de usuarios",
 				'descripcion'	=>"No se encontraron resultados."
 				];
 		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));
 	}
-	$id_profesional=$_GET['id_profesional'];
+	$id_usuario=$_GET['id_usuario'];
 	
-	$profesional = $GLOBALS['db']->select("SELECT * FROM profesionales, persona_sistema
-								WHERE profesionales.id_persona=persona_sistema.id_persona
-								AND profesionales.id_profesional='$id_profesional' ");
+	$usuario = $GLOBALS['db']->select("SELECT * FROM usuarios, persona_sistema
+								WHERE usuarios.id_persona=persona_sistema.id_persona
+								AND usuarios.id_usuario='$id_usuario' ");
 								
-	if(!$profesional){
+	if(!$usuario){
 		$error=[
-				'menu'			=>"Profesionales",
-				'funcion'		=>"Perfil del profesional",
+				'menu'			=>"Usuarios",
+				'funcion'		=>"Perfil de usuarios",
 				'descripcion'	=>"No se encontraron resultados."
 				];
 		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));
 	}
 	
-	$profesional[0]['fech_creacion'] = date("d/m/Y", strtotime($profesional[0]['fech_alta']));
+	$usuario[0]['fech_creacion'] = date("d/m/Y", strtotime($usuario[0]['fech_creacion']));
 	
-	
+			
 	///---FUNCIÓN PARA CALCULAR EDAD----
 	
-	$fecha=$profesional[0]['fecnacim'];
+	$fecha=$usuario[0]['fecnacim'];
 	$dias = explode("-", $fecha, 3);
 	
 	// $dias[0] es el año
@@ -112,22 +112,34 @@ function verMas(){
 	// mktime toma los datos en el orden (0,0,0, mes, dia, año) 
 	$dias = mktime(0,0,0,$dias[1],$dias[2],$dias[0]);
 	$edad = (int)((time()-$dias)/31556926 );
-	$profesional[0]['edad']=$edad;
+	$usuario[0]['edad']=$edad;
 	
 	///---FIN FUNCIÓN PARA CALCULAR EDAD----
 	
-	echo $GLOBALS['twig']->render('/Atenciones/profesionales_perfil.html', compact('profesional'));
+	echo $GLOBALS['twig']->render('/Atenciones/usuarios_perfil.html', compact('usuario'));
 	
 }
 
 function mostrarFormulario(){
-	echo $GLOBALS['twig']->render('/Atenciones/nuevo_profesional_formulario.html');
+	echo $GLOBALS['twig']->render('/Atenciones/nuevo_usuario_formulario.html');
 	return;
 }
 
-function registrarProfesional(){
+function validarUsuario(){
+    $user = $_POST["user"];
+	$usuario = $GLOBALS['db']->select("SELECT usuario FROM usuarios
+								WHERE usuario='$user' ");
+
+    if(!$usuario)
+        echo 1;
+    else
+        echo 0;
+	return;
+}
+
+function crearUsuario(){
 	
-	$use=$_SESSION['usuario']; //Usuario que realiza la creacion del nuevo profesional
+	$use=$_SESSION['usuario']; //Usuario que realiza la creacion del nuevo usuario
 	
 	$nombre=$_POST['nombre'];
 	$doc=$_POST['doc'];
@@ -143,8 +155,8 @@ function registrarProfesional(){
 	$cod_postal=$_POST['codpostal'];
 	$dpto=$_POST['dpto'];
 	
-	$matr=$_POST['especialidad'];
-	$espec=$_POST['matricula'];
+	$usuario=$_POST['user'];
+	$pass=$_POST['pass'];
 	
 	date_default_timezone_set('America/Argentina/Catamarca');
 	$fec_alta=date("Y")."-".date("m")."-".date("d");
@@ -156,9 +168,9 @@ function registrarProfesional(){
 	if(!$resultado)
 	{
 		$error=[
-				'menu'			=>"Profesionales",
-				'funcion'		=>"registrarProfesional",
-				'descripcion'	=>"No se pudo registrar el profesional, error tabla persona"
+				'menu'			=>"Usuarios",
+				'funcion'		=>"CrearUsuario",
+				'descripcion'	=>"No se pudo crear el usuario, error tabla persona"
 				];
 		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
 		return;
@@ -166,15 +178,15 @@ function registrarProfesional(){
 	
 	
 	
-	$resultado2=$GLOBALS['db']->query("INSERT INTO profesionales (id_persona, matricula, especialidad, fech_alta)
-				VALUES (LAST_INSERT_ID(),'$matr','$espec','$fec_alta')");
+	$resultado2=$GLOBALS['db']->query("INSERT INTO usuarios (id_persona, usuario, password, fech_creacion, activa)
+				VALUES (LAST_INSERT_ID(),'$usuario','$pass','$fec_alta',1)");
 				
 	if(!$resultado2)
 	{
 
 		$error=[
-				'menu'			=>"profesionales",
-				'funcion'		=>"registrarProfesional",
+				'menu'			=>"Usuarios",
+				'funcion'		=>"CrearUsuario",
 				'descripcion'	=>"No se pudo crear el usuario, error tabla usuarios"
 				];
 		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
@@ -185,6 +197,7 @@ function registrarProfesional(){
 	header('Location: mensaje_exito.php');
 
 }
+	
 
 	
 //llamada a la funcion con el parametro pasado por la url.	

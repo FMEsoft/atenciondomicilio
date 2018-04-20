@@ -44,7 +44,7 @@
 	
 function mostrarListado(){
 	
-	$usuarios = $GLOBALS['db']->select('SELECT * FROM usuarios, persona_sistema
+	$usuarios = $GLOBALS['db']->select('SELECT usuarios.usuario, persona_sistema.nombre, persona_sistema.numdoc, persona_sistema.sexo FROM usuarios, persona_sistema
 								WHERE usuarios.id_persona=persona_sistema.id_persona');								
 	if($usuarios)
 	{
@@ -99,15 +99,103 @@ function verMas(){
 	
 	$usuario[0]['fech_creacion'] = date("d/m/Y", strtotime($usuario[0]['fech_creacion']));
 	
+			
+	///---FUNCIÓN PARA CALCULAR EDAD----
 	
 	$fecha=$usuario[0]['fecnacim'];
-			$dias = explode("-", $fecha, 3);
-			$dias = mktime(0,0,0,$dias[2],$dias[1],$dias[0]);
-			$edad = (int)((time()-$dias)/31556926 );
-			$usuario[0]['edad']=$edad;
+	$dias = explode("-", $fecha, 3);
+	
+	// $dias[0] es el año
+	// $dias[1] es el mes
+	// $dias[2] es el dia
+	
+	// mktime toma los datos en el orden (0,0,0, mes, dia, año) 
+	$dias = mktime(0,0,0,$dias[1],$dias[2],$dias[0]);
+	$edad = (int)((time()-$dias)/31556926 );
+	$usuario[0]['edad']=$edad;
+	
+	///---FIN FUNCIÓN PARA CALCULAR EDAD----
 	
 	echo $GLOBALS['twig']->render('/Atenciones/usuarios_perfil.html', compact('usuario'));
 	
+}
+
+function mostrarFormulario(){
+	echo $GLOBALS['twig']->render('/Atenciones/nuevo_usuario_formulario.html');
+	return;
+}
+
+function validarUsuario(){
+    $user = $_POST["user"];
+	$usuario = $GLOBALS['db']->select("SELECT usuario FROM usuarios
+								WHERE usuario='$user' ");
+
+    if(!$usuario)
+        echo 1;
+    else
+        echo 0;
+	return;
+}
+
+function crearUsuario(){
+	
+	$use=$_SESSION['usuario']; //Usuario que realiza la creacion del nuevo usuario
+	
+	$nombre=$_POST['nombre'];
+	$doc=$_POST['doc'];
+	$sexo=$_POST['sexo'];
+	$fech_nac=$_POST['fech_nac'];
+	$tel_fijo=$_POST['fijo'];
+	$tel_celu=$_POST['celu'];
+	
+	$dom=$_POST['dom'];
+	$nrocasa=$_POST['nrocasa'];
+	$barrio=$_POST['barrio'];
+	$localidad=$_POST['localidad'];
+	$cod_postal=$_POST['codpostal'];
+	$dpto=$_POST['dpto'];
+	
+	$usuario=$_POST['user'];
+	$pass=$_POST['pass'];
+	
+	date_default_timezone_set('America/Argentina/Catamarca');
+	$fec_alta=date("Y")."-".date("m")."-".date("d");
+	
+	
+	$resultado=$GLOBALS['db']->query("INSERT INTO persona_sistema (nombre,numdoc,sexo,fecnacim,domicilio,casa_nro,barrio,localidad,codpostal,dpmto,tel_fijo,tel_cel,fec_alta,usualta)
+				VALUES ('$nombre','$doc','$sexo','$fech_nac','$dom','$nrocasa','$barrio','$localidad','$cod_postal','$dpto','$tel_fijo','$tel_celu','$fec_alta','$use')");
+
+	if(!$resultado)
+	{
+		$error=[
+				'menu'			=>"Usuarios",
+				'funcion'		=>"CrearUsuario",
+				'descripcion'	=>"No se pudo crear el usuario, error tabla persona"
+				];
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+		return;
+	}
+	
+	
+	
+	$resultado2=$GLOBALS['db']->query("INSERT INTO usuarios (id_persona, usuario, password, fech_creacion, activa)
+				VALUES (LAST_INSERT_ID(),'$usuario','$pass','$fec_alta',1)");
+				
+	if(!$resultado2)
+	{
+
+		$error=[
+				'menu'			=>"Usuarios",
+				'funcion'		=>"CrearUsuario",
+				'descripcion'	=>"No se pudo crear el usuario, error tabla usuarios"
+				];
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+		return;
+	}
+		
+	
+	header('Location: mensaje_exito.php');
+
 }
 	
 

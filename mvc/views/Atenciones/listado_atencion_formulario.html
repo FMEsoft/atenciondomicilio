@@ -41,15 +41,25 @@
 								<input type="text" class="form-control" id="nombre" name="nombre" readonly value="{{ persona.nombre }}"/>
 							</div>
 							
+							{% if persona.cod_serv == '020' %}
 							<div class="col-md-3 form-group">
 								<label for="doc">Documento del asociado</label><br/>
 								<input type="text" class="form-control" id="doc" name="doc" readonly value="{{ persona.doc }}"/>
 							</div>
-
+							
+							
 							<div class="col-md-3 form-group">
 								<label for="doctit">Documento del titular</label><br/>
 								<input type="text" class="form-control" id="doctit" name="doctit" readonly value="{{ persona.doctit }}"/>
 							</div>
+							{% endif %}
+							
+							{% if persona.cod_serv == '021' %}
+							<div class="col-md-3 form-group">
+								<label for="doc">Documento del particular</label><br/>
+								<input type="text" class="form-control" id="doc" name="doc" readonly value="{{ persona.doc }}"/>
+							</div>
+							{% endif %}
 
 						</div>
 						<div class="row">
@@ -68,6 +78,100 @@
 								<input type="text" class="form-control" id="hora" name="hora" readonly value="{{ persona.hora }}"/>
 							</div>
 						</div>
+					</fieldset>
+					
+					<fieldset><legend>Domicilio</legend>
+						<div class="row">
+							<div class="col-md-6 form-group">
+								<label for="dom">Domicilio</label>
+								<input type="text" class="form-control" name="dom" id="dom" value="{{ persona.dom }}"/>
+							</div>
+							
+							<div class="col-md-6 form-group">
+								<label for="nrocasa">Numero de casa</label>
+								<input type="text" class="form-control" name="nrocasa" id="nrocasa" value="{{ persona.nro_casa }}"/>
+							</div>
+							
+							<div class="col-md-6 form-group">
+								<label for="barrio">Barrio</label>
+								<input type="text" class="form-control" name="barrio" id="barrio" value="{{ persona.barrio }}"/>
+							</div>
+							
+							<div class="col-md-6 form-group">
+								<label for="localidad">Localidad</label>
+								<input type="text" class="form-control" name="localidad" id="localidad" value="{{ persona.localidad }}"/>
+							</div>
+							
+							<div class="col-md-6 form-group">
+								<label for="codpostal">Codigo postal</label>
+								<input type="text" class="form-control" name="codpostal" id="codpostal" value="{{ persona.cod_postal }}"/>
+							</div>
+							
+							<div class="col-md-6 form-group">
+								<label for="dpto">Departamento</label>
+								<input type="text" class="form-control" name="dpto" id="dpto" value="{{ persona.dpmto }}"/>
+							</div>
+						</div>
+					</fieldset>
+					
+					<fieldset><legend>Enfermedades padecidas</legend>
+						<div class="row">
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="paperas" id="paperas" {% if historia.paperas == 1 %}checked{% else %}{% endif %} disabled>Paperas</label>
+							</div>
+							
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="rubeola" id="rubeola" {% if historia.rubeola == 1 %}checked{% else %}{% endif %} disabled>Rubeola</label>
+							</div>
+							
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="varicela" id="varicela" {% if historia.varicela == 1 %}checked{% else %}{% endif %} disabled>Varicela</label>
+							</div>
+							
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="epilepsia" id="epilepsia" {% if historia.epilepsia == 1 %}checked{% else %}{% endif %} disabled>Epilepsia</label>
+							</div>
+							
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="hepatitis" id="hepatitis" {% if historia.hepatitis == 1 %}checked{% else %}{% endif %} disabled>Hepatitis</label>
+							</div>
+							
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="sinusitis" id="sinusitis" {% if historia.sinusitis == 1 %}checked{% else %}{% endif %} disabled>Sinusitis</label>
+							</div>
+							
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="diabetes" id="diabetes" {% if historia.diabetes == 1 %}checked{% else %}{% endif %} disabled>Diabetes</label>
+							</div>
+							
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="apendicitis" id="apendicitis" {% if historia.apendicitis == 1 %}checked{% else %}{% endif %} disabled>Apendicitis</label>
+							</div>
+							
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="amigdalitis" id="amigdalitis" {% if historia.amigdalitis == 1 %}checked{% else %}{% endif %} disabled>Amigdalitis</label>
+							</div>
+						</div>
+
+					</fieldset>
+					
+					
+					
+					<fieldset><legend>Alergias</legend>
+
+						<div class="col-md-4 form-group">
+							<label for="comidas">Comidas</label><br/>
+							<textarea type="text" class="form-control"  id="comidas" name="comidas" rows="2" placeholder="Escribe las alergias.." readonly />{{ historia.comidas }}</textarea>
+						</div>
+						<div class="col-md-4 form-group">
+							<label for="medicamentos">Medicamentos</label><br/>
+							<textarea type="text" class="form-control" id="medicamentos" name="medicamentos" rows="2" placeholder="Escribe las alergias.." readonly />{{ historia.medicamentos }}</textarea>
+						</div>
+						<div class="col-md-4 form-group">
+							<label for="otras">Otras</label><br/>
+							<textarea type="text" class="form-control" id="otras" name="otras" rows="2" placeholder="Escribe las alergias.." readonly />{{ historia.otras }}</textarea>
+						</div>
+
 					</fieldset>
 					
 					

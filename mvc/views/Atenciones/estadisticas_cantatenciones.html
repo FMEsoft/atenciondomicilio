@@ -1,31 +1,26 @@
 {% extends 'Base/base.html' %}
 {% block wrapper %}
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 2 | Log in</title>
-
-
-
-</head>
+	<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	</head>
 {% endblock %}
+
 {% block content %}
-  <div class="content-wrapper">
-    
+  <div class="content-wrapper container">
 		<h3 class="text-primary text-center">
 			Estadisticas
 		</h3>
 		
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-12">
 			  <!-- Cantidad de atenciones realizadas -->
-			  <div class="box box-primary">
-				<div class="box-header with-border">
-				  <h3 class="box-title">Cantidad de atenciones</h3>
-				  
-				  <!-- VERIFICAR COMO ES LA MEJOR FORMA DE ENVIAR LA INFORMACION, YO LO HICE ASI SOLO PARA PROBAR QUE FUNCIONABA -->
-				  
+			  <div class="box box-primary container">
+				<div class="box-header with-border"><br>
+				  <h3 class="box-title">Cantidad de atenciones</h3><br><br>
+				  <span>Seleccione si desea visualizar la estadistica por año o por dia</span><br><br>
 				  <!-- AL PRESIONAR ESTE BOTON TRAE LA INFORMACION VARIAS VECES, VERIFICAR -->
+<<<<<<< Updated upstream
 				  <button type="button" onclick="getData()">Estadistica por año</button>
 				  
 				  
@@ -35,27 +30,42 @@
 				  <select id="select-datos" onchange="mostrarResultadosAnual(this.value)" style='display:none;'></select>
 				
 				  
+=======
+				  <div class="row">
+					  	<div class="col-md-6">
+							<button class="btn btn-default" type="button" onclick="getData()">Estadistica por año</button><br><br>
+							<select id="select-datos" class="form-control" onchange="mostrarResultadosAnual(this.value)" style='display:none;'></select><br><br>
+						</div>
+						<!-- FALTAN LOS SELECT PARA EL MES Y EL DIA -->
+						<div class="col-md-6">	
+							<button class="btn btn-default" type="button" onclick="mostrarResultadosDiarias(2016, 03, 11)">Estadistica por día</button>
+							<!-- Agregar datepicker para seleccionar el dia a ver -->
+						</div>
+				   </div>
+
+>>>>>>> Stashed changes
 				  <div class="box-tools pull-right">
-					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-					</button>
+					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 					<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
 				  </div>
+
 				</div>
+
 				<div class="box-body chart-responsive">
 				  <div class="chart" id="cant-atenciones" style="width: 300px; height: 400px;"></div>
 				</div>
-				<!-- /.box-body -->
-			  </div>
-			  <!-- /.box -->
-			  
-			  <label>DATOS</label></br>
-			  <label>Total de atenciones: </label><p id="tot-atenciones"></p>
 
+			  </div>
 			</div>
-			
-      </div>
-      <!-- /.row -->
-		
+		</div>
+		  
+		<div class="row">
+			<div class="col-md-12">			
+				<h3>DATOS</h3>
+				<h4>Total de atenciones</h4>
+				<p id="tot-atenciones"></p>
+			</div>
+		</div>			
 	
   </div>
   
@@ -147,9 +157,9 @@
 				bar_chart_data[x]= [mes, numatenciones];
 			}
 			
-			$("#tot-atenciones").text("El total de atenciones realizadas en el año "+anio+" es: "+total_atenciones);
+			$("#tot-atenciones").text("El total de atenciones realizadas en el año " + anio + " es: " + total_atenciones);
 			
-			console.log("El total de atenciones realizadas en el año "+anio+" es:"+total_atenciones);
+			console.log("El total de atenciones realizadas en el año " + anio + " es: " + total_atenciones);
 						  
 			//Gráfico de barra de FLOT js
 			var bar_data = 

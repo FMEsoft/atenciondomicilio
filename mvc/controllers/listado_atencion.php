@@ -133,7 +133,9 @@ function verMas()
 		$asistencia = $GLOBALS['db']->select("SELECT fme_asistencia.cod_ser, fme_asistencia.fec_pedido, fme_asistencia.hora_pedido, 
 													 fme_asistencia.nombre, persona.sexo, fme_asistencia.numdoc, fme_asistencia.doctitu,
 													 fme_asistencia.profesional, fme_asistencia.dessit, fme_asistencia.fec_ate, fme_asistencia.hora_aten,
-													 fme_asistencia.sintomas, fme_asistencia.tratamiento, fme_asistencia.diagnostico
+													 fme_asistencia.sintomas, fme_asistencia.tratamiento, fme_asistencia.diagnostico, 
+													 fme_asistencia.domicilio, fme_asistencia.casa_nro, fme_asistencia.barrio, fme_asistencia.localidad,
+													 fme_asistencia.codpostal, fme_asistencia.dpmto
 									  FROM fme_asistencia, persona 
 									  WHERE fme_asistencia.idnum='$numero_asistencia' AND persona.numdoc = fme_asistencia.numdoc");
 
@@ -167,6 +169,12 @@ function verMas()
 		'sintomas'		=>	$asistencia[0]['sintomas'],
 		'tratamiento'		=>	$asistencia[0]['tratamiento'],
 		'diagnostico'		=>	$asistencia[0]['diagnostico'],
+		'dom'			=>	$asistencia[0]['domicilio'],
+		'nro_casa'		=>	$asistencia[0]['casa_nro'],
+		'barrio'		=>	$asistencia[0]['barrio'],
+		'localidad'		=>	$asistencia[0]['localidad'],
+		'cod_postal'	=>	$asistencia[0]['codpostal'],
+		'dpmto'			=>	$asistencia[0]['dpmto'],
 		'num_asistencia'	=>	$numero_asistencia
 	];
 	if($asistencia[0]['sexo']==1)
@@ -191,7 +199,6 @@ function finalizarAtencion()
 	
 	if(!$resultado)
 	{
-		echo "hola";
 		$error=[
 				'menu'			=>"Atenciones",
 				'funcion'		=>"FinalizarAtencion",
