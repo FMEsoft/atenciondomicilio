@@ -184,8 +184,7 @@ function verMas()
 			$asistencias = $GLOBALS['db']->select("SELECT fme_asistencia.doctitu, fme_asistencia.numdoc, fme_asistencia.nombre,
 									  fme_asistencia.fec_pedido, fme_asistencia.hora_pedido, fme_asistencia.dessit, fme_asistencia.fec_ate,
 									  fme_asistencia.sintomas, fme_asistencia.diagnostico, fme_asistencia.tratamiento, fme_asistencia.hora_aten,
-									  fme_asistencia.profesional, fme_asistencia.feccanasis, fme_asistencia.horacanasis, fme_asistencia.motivo,
-									  fme_asistencia.cuenta, fme_asistencia.idafiliado
+									  fme_asistencia.profesional
 									  FROM fme_asistencia, socios, persona 
 									  WHERE soc_titula = '$numero_socio' 
 									  AND socios.id_persona = persona.id_persona
@@ -252,8 +251,7 @@ function verMasParticular()
 			$asistencias = $GLOBALS['db']->select("SELECT fme_asistencia.numdoc, fme_asistencia.nombre,
 									  fme_asistencia.fec_pedido, fme_asistencia.hora_pedido, fme_asistencia.dessit, fme_asistencia.fec_ate,
 									  fme_asistencia.sintomas, fme_asistencia.diagnostico, fme_asistencia.tratamiento, fme_asistencia.hora_aten,
-									  fme_asistencia.profesional, fme_asistencia.feccanasis, fme_asistencia.horacanasis, fme_asistencia.motivo,
-									  fme_asistencia.cuenta, fme_asistencia.idafiliado
+									  fme_asistencia.profesional
 									  FROM fme_asistencia, persona, fme_adhsrv
 									  WHERE persona.id_persona='$id_persona'
 									  AND persona.numdoc = fme_asistencia.numdoc
@@ -288,6 +286,7 @@ function mostrarFormulario()
 		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
 		return;
 	}
+
 	
 	if(!isset($_GET['cod_servicio']))
 	{
@@ -556,11 +555,15 @@ function generarAtencion()
 		$profesional=$_POST['prof'];
 		$sexo=$_POST['sexo'];
 		$tel=$_POST['tel'];
-
+		$id_persona= $_POST['id_persona'];
 		$nro=$_POST['nro'];		//nro es el numero de asociado
 		
-		$resultado=$GLOBALS['db']->query("INSERT INTO fme_asistencia (cod_ser,doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional,domicilio,casa_nro,barrio,localidad,codpostal,dpmto)
-				VALUES ('$cod_ser','$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional','$dom','$nrocasa','$barrio','$localidad','$cod_postal','$dpto')");
+		$resultado=$GLOBALS['db']->query("INSERT INTO fme_asistencia (cod_ser,doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional,domicilio,casa_nro,barrio,localidad,codpostal,dpmto,id_persona)
+				VALUES ('$cod_ser','$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional','$dom','$nrocasa','$barrio','$localidad','$cod_postal','$dpto','$id_persona')");
+		
+		$res2=$GLOBALS['db']->select("SELECT idnum FROM fme_asistencia WHERE idnum=LAST_INSERT_ID()");//obtentemos el id_atencion del ultimo insert realizado
+		
+		$id_atencion=$res2[0]['idnum']; 
 
 		if(!$resultado)
 		{
@@ -573,110 +576,9 @@ function generarAtencion()
 			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
 			return;
 		}
-
-		$persona=[
-			'cod_serv'	=>	$cod_ser,
-			'fecha'		=>	$fec_pedido,
-			'hora'		=>	$hora_pedido,
-			'nro'		=>	$nro,
-			'nombre'	=>	$nombre,
-			'sexo'		=>	$sexo,
-			'tel'		=>	$tel,
-			'doc'		=>	$numdoc,
-			'doctit'	=>	$doctitu,
-			'dom'		=>	$dom,
-			'nro_casa'		=>	$nrocasa,
-			'barrio'		=>	$barrio,
-			'localidad'		=>	$localidad,
-			'cod_postal'	=>	$cod_postal,
-			'dpmto'			=>	$dpto,
-			'prof'		=>	$profesional,
-			'desc'		=>	$dessit
-		];
 		
-		
-		//HISTORIA CLINICA
-		if(isset($_POST['paperas'])){
-			$paperas=1;
-		}
-		else{
-			$paperas=0;
-		}
-		if(isset($_POST['rubeola'])){
-			$rubeola=1;
-		}
-		else{
-			$rubeola=0;
-		}
-		if(isset($_POST['varicela'])){
-			$varicela=1;
-		}
-		else{
-			$varicela=0;
-		}
-		if(isset($_POST['epilepsia'])){
-			$epilepsia=1;
-		}
-		else{
-			$epilepsia=0;
-		}
-		if(isset($_POST['hepatitis'])){
-			$hepatitis=1;
-		}
-		else{
-			$hepatitis=0;
-		}
-		if(isset($_POST['sinusitis'])){
-			$sinusitis=1;
-		}
-		else{
-			$sinusitis=0;
-		}
-		if(isset($_POST['diabetes'])){
-			$diabetes=1;
-		}
-		else{
-			$diabetes=0;
-		}
-		if(isset($_POST['apendicitis'])){
-			$apendicitis=1;
-		}
-		else{
-			$apendicitis=0;
-		}
-		if(isset($_POST['amigdalitis'])){
-			$amigdalitis=1;
-		}
-		else{
-			$amigdalitis=0;
-		}
-		
-		$comidas=$_POST['comidas'];
-		$medicamentos=$_POST['medicamentos'];
-		$otras=$_POST['otras'];
-		$id_persona=$_POST['id_persona'];
-		
-		$resultado = $GLOBALS['db']->select("SELECT * FROM historia_clinica
-										WHERE id_persona = '$id_persona' ");
-
-		if($resultado)
-		{
-			$res=$GLOBALS['db']->query("UPDATE historia_clinica SET 
-			paperas='$paperas',rubeola='$rubeola',varicela='$varicela',epilepsia='$epilepsia',
-			hepatitis='$hepatitis',sinusitis='$sinusitis',diabetes='$diabetes',
-			apendicitis='$apendicitis',amigdalitis='$amigdalitis',comidas='$comidas',
-			medicamentos='$medicamentos',otras='$otras'
-			WHERE id_persona='$id_persona'");
-		}
-		else{
-			$res=$GLOBALS['db']->query("INSERT INTO historia_clinica (id_persona,paperas,rubeola,varicela,epilepsia,
-			hepatitis,sinusitis,diabetes,apendicitis,amigdalitis,comidas,medicamentos,otras)
-					VALUES ('$id_persona','$paperas','$rubeola','$varicela','$epilepsia',
-					'$hepatitis','$sinusitis','$diabetes','$apendicitis','$amigdalitis',
-					'$comidas','$medicamentos','$otras')");
-		}
-
-			echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_finalizar.html', compact('persona','use'));
+		header('Location: ./nueva_atencion_finalizar.php?id_atencion='.$id_atencion);
+		return;
 	}
 	
 	
@@ -693,10 +595,15 @@ function generarAtencion()
 		$profesional=$_POST['prof'];
 		$sexo=$_POST['sexo'];
 		$tel=$_POST['tel'];
+		$id_persona= $_POST['id_persona'];
 		$nro='';		//nro es el numero de asociado
 		
-		$resultado=$GLOBALS['db']->query("INSERT INTO fme_asistencia (cod_ser,doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional,domicilio,casa_nro,barrio,localidad,codpostal,dpmto)
-				VALUES ('$cod_ser','$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional','$dom','$nrocasa','$barrio','$localidad','$cod_postal','$dpto')");
+		$resultado=$GLOBALS['db']->query("INSERT INTO fme_asistencia (cod_ser,doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional,domicilio,casa_nro,barrio,localidad,codpostal,dpmto,id_persona)
+				VALUES ('$cod_ser','$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional','$dom','$nrocasa','$barrio','$localidad','$cod_postal','$dpto','$id_persona')");
+		
+		$res2=$GLOBALS['db']->select("SELECT idnum FROM fme_asistencia WHERE idnum=LAST_INSERT_ID()");//obtentemos el id_atencion del ultimo insert realizado
+				
+		$id_atencion=$res2[0]['idnum']; 
 
 		if(!$resultado)
 		{
@@ -730,113 +637,48 @@ function generarAtencion()
 			'desc'		=>	$dessit
 		];
 		
-		//HISTORIA CLINICA
-		if(isset($_POST['paperas'])){
-			$paperas=1;
-		}
-		else{
-			$paperas=0;
-		}
-		if(isset($_POST['rubeola'])){
-			$rubeola=1;
-		}
-		else{
-			$rubeola=0;
-		}
-		if(isset($_POST['varicela'])){
-			$varicela=1;
-		}
-		else{
-			$varicela=0;
-		}
-		if(isset($_POST['epilepsia'])){
-			$epilepsia=1;
-		}
-		else{
-			$epilepsia=0;
-		}
-		if(isset($_POST['hepatitis'])){
-			$hepatitis=1;
-		}
-		else{
-			$hepatitis=0;
-		}
-		if(isset($_POST['sinusitis'])){
-			$sinusitis=1;
-		}
-		else{
-			$sinusitis=0;
-		}
-		if(isset($_POST['diabetes'])){
-			$diabetes=1;
-		}
-		else{
-			$diabetes=0;
-		}
-		if(isset($_POST['apendicitis'])){
-			$apendicitis=1;
-		}
-		else{
-			$apendicitis=0;
-		}
-		if(isset($_POST['amigdalitis'])){
-			$amigdalitis=1;
-		}
-		else{
-			$amigdalitis=0;
-		}
-		
-		$comidas=$_POST['comidas'];
-		$medicamentos=$_POST['medicamentos'];
-		$otras=$_POST['otras'];
-		$id_persona=$_POST['id_persona'];
-		
-		$resultado = $GLOBALS['db']->select("SELECT * FROM historia_clinica
-										WHERE id_persona = '$id_persona' ");
-
-		if($resultado)
-		{
-			$res=$GLOBALS['db']->query("UPDATE historia_clinica SET 
-			paperas='$paperas',rubeola='$rubeola',varicela='$varicela',epilepsia='$epilepsia',
-			hepatitis='$hepatitis',sinusitis='$sinusitis',diabetes='$diabetes',
-			apendicitis='$apendicitis',amigdalitis='$amigdalitis',comidas='$comidas',
-			medicamentos='$medicamentos',otras='$otras'
-			WHERE id_persona='$id_persona'");
-		}
-		else{
-			$res=$GLOBALS['db']->query("INSERT INTO historia_clinica (id_persona,paperas,rubeola,varicela,epilepsia,
-			hepatitis,sinusitis,diabetes,apendicitis,amigdalitis,comidas,medicamentos,otras)
-					VALUES ('$id_persona','$paperas','$rubeola','$varicela','$epilepsia',
-					'$hepatitis','$sinusitis','$diabetes','$apendicitis','$amigdalitis',
-					'$comidas','$medicamentos','$otras')");
-		}
-
-		echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_finalizar.html', compact('persona','use'));
-		
+		header('Location: ./nueva_atencion_finalizar.php?id_atencion='.$id_atencion);
+		return;
 	}
 
 	
 }
 
 function generarPDF()
+{
+	if(!isset($_GET['id_atencion']))
 	{
-		$cod_ser=$_POST['cod_serv'];
-		$doctitu=$_POST['doctit'];	
-		$numdoc=$_POST['doc'];		
-		$nombre=$_POST['nombre'];	
-		$fec_pedido=$_POST['fecha'];
-		$hora_pedido=$_POST['hora'];
-		$dessit=$_POST['desc'];
-		$profesional=$_POST['prof'];
-		$sexo=$_POST['sexo'];		
-		$tel=$_POST['tel'];
-		$dom=$_POST['dom'];
-		$nrocasa=$_POST['nrocasa'];
-		$barrio=$_POST['barrio'];
-		$localidad=$_POST['localidad'];
-		$cod_postal=$_POST['codpostal'];
-		$dpto=$_POST['dpto'];
-		$nro=$_POST['nro'];
+		return;
+	}
+	$id_atencion=$_GET['id_atencion'];
+
+	$resultado=$GLOBALS['db']->select("SELECT fme_asistencia.cod_ser, fme_asistencia.doctitu, fme_asistencia.numdoc, fme_asistencia.nombre, fme_asistencia.fec_pedido, 
+	fme_asistencia.hora_pedido, fme_asistencia.dessit, fme_asistencia.profesional, fme_asistencia.domicilio, fme_asistencia.casa_nro, fme_asistencia.barrio, 
+	fme_asistencia.localidad, fme_asistencia.codpostal, fme_asistencia.dpmto, fme_asistencia.id_persona, persona.sexo, persona.tel_fijo, persona.tel_cel 
+	FROM fme_asistencia, persona 
+	WHERE fme_asistencia.id_persona= persona.id_persona
+	AND fme_asistencia.idnum='$id_atencion'");
+
+	foreach($resultado as $res){
+		$cod_ser=$res['cod_ser'];
+		$doctitu=$res['doctitu'];	
+		$numdoc=$res['numdoc'];		
+		$nombre=$res['nombre'];	
+		$fec_pedido=$res['fec_pedido'];
+		$hora_pedido=$res['hora_pedido'];
+		$dessit=$res['dessit'];
+		$profesional=$res['profesional'];
+		$sexo=$res['sexo'];		
+		$tel=$res['tel_fijo'];
+		$tel=$tel.$res['tel_cel'];
+		$dom=$res['domicilio'];
+		$nrocasa=$res['casa_nro'];
+		$barrio=$res['barrio'];
+		$localidad=$res['localidad'];
+		$cod_postal=$res['codpostal'];
+		$dpto=$res['dpmto'];
+		$id_persona=$res['id_persona'];
+	}
 	
 	//---------------Generar PDF -------------------------------
 	
