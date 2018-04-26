@@ -20,17 +20,6 @@
 				  <h3 class="box-title">Cantidad de atenciones</h3><br><br>
 				  <span>Seleccione si desea visualizar la estadistica por año o por dia</span><br><br>
 				  <!-- AL PRESIONAR ESTE BOTON TRAE LA INFORMACION VARIAS VECES, VERIFICAR -->
-<<<<<<< Updated upstream
-				  <button type="button" onclick="getData()">Estadistica por año</button>
-				  
-				  
-				  <!-- FALTAN LOS SELECT PARA EL MES Y EL DIA -->
-				  
-				  <button type="button" onclick="mostrarResultadosDiarias(2016, 03, 11)">POR DIA</button>
-				  <select id="select-datos" onchange="mostrarResultadosAnual(this.value)" style='display:none;'></select>
-				
-				  
-=======
 				  <div class="row">
 					  	<div class="col-md-6">
 							<button class="btn btn-default" type="button" onclick="getData()">Estadistica por año</button><br><br>
@@ -43,7 +32,6 @@
 						</div>
 				   </div>
 
->>>>>>> Stashed changes
 				  <div class="box-tools pull-right">
 					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 					<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
@@ -101,7 +89,7 @@
 		//1.- El PHP donde se va a procesar todo que es proceso_cantatenciones.php
 		//2.- El o los datos, en este caso el año seleccionado, aqui esa info se ve en {'anio': anio}
 		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
-		$.post( "../controllers/estadisticas.php?funcion=cantidadAsociadosProceso.php", {'anio': anio}).done(function( data ) 
+		$.post( "../controllers/estadisticas.php?funcion=cantidadAtencionesProceso", {'anio': anio}).done(function( data ) 
 		{
 			var data = $.parseJSON(data);
 			var total_atenciones = 0;
@@ -200,7 +188,7 @@
 		//1.- El PHP donde se va a procesar todo que es proceso_cantatenciones.php
 		//2.- El o los datos, en este caso el año seleccionado, aqui esa info se ve en {'anio': anio}
 		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
-		$.post( "../controllers/proceso_cantatenciones.php", {'anio': anio, 'mes': mes, 'dia': dia}).done(function( data ) 
+		$.post( "../controllers/estadisticas.php?funcion=cantidadAtencionesProceso", {'anio': anio, 'mes': mes, 'dia': dia}).done(function( data ) 
 		{
 			var data = $.parseJSON(data);
 			console.log(data);

@@ -21,6 +21,15 @@ else
 	$twig = new Twig_Environment($loader, []);
 }
 
+
+session_start();
+
+if (!isset($_SESSION['usuario'])) {
+
+header('location:login.php');
+# code...
+}
+
 //array para la conexion de la bd
 include ('conexion.php');
 $config['db']='fme_mutual';
@@ -45,7 +54,7 @@ function cantidadAtenciones(){
 
 
 //funcion atencionesAsociados
-function atencionesAsociados(){
+function asociados(){
 	require_once '../../vendor/autoload.php';
 	
 		$loader = new Twig_Loader_Filesystem('../views');
@@ -56,7 +65,7 @@ function atencionesAsociados(){
 }
 
 //funcion horarioAtenciones
-function horarioAtenciones(){
+function horarios(){
 	require_once '../../vendor/autoload.php';
 	
 		$loader = new Twig_Loader_Filesystem('../views');
@@ -88,7 +97,6 @@ function cantidadAtencionesProceso(){
 												GROUP BY MONTH(fec_ate)");
 				 
 				//Devuelvo los datos solicitados por el metodo ajax
-				echo var_dump($data);
 				echo json_encode($data);
 			}
 		else
@@ -100,17 +108,15 @@ function cantidadAtencionesProceso(){
 												GROUP BY MONTH(fec_ate)");
 				 
 				//Devuelvo los datos solicitados por el metodo ajax
-				echo var_dump($data);
 				echo json_encode($data);
 			}
 	}
 	else
 			{
 				//Consulta que devuelve los años de las atenciones que hay en la BD, son para rellenar el select
-				$data = $GLOBALS['db']->select("SELECT fec_ate AS fecha, YEAR(fec_ate) AS anio FROM fme_asistencia GROUP BY YEAR(fec_ate) ASC");
+				$data = $GLOBALS['db']->select("SELECT fec_ate AS fecha, YEAR(fec_ate) AS anio FROM fme_asistencia WHERE YEAR(fec_ate)<>'0000' GROUP BY YEAR(fec_ate) ASC");
 				 
 				//Devuelvo los datos solicitados por el metodo ajax
-				echo var_dump($data);
 				echo json_encode($data);
 			}
 }
@@ -226,7 +232,7 @@ function horarioAtencionesProceso(){
 	else
 			{
 				//Consulta que devuelve los años de las atenciones que hay en la BD, son para rellenar el select
-				$data = $GLOBALS['db']->select("SELECT fec_pedido AS fecha, YEAR(fec_pedido) AS anio FROM fme_asistencia GROUP BY YEAR(fec_pedido) ASC");
+				$data = $GLOBALS['db']->select("SELECT fec_pedido AS fecha, YEAR(fec_pedido) AS anio FROM fme_asistencia WHERE YEAR(fec_ate)<>'0000' GROUP BY YEAR(fec_pedido) ASC");
 				 
 				//Devuelvo los datos solicitados por el metodo ajax
 				echo json_encode($data);

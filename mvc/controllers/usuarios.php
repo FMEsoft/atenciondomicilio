@@ -44,7 +44,7 @@
 	
 function mostrarListado(){
 	
-	$usuarios = $GLOBALS['db']->select('SELECT usuarios.usuario, persona_sistema.nombre, persona_sistema.numdoc, persona_sistema.sexo FROM usuarios, persona_sistema
+	$usuarios = $GLOBALS['db']->select('SELECT usuarios.id_usuario, usuarios.usuario, persona_sistema.nombre, persona_sistema.numdoc, persona_sistema.sexo FROM usuarios, persona_sistema
 								WHERE usuarios.id_persona=persona_sistema.id_persona');								
 	if($usuarios)
 	{
