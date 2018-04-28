@@ -138,9 +138,9 @@ function atencionesAsociadosProceso(){
 						//Consulta que me devuelve la cantidad de atenciones que recibió cada asociado ese DÍA en particular, con el nombre del asociado y su número de documento
 						$data = $GLOBALS['db']->select("SELECT tablaAUX.cantidad AS cantidad, persona.numdoc AS numdoc, persona.nombre AS nombre 
 														FROM (SELECT doctitu, nombre, COUNT(*) AS cantidad FROM fme_asistencia 
-														WHERE YEAR(fec_ate)='$anio'
-														AND MONTH(fec_ate)='$mes'
-														AND DAY(fec_ate)='$dia'
+														WHERE YEAR(fec_pedido)='$anio'
+														AND MONTH(fec_pedido)='$mes'
+														AND DAY(fec_pedido)='$dia'
 														GROUP BY doctitu) AS tablaAUX 
 														INNER JOIN persona on persona.numdoc = tablaAUX.doctitu ORDER BY cantidad DESC");
 						 
@@ -153,8 +153,8 @@ function atencionesAsociadosProceso(){
 					//Consulta que me devuelve la cantidad de atenciones que recibió cada asociado ese MES en particular, con el nombre del asociado y su numero de documento
 					$data = $GLOBALS['db']->select("SELECT tablaAUX.cantidad AS cantidad, persona.numdoc AS numdoc, persona.nombre AS nombre 
 													FROM (SELECT doctitu, nombre, COUNT(*) AS cantidad FROM fme_asistencia 
-													WHERE YEAR(fec_ate)='$anio'
-													AND MONTH(fec_ate)='$mes'
+													WHERE YEAR(fec_pedido)='$anio'
+													AND MONTH(fec_pedido)='$mes'
 													GROUP BY doctitu) AS tablaAUX 
 													INNER JOIN persona on persona.numdoc = tablaAUX.doctitu ORDER BY cantidad DESC");
 					 
@@ -168,7 +168,7 @@ function atencionesAsociadosProceso(){
 				//Consulta que me devuelve la cantidad de atenciones que se dieron en cada mes, del año enviado
 				$data = $GLOBALS['db']->select("SELECT tablaAUX.cantidad AS cantidad, persona.numdoc AS numdoc, persona.nombre AS nombre 
 												FROM (SELECT doctitu, nombre, COUNT(*) AS cantidad FROM fme_asistencia 
-												WHERE YEAR(fec_ate)='$anio' 
+												WHERE YEAR(fec_pedido)='$anio' 
 												GROUP BY doctitu) AS tablaAUX 
 												INNER JOIN persona on persona.numdoc = tablaAUX.doctitu ORDER BY cantidad DESC");
 				 
@@ -199,7 +199,7 @@ function horarioAtencionesProceso(){
 												AND MONTH(fec_pedido)='$mes'
 												AND DAY(fec_pedido)='$dia'
 												GROUP BY HOUR(hora_pedido) 
-												ORDER BY cantidad DESC");
+												ORDER BY hora");
 						 
 						//Devuelvo los datos solicitados por el metodo ajax
 						echo json_encode($data);
@@ -211,7 +211,7 @@ function horarioAtencionesProceso(){
 												WHERE YEAR(fec_pedido)='$anio'													
 												AND MONTH(fec_pedido)='$mes'
 												GROUP BY HOUR(hora_pedido) 
-												ORDER BY cantidad DESC");
+												ORDER BY hora");
 					 
 					//Devuelvo los datos solicitados por el metodo ajax
 					echo json_encode($data);
@@ -223,7 +223,7 @@ function horarioAtencionesProceso(){
 				$data = $GLOBALS['db']->select("SELECT hora_pedido, HOUR(hora_pedido) AS hora, COUNT(*) AS cantidad FROM fme_asistencia 
 												WHERE YEAR(fec_pedido)='$anio' 
 												GROUP BY HOUR(hora_pedido) 
-												ORDER BY cantidad DESC");
+												ORDER BY hora");
 				 
 				//Devuelvo los datos solicitados por el metodo ajax
 				echo json_encode($data);
