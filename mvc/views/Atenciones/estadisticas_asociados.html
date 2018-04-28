@@ -47,7 +47,8 @@
 				</div>
 
 			</div>
-
+			
+			<!-- AQUI EMPIEZAN LOS DATOS A MOSTRAR EN LA ESTADISTICA -->
 			<label>DATOS</label>
 			</br>
 			<label>Total de atenciones: </label>
@@ -91,26 +92,29 @@
 				datos = { 'anio': anio, 'mes': mes, 'dia': dia };
 
 		//Método POST de ajax para mandar:
-		//1.- El PHP donde se va a procesar todo que es proceso_asociados.php
+		//1.- El PHP donde se va a procesar todo es el archivo estadisticas.php, se procesa en la función atencionesAsociadosProceso
 		//2.- El o los datos
 		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
 		$.post("../controllers/estadisticas.php?funcion=atencionesAsociadosProceso", datos).done(function (data) {
 			var data = $.parseJSON(data);
 			var total_atenciones = 0;
 
-			// NOTA: Esta grafica hay que revisarla, puede ser ilegible si hay muchos datos, para poder acotarla en un futuro le puse el order by en la consulta
-			//Información para manejar el Donut chart de Morris.js
+			//Información para manejar el bar_chart_data 
 			bar_chart_data = [];
 
 			var tot_asociados = "";
 
-			//Recorremos para calcular el total de atenciones de los asociados en el dia y para rellenar la info del Donut chart
+			//Recorremos para calcular el total de atenciones de los asociados en el dia y para rellenar la info del bar_chart_data
 			for (x = 0; x < data.length; x++) {
 				total_atenciones = total_atenciones + parseInt(data[x].cantidad);
-				tot_asociados = tot_asociados + " " + nombre + " contó con: " + cantidad + " de atenciones.";
+				
 
 				var nombre = data[x].nombre;
 				var cantidad = parseInt(data[x].cantidad);
+				
+				
+				//Muestro los datos en la parte inferior
+				tot_asociados = tot_asociados + " " + nombre + " contó con: " + cantidad + " atención/es. Su DNI es: " + data[x].numdoc + "<br>";
 
 				bar_chart_data[x] = {
 					nombre: nombre,
@@ -121,7 +125,8 @@
 			console.log(bar_chart_data);
 
 			$("#tot-atenciones").text(total_atenciones);
-			$("#tot-asociados").text(tot_asociados);
+			//$("#tot-asociados").text(tot_asociados);
+			document.getElementById("tot-asociados").innerHTML=tot_asociados;
 
 			var config = {
 				data: bar_chart_data,

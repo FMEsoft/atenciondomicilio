@@ -61,7 +61,7 @@
 	function getData() {
 		$("#select-datos").empty();
 		//Método POST de ajax para mandar:
-		//1.- El PHP donde se va a procesar todo que es proceso_horario.php
+		//1.- El PHP donde se va a procesar todo que es estadisticas.php, en la función horarioAtencionesProceso
 		//2.- El o los datos, en este caso no requerimos datos
 		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
 		$.post("../controllers/estadisticas.php?funcion=horarioAtencionesProceso", 0).done(function (data) {
@@ -87,7 +87,7 @@
 				datos = { 'anio': anio, 'mes': mes, 'dia': dia };
 
 		//Método POST de ajax para mandar:
-		//1.- El PHP donde se va a procesar todo que es proceso_horario.php
+		//1.- El PHP donde se va a procesar todo que es estadisticas.php en horarioAtencionesProceso
 		//2.- El o los datos,
 		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
 		$.post("../controllers/estadisticas.php?funcion=horarioAtencionesProceso", datos).done(function (data) {
@@ -97,19 +97,19 @@
 			//Creamos una variable que tendrá el total de las atenciones
 			var total_atenciones = 0;
 
-			//Información para manejar el Donut chart de Morris.js
+			//Información para manejar el bar_chart_data
 			bar_chart_data = [];
 
 			var tot_horarios = "";
 
-			//Recorremos para calcular el total de atenciones en el año y para rellenar la info del Donut chart
+			//Recorremos para calcular el total de atenciones en el año y para rellenar la info del bar_chart_data
 			for (x = 0; x < data.length; x++) {
 				total_atenciones = total_atenciones + parseInt(data[x].cantidad);
 
 				var hora = "Hora: " + data[x].hora;
 				var cantidad = parseInt(data[x].cantidad);
 
-				tot_horarios = tot_horarios + " En la " + hora + " se solicitaron: " + cantidad + " de atenciones.";
+				tot_horarios = tot_horarios + " En la " + hora + " se solicitaron: " + cantidad + " de atenciones.<br>";
 
 				bar_chart_data[x] = {
 					hora: hora,
@@ -118,7 +118,8 @@
 			}
 
 			$("#tot-atenciones").text(total_atenciones);
-			$("#tot-horarios").text(tot_horarios);
+			//$("#tot-horarios").text(tot_horarios);
+			document.getElementById("tot-horarios").innerHTML=tot_horarios;
 
 			console.log(bar_chart_data);
 

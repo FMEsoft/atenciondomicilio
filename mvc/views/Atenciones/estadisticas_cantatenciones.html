@@ -73,7 +73,7 @@
 	function getData() {
 		$("#select-datos").empty();
 		//Método POST de ajax para mandar:
-		//1.- El PHP donde se va a procesar todo que es proceso_cantatenciones.php
+		//1.- El PHP donde se va a procesar todo es el archivo estadisticas.php, se procesa en la función cantidadAtencionesProceso
 		//2.- El o los datos, en este caso no requerimos datos
 		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
 		$.post("../controllers/estadisticas.php?funcion=cantidadAtencionesProceso", 0).done(function (data) {
@@ -81,6 +81,7 @@
 			console.log(data);
 
 			$.each(data, function (key, registro) {
+				//Levanto todos los datos para rellenar en el select
 				$("#select-datos").append('<option value=' + registro.anio + '>' + registro.anio + '</option>');
 			});
 		});
@@ -90,7 +91,7 @@
 
 	function mostrarResultadosAnual(anio) {
 		//Método POST de ajax para mandar:
-		//1.- El PHP donde se va a procesar todo que es proceso_cantatenciones.php
+		//1.- El PHP donde se va a procesar todo es el archivo estadisticas.php, se procesa en la función cantidadAtencionesProceso
 		//2.- El o los datos, en este caso el año seleccionado, aqui esa info se ve en {'anio': anio}
 		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
 		$.post("../controllers/estadisticas.php?funcion=cantidadAtencionesProceso", { 'anio': anio }).done(function (data) {
@@ -186,7 +187,7 @@
 
 	function mostrarResultadosDiarias(anio, mes, dia) {
 		//Método POST de ajax para mandar:
-		//1.- El PHP donde se va a procesar todo que es proceso_cantatenciones.php
+		//1.- El PHP donde se va a procesar todo es el archivo estadisticas.php, se procesa en la función cantidadAtencionesProceso
 		//2.- El o los datos, en este caso el año seleccionado, aqui esa info se ve en {'anio': anio}
 		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
 		$.post("../controllers/estadisticas.php?funcion=cantidadAtencionesProceso", { 'anio': anio, 'mes': mes, 'dia': dia }).done(function (data) {

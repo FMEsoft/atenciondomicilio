@@ -75,8 +75,7 @@ function horarios(){
 		echo $twig->render('/Atenciones/estadisticas_horario.html', compact(''));
 }
 
-//Funciones Accesibles mediante AJAX
-//funcion para AJAX cantidadAsocadosProceso
+//Funciones que son llamadas en los métodos Ajax para las estadisticas (estan en los archivos .html, en las vistas, al final del documento donde estan los scripts)
 function cantidadAtencionesProceso(){
 	//Datos que recibo desde ajax por el metodo POST
 	if(isset($_POST['anio']))
@@ -88,7 +87,7 @@ function cantidadAtencionesProceso(){
 				$mes = $_POST['mes'];
 				$dia = $_POST['dia'];
 			
-				//Consulta que me devuelve la cantidad de atenciones que se dieron en cada mes, del año enviado
+				//Consulta que me devuelve la cantidad de atenciones que se dieron en ese dia en particular, se le manda tanto el dia como el mes y el año
 				$data = $GLOBALS['db']->select("SELECT fec_ate AS fecha, COUNT(*) AS numatenciones 
 												FROM fme_asistencia 
 												WHERE YEAR(fec_ate)='$anio'
@@ -121,7 +120,7 @@ function cantidadAtencionesProceso(){
 			}
 }
 
-//funcion para AJAX atencionesAsociadosProceso
+
 function atencionesAsociadosProceso(){	
 	//Datos que recibo desde ajax por el metodo POST
 	if(isset($_POST['anio']))
@@ -136,7 +135,7 @@ function atencionesAsociadosProceso(){
 					{
 						$dia = $_POST['dia']; 
 			
-						//Consulta que me devuelve la cantidad de atenciones que recibió cada asociado, con el nombre del asociado y su numero de documento
+						//Consulta que me devuelve la cantidad de atenciones que recibió cada asociado ese DÍA en particular, con el nombre del asociado y su número de documento
 						$data = $GLOBALS['db']->select("SELECT tablaAUX.cantidad AS cantidad, persona.numdoc AS numdoc, persona.nombre AS nombre 
 														FROM (SELECT doctitu, nombre, COUNT(*) AS cantidad FROM fme_asistencia 
 														WHERE YEAR(fec_ate)='$anio'
@@ -151,7 +150,7 @@ function atencionesAsociadosProceso(){
 				}
 				else
 				{
-					//Consulta que me devuelve la cantidad de atenciones que recibió cada asociado, con el nombre del asociado y su numero de documento
+					//Consulta que me devuelve la cantidad de atenciones que recibió cada asociado ese MES en particular, con el nombre del asociado y su numero de documento
 					$data = $GLOBALS['db']->select("SELECT tablaAUX.cantidad AS cantidad, persona.numdoc AS numdoc, persona.nombre AS nombre 
 													FROM (SELECT doctitu, nombre, COUNT(*) AS cantidad FROM fme_asistencia 
 													WHERE YEAR(fec_ate)='$anio'
@@ -168,7 +167,9 @@ function atencionesAsociadosProceso(){
 			{
 				//Consulta que me devuelve la cantidad de atenciones que se dieron en cada mes, del año enviado
 				$data = $GLOBALS['db']->select("SELECT tablaAUX.cantidad AS cantidad, persona.numdoc AS numdoc, persona.nombre AS nombre 
-												FROM (SELECT doctitu, nombre, COUNT(*) AS cantidad FROM fme_asistencia WHERE YEAR(fec_ate)='$anio' GROUP BY doctitu) AS tablaAUX 
+												FROM (SELECT doctitu, nombre, COUNT(*) AS cantidad FROM fme_asistencia 
+												WHERE YEAR(fec_ate)='$anio' 
+												GROUP BY doctitu) AS tablaAUX 
 												INNER JOIN persona on persona.numdoc = tablaAUX.doctitu ORDER BY cantidad DESC");
 				 
 				//Devuelvo los datos solicitados por el metodo ajax
@@ -178,7 +179,6 @@ function atencionesAsociadosProceso(){
 	}
 }
 
-//funcion para AJAX cantidadAsocados
 function horarioAtencionesProceso(){
 	//Datos que recibo desde ajax por el metodo POST
 	if(isset($_POST['anio']))

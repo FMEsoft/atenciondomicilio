@@ -161,41 +161,56 @@ function crearUsuario(){
 	date_default_timezone_set('America/Argentina/Catamarca');
 	$fec_alta=date("Y")."-".date("m")."-".date("d");
 	
-	
-	$resultado=$GLOBALS['db']->query("INSERT INTO persona_sistema (nombre,numdoc,sexo,fecnacim,domicilio,casa_nro,barrio,localidad,codpostal,dpmto,tel_fijo,tel_cel,fec_alta,usualta)
+	//Hacemos la prueba de que no quiera registrar un usuario ya existente
+	$usuarioTEST = $GLOBALS['db']->select("SELECT usuario FROM usuarios
+								WHERE usuario='$usuario' ");
+
+    if(!$usuarioTEST)
+        {
+			$resultado=$GLOBALS['db']->query("INSERT INTO persona_sistema (nombre,numdoc,sexo,fecnacim,domicilio,casa_nro,barrio,localidad,codpostal,dpmto,tel_fijo,tel_cel,fec_alta,usualta)
 				VALUES ('$nombre','$doc','$sexo','$fech_nac','$dom','$nrocasa','$barrio','$localidad','$cod_postal','$dpto','$tel_fijo','$tel_celu','$fec_alta','$use')");
 
-	if(!$resultado)
-	{
-		$error=[
-				'menu'			=>"Usuarios",
-				'funcion'		=>"CrearUsuario",
-				'descripcion'	=>"No se pudo crear el usuario, error tabla persona"
-				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
-		return;
-	}
-	
-	
-	
-	$resultado2=$GLOBALS['db']->query("INSERT INTO usuarios (id_persona, usuario, password, fech_creacion, activa)
-				VALUES (LAST_INSERT_ID(),'$usuario','$pass','$fec_alta',1)");
+			if(!$resultado)
+			{
+				$error=[
+						'menu'			=>"Usuarios",
+						'funcion'		=>"CrearUsuario",
+						'descripcion'	=>"No se pudo crear el usuario, error tabla persona"
+						];
+				echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+				return;
+			}
+			
+			
+			
+			$resultado2=$GLOBALS['db']->query("INSERT INTO usuarios (id_persona, usuario, password, fech_creacion, activa)
+						VALUES (LAST_INSERT_ID(),'$usuario','$pass','$fec_alta',1)");
+						
+			if(!$resultado2)
+			{
+
+				$error=[
+						'menu'			=>"Usuarios",
+						'funcion'		=>"CrearUsuario",
+						'descripcion'	=>"No se pudo crear el usuario, error tabla usuarios"
+						];
+				echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+				return;
+			}
 				
-	if(!$resultado2)
-	{
-
-		$error=[
-				'menu'			=>"Usuarios",
-				'funcion'		=>"CrearUsuario",
-				'descripcion'	=>"No se pudo crear el usuario, error tabla usuarios"
-				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
-		return;
-	}
-		
-	
-	header('Location: mensaje_exito.php');
-
+			
+			header('Location: mensaje_exito.php');
+		}
+    else
+        {
+			$error=[
+					'menu'			=>"Usuarios",
+					'funcion'		=>"CrearUsuario",
+					'descripcion'	=>"No se pudo crear el usuario, el usuario ".$usuario." ya existe"
+					];
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+			return;
+		}
 }
 	
 

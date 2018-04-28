@@ -21,15 +21,15 @@
     
     <div class="box-body">
       	<form action="../controllers/usuarios.php?funcion=crearUsuario" method="post">
-			<fieldset><legend>Datos básicos</legend>
+			<fieldset><legend>Datos básicos (*Campos Obligatorios)</legend>
 				<div class="row">
 					<div class="col-md-6 form-group">
-						<label for="nombre">Nombre y apellido</label><br/>
+						<label for="nombre">Nombre y apellido *</label><br/>
 						<input type="text" class="form-control" id="nombre" name="nombre" required/>
 					</div>
 					
 					<div class="col-md-3 form-group">
-						<label for="doc">Número de documento</label><br/>
+						<label for="doc">Número de documento *</label><br/>
 						<input type="text" class="form-control" id="doc" name="doc" required/>
 					</div>
 					
@@ -42,7 +42,7 @@
 					</div>
 
 					<div class="col-md-6 form-group">
-						<label for="fech_nac">Fecha de nacimiento</label><br/>
+						<label for="fech_nac">Fecha de nacimiento *</label><br/>
 						<div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-highlight="true" data-date-language='es'>
 							<input type="text" class="form-control" id="fech_nac" name="fech_nac" required>
 							<div class="input-group-addon">
@@ -53,12 +53,12 @@
 
 
 					<div class="col-md-3 form-group">
-						<label for="fijo">telefono fijo</label><br/>
+						<label for="fijo">Teléfono fijo</label><br/>
 						<input type="text" class="form-control" id="fijo" name="fijo"/>
 					</div>
 					
 					<div class="col-md-3 form-group">
-						<label for="celu">telefono celular</label><br/>
+						<label for="celu">Teléfono celular</label><br/>
 						<input type="text" class="form-control" id="celu" name="celu"/>
 					</div>
 					
@@ -88,7 +88,7 @@
 					</div>
 					
 					<div class="col-md-6 form-group">
-						<label for="codpostal">Codigo postal</label>
+						<label for="codpostal">Código postal</label>
 						<input type="text" class="form-control" name="codpostal" id="codpostal"/>
 					</div>
 					
@@ -102,13 +102,13 @@
 			<fieldset><legend>Datos del usuario</legend>
 				<div class="row">
 					<div class="col-md-6 form-group">
-						<label for="user">Nombre de usuario</label>
+						<label for="user">Nombre de usuario *</label>
 						<input type="text" class="form-control" name="user" id="user" required/>
 						<div id="msgUsuario"></div>
 					</div>
 					
 					<div class="col-md-6 form-group">
-						<label for="pass">Constraseña</label>
+						<label for="pass">Constraseña *</label>
 						<input type="text" class="form-control" name="pass" id="pass" required/>
 					</div>
 				</div>
@@ -116,7 +116,7 @@
 			
 			<div class="row"><br><br>
 				<div class="col-md-4">
-					<input class="btn btn-block btn-success" type="submit" name="crear_usuario" value="Crear usuario" />
+					<input class="btn btn-block btn-success" id="crear_usuario_boton" type="submit" name="crear_usuario" value="Crear usuario"/>
 				</div>
 				<div class="col-md-4">
 					<a href="../controllers/index.php"><input class="btn btn-block btn-default" type="button" name="cancelar" value="Cancelar" /></a>
