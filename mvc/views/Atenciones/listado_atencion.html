@@ -42,7 +42,10 @@
 					<td>{{ res1.fecha }}</td>
 					{% if res1.estado == '0' %}
 						<td><h4><span class="label label-warning">En progreso</span></h4></td>
-						<td><a class="btn btn-primary btn-sm" href="../controllers/listado_atencion.php?funcion=verMas&num_asist={{ res1.nro }}">Finalizar</a></td>
+						<td>
+							<a class="btn btn-primary btn-sm" href="../controllers/listado_atencion.php?funcion=verMas&num_asist={{ res1.nro }}">Finalizar</a>
+							<a href="../controllers/atenciones.php?funcion=generarPDF&id_atencion={{ res1.nro }}" class="btn btn-danger btn-sm" target="_blank"><span class="glyphicon glyphicon-download-alt"></span>PDF</a>
+						</td>
 					{% else %}
 						<td><h4><span class="label label-success">Finalizada</span></h4></td>
 						<td></td>
@@ -58,7 +61,7 @@
 
 {% block javascript %}
 <script>
- 	$('#tabla').DataTable({
+ 	var tabla = $('#tabla').DataTable({
  		"language": {
             "lengthMenu": "Mostrando _MENU_ registros por página",
             "zeroRecords": "Ningún registro coincide con lo ingresado",
@@ -67,5 +70,9 @@
             "infoFiltered": "(de un total de _MAX_ total registros)"
         }
  	});
+	tabla
+    .column( '5:visible' )
+    .order( 'asc' )
+    .draw();
 </script>
 {% endblock %}
