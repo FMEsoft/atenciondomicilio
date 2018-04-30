@@ -101,10 +101,11 @@
 			
 			<fieldset><legend>Datos del usuario</legend>
 				<div class="row">
-					<div class="col-md-6 form-group">
+					<div class="col-md-6 form-group" id="usuario">
 						<label for="user">Nombre de usuario *</label>
-						<input type="text" class="form-control" name="user" id="user" required/>
-						<div id="msgUsuario"></div>
+						<input type="text" class="form-control" name="user" id="user" required oninput="comprobar()"/>
+						<span class="help-block" id="disponible" style="display: none">USUARIO NO DISPONIBLE</span>
+						<span class="help-block" id="noDisponible" style="display: none">USUARIO DISPONIBLE</span>
 					</div>
 					
 					<div class="col-md-6 form-group">
@@ -130,25 +131,34 @@
 
 {% block javascript %}
 <script> 
-$('#user').focusout( function(){
+function comprobar(){
     if($('#user').val()!= ""){
         $.ajax({
             type: "POST",
             url: "../controllers/usuarios.php?funcion=validarUsuario",
             data: "user="+$('#user').val(),
-            beforeSend: function(){
-              $('#msgUsuario').html('<img src="loader.gif"/> verificando');
-            },
             success: function( respuesta ){
               if(respuesta == '1'){
-                $('#msgUsuario').html("Disponible");
+                $('#usuario').attr('class', 'col-md-6 form-group has-success');
+				$('#disponible').show();
+				$('#noDisponible').hide();
+				$("#crear_usuario_boton").prop( "disabled", false );
 				}
               else{
-                $('#msgUsuario').html("No Disponible");
+                $('#usuario').attr('class', 'col-md-6 form-group has-error');
+				$('#disponible').hide();
+				$('#noDisponible').show();
+				$("#crear_usuario_boton").prop( "disabled", true );
 				}
             }
         });
     }
-});
+	else{
+		$('#usuario').attr('class', 'col-md-6 form-group');
+		$('#disponible').hide();
+		$('#noDisponible').hide();
+		$("#crear_usuario_boton").prop( "disabled", false );
+	}
+};
 </script>
 {% endblock %}

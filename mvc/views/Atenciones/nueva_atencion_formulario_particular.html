@@ -157,7 +157,11 @@
 				<div class="row">
 					<div class="col-md-6 form-group">
 						<label for="prof">Profesional</label>
-						<input type="text" class="form-control" id="prof" name="prof" placeholder="Nombre completo del profesional..." required/>
+						<select class="form-control select2" style="width: 100%;" id="prof" name="prof">
+							{% for profesional in profesionales %}
+								<option value="{{ profesional.nombre }}|{{ profesional.id_profesional }}">{{ profesional.nombre }} | {{ profesional.especialidad }} | {{ profesional.matricula }}</option>
+							{% endfor %}
+						</select>
 					</div>
 				</div>
 				
@@ -175,7 +179,7 @@
 					<a href="../controllers/index.php"><input class="btn btn-block btn-default" type="button" name="cancelar" value="Cancelar" /></a>
 				</div>
 				<div class="col-md-4">
-					<input class="btn btn-block btn-success" type="submit" name="atencion_consultorio" value="Generar atencion en consultorio" />
+					<input class="btn btn-block btn-info" type="submit" name="atencion_consultorio" value="Generar atencion en consultorio" />
 				</div>
 			</div>
 				<input style="display:none" type="text" class="form-control" name="cod_serv" id="cod_serv" value="{{ persona.cod_serv }}"/>

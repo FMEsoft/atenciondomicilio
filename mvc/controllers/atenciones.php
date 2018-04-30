@@ -401,9 +401,12 @@ function mostrarFormulario()
 				'otras'		=>	'',
 				];
 	}
+
+	$profesionales = $GLOBALS['db']->select("SELECT * FROM profesionales,persona_sistema
+										WHERE profesionales.id_persona = persona_sistema.id_persona");
 	
 
-	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_formulario.html', compact('persona','use','historia'));
+	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_formulario.html', compact('persona','use','historia','profesionales'));
 }
 
 
@@ -515,9 +518,10 @@ function mostrarFormularioParticular()
 				];
 	}
 	
-	
+	$profesionales = $GLOBALS['db']->select("SELECT * FROM profesionales,persona_sistema
+										WHERE profesionales.id_persona = persona_sistema.id_persona");
 
-	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_formulario_particular.html', compact('persona','use','historia'));
+	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_formulario_particular.html', compact('persona','use','historia','profesionales'));
 }
 	
 	
@@ -557,9 +561,11 @@ function generarAtencion()
 		$tel=$_POST['tel'];
 		$id_persona= $_POST['id_persona'];
 		$nro=$_POST['nro'];		//nro es el numero de asociado
+
+		$profesional_explode = explode('|',$profesional); //$profesional_explode[0] es nombre y $profesional_explode[1] es id_profesional
 		
-		$resultado=$GLOBALS['db']->query("INSERT INTO fme_asistencia (cod_ser,doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional,domicilio,casa_nro,barrio,localidad,codpostal,dpmto,id_persona)
-				VALUES ('$cod_ser','$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional','$dom','$nrocasa','$barrio','$localidad','$cod_postal','$dpto','$id_persona')");
+		$resultado=$GLOBALS['db']->query("INSERT INTO fme_asistencia (cod_ser,doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional,domicilio,casa_nro,barrio,localidad,codpostal,dpmto,id_persona, id_profesional)
+				VALUES ('$cod_ser','$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional_explode[0]','$dom','$nrocasa','$barrio','$localidad','$cod_postal','$dpto','$id_persona','$profesional_explode[1]')");
 		
 		$res2=$GLOBALS['db']->select("SELECT idnum FROM fme_asistencia WHERE idnum=LAST_INSERT_ID()");//obtentemos el id_atencion del ultimo insert realizado
 		
@@ -597,9 +603,11 @@ function generarAtencion()
 		$tel=$_POST['tel'];
 		$id_persona= $_POST['id_persona'];
 		$nro='';		//nro es el numero de asociado
+
+		$profesional_explode = explode('|',$profesional); //$profesional_explode[0] es nombre y $profesional_explode[1] es id_profesional
 		
-		$resultado=$GLOBALS['db']->query("INSERT INTO fme_asistencia (cod_ser,doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional,domicilio,casa_nro,barrio,localidad,codpostal,dpmto,id_persona)
-				VALUES ('$cod_ser','$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional','$dom','$nrocasa','$barrio','$localidad','$cod_postal','$dpto','$id_persona')");
+		$resultado=$GLOBALS['db']->query("INSERT INTO fme_asistencia (cod_ser,doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional,domicilio,casa_nro,barrio,localidad,codpostal,dpmto,id_persona, id_profesional)
+				VALUES ('$cod_ser','$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional_explode[0]','$dom','$nrocasa','$barrio','$localidad','$cod_postal','$dpto','$id_persona','$profesional_explode[1]')");
 		
 		$res2=$GLOBALS['db']->select("SELECT idnum FROM fme_asistencia WHERE idnum=LAST_INSERT_ID()");//obtentemos el id_atencion del ultimo insert realizado
 				
