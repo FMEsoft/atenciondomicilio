@@ -45,6 +45,9 @@
                     <li>
                         <a href="#permisos" data-toggle="tab">Permisos</a>
                     </li>
+                    <li>
+                        <a href="#eliminar" data-toggle="tab">Eliminar</a>
+                    </li>
                 </ul>
 
                 <div class="tab-content">
@@ -269,6 +272,30 @@
                         </fieldset>
                     </div>
 
+                    <div class="tab-pane" id="eliminar">
+                        <div class="box box-danger" >
+                                <div class="box-header">
+                                    <h3 class="box-title">ELIMINAR USUARIO (Se eliminara toda su informacion de la base de datos)</h3>
+                                </div>
+                                <div class="box-body">
+                                        <form action="../controllers/usuarios.php?funcion=eliminarUsuario" method="post">
+                                            <div class="row">
+                                                <div class="col-md-2 form-group">
+                                                    <input type="text" name="borrar" id="borrar" placeholder="Escriba BORRAR para eliminar al usuario" oninput="comprobar()">
+                                                </div>
+                                                <div class="col-md-2 form-group">
+                                                    <input class="btn btn-block btn-danger" type="submit" id="eliminar_usuario" name="eliminar_usuario" value="Eliminar Usuario" disabled/>
+                                                </div>
+                                                <div class="col-md-2 form-group">
+                                                    <a href="../controllers/usuarios.php?funcion=mostrarListado"><input class="btn btn-block btn-default" type="button" name="cancelar" value="Cancelar" /></a>
+                                                </div>
+                                            </div>
+                                            <input style="display:none" type="text" class="form-control" name="id_usuario" id="id_usuario" value="{{ id_usuario }}" />
+                                        </form>
+                                </div>
+                        </div>
+                    </div>
+
                     {% block javascript %}
                     <script>
                         $('#tabla').DataTable({
@@ -281,7 +308,20 @@
                                 "infoFiltered": "(de un total de _MAX_ total registros)"
                             }
                         });
-                    </script> {% endblock %}
+                    </script> 
+
+                    <script> 
+                            function comprobar(){
+                                if($('#borrar').val()== "BORRAR"){
+                                    $("#eliminar_usuario").prop( "disabled", false );
+                                }
+                                else{
+                                    $("#eliminar_usuario").prop( "disabled", true );
+                                }
+                            };
+                    </script>
+                    
+                    {% endblock %}
                 </div>
             </div>
         </div>

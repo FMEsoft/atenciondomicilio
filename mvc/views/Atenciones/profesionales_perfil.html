@@ -33,6 +33,7 @@
                     <ul class="nav nav-tabs">
                       <li class="active"><a href="#datos_persona" data-toggle="tab">Datos personales</a></li>
                       <li><a href="#datos_prof" data-toggle="tab">Datos del profesional</a></li>
+                      <li><a href="#eliminar" data-toggle="tab">Eliminar</a></li>
                     </ul>
 
                     <div class="tab-content">
@@ -201,6 +202,32 @@
 									{% endfor %}
                         </div>
 
+                        <div class="tab-pane" id="eliminar">
+                                <div class="box box-danger" >
+                                        <div class="box-header">
+                                            <h3 class="box-title">ELIMINAR PROFESIONAL (Se eliminara toda su informacion de la base de datos)</h3>
+                                        </div>
+                                        <div class="box-body">
+                                                <form action="../controllers/profesionales.php?funcion=eliminarProfesional" method="post">
+                                                    <div class="row">
+                                                        <div class="col-md-2 form-group">
+                                                            <input type="text" name="borrar" id="borrar" placeholder="Escriba BORRAR para eliminar el profesional" oninput="comprobar()">
+                                                        </div>
+                                                        <div class="col-md-2 form-group">
+                                                            <input class="btn btn-block btn-danger" type="submit" id="eliminar_profesional" name="eliminar_profesional" value="Eliminar Profesional" disabled/>
+                                                        </div>
+                                                        <div class="col-md-2 form-group">
+                                                            <a href="../controllers/profesionales.php?funcion=mostrarListado"><input class="btn btn-block btn-default" type="button" name="cancelar" value="Cancelar" /></a>
+                                                        </div>
+                                                    </div>
+                                                    {% for res in profesional %}
+                                                    <input style="display:none" type="text" class="form-control" name="id_profesional" id="id_profesional" value="{{ res.id_profesional }}" />
+                                                    {% endfor %}
+                                                </form>
+                                        </div>
+                                </div>
+                            </div>
+
 
                             {% block javascript %}
                                 <script>
@@ -214,6 +241,17 @@
                                             "infoFiltered": "(de un total de _MAX_ total registros)"
                                         }
                                     });
+                                </script>
+
+                                <script> 
+                                        function comprobar(){
+                                            if($('#borrar').val()== "BORRAR"){
+                                                $("#eliminar_profesional").prop( "disabled", false );
+                                            }
+                                            else{
+                                                $("#eliminar_profesional").prop( "disabled", true );
+                                            }
+                                        };
                                 </script>
                             {% endblock %}
                         </div>

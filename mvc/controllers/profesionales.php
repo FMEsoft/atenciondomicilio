@@ -64,7 +64,12 @@ function mostrarListado(){
 			$exito=1;
 		}
 
-		echo $GLOBALS['twig']->render('/Atenciones/profesionales_listado.html', compact('profesionales', 'exito'));
+		$eliminado=0;
+		if(isset($_GET['eliminado'])){
+			$eliminado=1;
+		}
+
+		echo $GLOBALS['twig']->render('/Atenciones/profesionales_listado.html', compact('profesionales', 'exito', 'eliminado'));
 	}
 	else
 	{
@@ -260,6 +265,33 @@ function modificarPersonaProfesional(){
 
 
 	header('Location: ./profesionales.php?funcion=verMas&id_profesional='.$id_profesional.'&modificar');
+}
+
+
+function eliminarProfesional(){
+	$id_profesional=$_POST['id_profesional'];
+	$persona = $GLOBALS['db']->select("SELECT id_persona FROM profesionales
+								WHERE id_profesional='$id_profesional'");
+	
+	if(!$persona){
+		$error=[
+			'menu'			=>"Profesionales",
+			'funcion'		=>"EliminarProfesional",
+			'descripcion'	=>"No se pudo encontrar los datos de la persona del profesional  ".$id_profesional
+			];
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+			return;
+	}
+
+	$id_persona=$persona[0]['id_persona'];
+
+	$res=$GLOBALS['db']->query("DELETE FROM persona_sistema
+	WHERE id_persona='$id_persona'");
+
+	$res1=$GLOBALS['db']->query("DELETE FROM profesionales
+	WHERE id_profesional='$id_profesional'");
+
+	header('Location: ./profesionales.php?funcion=mostrarListado&eliminado');
 }
 
 	

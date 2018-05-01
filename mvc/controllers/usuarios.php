@@ -67,7 +67,12 @@ function mostrarListado(){
 			$exito=1;
 		}
 
-		echo $GLOBALS['twig']->render('/Atenciones/usuarios_listado.html', compact('usuarios','use', 'exito'));
+	$eliminado=0;
+	if(isset($_GET['eliminado'])){
+		$eliminado=1;
+	}
+
+		echo $GLOBALS['twig']->render('/Atenciones/usuarios_listado.html', compact('usuarios','use', 'exito', 'eliminado'));
 	}
 	else
 	{
@@ -380,6 +385,32 @@ function modificarUsuario(){
 
 
 	header('Location: ./usuarios.php?funcion=verMas&id_usuario='.$id_usuario.'&modificar');
+}
+
+function eliminarUsuario(){
+	$id_usuario=$_POST['id_usuario'];
+	$persona = $GLOBALS['db']->select("SELECT id_persona FROM usuarios
+								WHERE id_usuario='$id_usuario'");
+	
+	if(!$persona){
+		$error=[
+			'menu'			=>"Usuarios",
+			'funcion'		=>"EliminarUsuario",
+			'descripcion'	=>"No se pudo encontrar los datos de la persona del usuario  ".$id_usuario
+			];
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+			return;
+	}
+
+	$id_persona=$persona[0]['id_persona'];
+
+	$res=$GLOBALS['db']->query("DELETE FROM persona_sistema
+	WHERE id_persona='$id_persona'");
+
+	$res1=$GLOBALS['db']->query("DELETE FROM usuarios
+	WHERE id_usuario='$id_usuario'");
+
+	header('Location: ./usuarios.php?funcion=mostrarListado&eliminado');
 }
 	
 
