@@ -21,8 +21,6 @@ $use=$_SESSION['usuario'];
 
 
 
-$tipo=$_SESSION['tipo'];
-
 //echo $tipo;
 
 

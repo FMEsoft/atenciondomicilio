@@ -31,6 +31,8 @@
 	}
 
 	
+
+	
 //array para la conexion de la bd
 	include ('conexion.php');
 	$config['db']='fme_mutual';
@@ -43,6 +45,7 @@
 	
 	
 function mostrarListado(){
+	$use=$_SESSION['usuario'];
 	
 	$usuarios = $GLOBALS['db']->select('SELECT usuarios.id_usuario, usuarios.usuario, persona_sistema.nombre, persona_sistema.numdoc, persona_sistema.sexo FROM usuarios, persona_sistema
 								WHERE usuarios.id_persona=persona_sistema.id_persona');								
@@ -58,7 +61,7 @@ function mostrarListado(){
 			}
 			$i++;
 		}
-		echo $GLOBALS['twig']->render('/Atenciones/usuarios_listado.html', compact('usuarios'));
+		echo $GLOBALS['twig']->render('/Atenciones/usuarios_listado.html', compact('usuarios','use'));
 	}
 	else
 	{
@@ -167,6 +170,9 @@ function crearUsuario(){
 
     if(!$usuarioTEST)
         {
+
+			mysqli_autocommit($GLOBALS['db'], FALSE);
+
 			$resultado=$GLOBALS['db']->query("INSERT INTO persona_sistema (nombre,numdoc,sexo,fecnacim,domicilio,casa_nro,barrio,localidad,codpostal,dpmto,tel_fijo,tel_cel,fec_alta,usualta)
 				VALUES ('$nombre','$doc','$sexo','$fech_nac','$dom','$nrocasa','$barrio','$localidad','$cod_postal','$dpto','$tel_fijo','$tel_celu','$fec_alta','$use')");
 
@@ -177,7 +183,8 @@ function crearUsuario(){
 						'funcion'		=>"CrearUsuario",
 						'descripcion'	=>"No se pudo crear el usuario, error tabla persona"
 						];
-				echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+				echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));
+				mysqli_rollback($GLOBALS['db']);	
 				return;
 			}
 			
@@ -195,10 +202,11 @@ function crearUsuario(){
 						'descripcion'	=>"No se pudo crear el usuario, error tabla usuarios"
 						];
 				echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+				mysqli_rollback($GLOBALS['db']);
 				return;
 			}
 				
-			
+			mysqli_commit($GLOBALS['db']);
 			header('Location: mensaje_exito.php');
 		}
     else
