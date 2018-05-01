@@ -662,7 +662,7 @@ function generarPDF()
 
 	$resultado=$GLOBALS['db']->select("SELECT fme_asistencia.cod_ser, fme_asistencia.doctitu, fme_asistencia.numdoc, fme_asistencia.nombre, fme_asistencia.fec_pedido, 
 	fme_asistencia.hora_pedido, fme_asistencia.dessit, fme_asistencia.profesional, fme_asistencia.domicilio, fme_asistencia.casa_nro, fme_asistencia.barrio, 
-	fme_asistencia.localidad, fme_asistencia.codpostal, fme_asistencia.dpmto, fme_asistencia.id_persona, persona.sexo, persona.tel_fijo, persona.tel_cel 
+	fme_asistencia.localidad, fme_asistencia.codpostal, fme_asistencia.dpmto, fme_asistencia.id_persona, persona.sexo, persona.tel_fijo, persona.tel_cel, fme_asistencia.fec_ate 
 	FROM fme_asistencia, persona 
 	WHERE fme_asistencia.id_persona= persona.id_persona
 	AND fme_asistencia.idnum='$id_atencion'");
@@ -686,6 +686,7 @@ function generarPDF()
 		$cod_postal=$res['codpostal'];
 		$dpto=$res['dpmto'];
 		$id_persona=$res['id_persona'];
+		$fec_ate=$res['fec_ate'];
 	}
 
 	$resultado_historia = $GLOBALS['db']->select("SELECT * FROM historia_clinica
@@ -882,9 +883,17 @@ function generarPDF()
 	if($historia['amigdalitis'] == true)
 		$check = "4"; else $check = "";
 		$pdf->Cell(10, 10, $check, 1, 0);	
+	
+	if($fec_ate=='0000-00-00'){
+		$pdf->Image('../../static/images/back.png','0','0','595','841','PNG');
+	}
+	else{
+		$pdf->Image('../../static/images/back_finalizado.png','0','0','595','841','PNG');
+	}
+	$pdf->Image('../../static/images/logo_mutual.png','425','100','100','100','PNG');//LOGO
+	
 
-	$pdf->Image('../../static/images/logo_mutual.png','425','100','100','100','PNG');	
-	$pdf->Image('../../static/images/back.png','0','0','595','841','PNG');	
+	
 
 	$pdf->Output(); //Salida al navegador	
 }
