@@ -44,27 +44,30 @@
 	
 function mostrarListado(){
 	
-	$usuarios = $GLOBALS['db']->select('SELECT * FROM usuarios, persona_sistema
-								WHERE usuarios.id_persona=persona_sistema.id_persona');								
-	if($usuarios)
+	$personas = $GLOBALS['db']->select('SELECT * FROM persona');								
+	if($personas)
 	{
 		$i=0;
-		foreach($usuarios as $res){
-			if($res['sexo']=='M'){
-				$usuarios[$i]['sexo']='Masculino';
+		foreach($personas as $res){
+			if($res['sexo']==1){
+				$personas[$i]['sexo']='Masculino';
 			}
 			else{
-				$usuarios[$i]['sexo']='Femenino';
+				$personas[$i]['sexo']='Femenino';
 			}
 			$i++;
 		}
-		echo $GLOBALS['twig']->render('/Atenciones/usuarios_listado.html', compact('usuarios'));
+		$exito=0;
+		if(isset($_GET['exito'])){
+			$exito=1;
+		}
+		echo $GLOBALS['twig']->render('/Atenciones/historia_listado.html', compact('personas','exito'));
 	}
 	else
 	{
 		$error=[
-				'menu'			=>"Usuarios",
-				'funcion'		=>"Listado de usuarios",
+				'menu'			=>"Historia Clinica",
+				'funcion'		=>"Listado de personas",
 				'descripcion'	=>"No se encontraron resultados."
 				];
 		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
@@ -73,128 +76,181 @@ function mostrarListado(){
 
 function verMas(){
 	
-	if(!isset($_GET['id_usuario']))
+	if(!isset($_GET['id_persona']))
 	{
 		$error=[
-				'menu'			=>"Usuarios",
+				'menu'			=>"Historia Clinica",
 				'funcion'		=>"Perfil de usuarios",
 				'descripcion'	=>"No se encontraron resultados."
 				];
 		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));
 	}
-	$id_usuario=$_GET['id_usuario'];
+	$id_persona=$_GET['id_persona'];
 	
-	$usuario = $GLOBALS['db']->select("SELECT * FROM usuarios, persona_sistema
-								WHERE usuarios.id_persona=persona_sistema.id_persona
-								AND usuarios.id_usuario='$id_usuario' ");
-								
-	if(!$usuario){
+	$resultado = $GLOBALS['db']->select("SELECT * FROM persona, historia_clinica
+								WHERE persona.id_persona=historia_clinica.id_persona
+								AND historia_clinica.id_persona='$id_persona' ");
+
+	if($resultado)
+	{
+		foreach($resultado as $res)
+		{
+			$persona =[
+					'sexo'		=>	$res['sexo'],
+					'nombre'	=>	$res['nombre'],
+					'doc' 		=>	$res['numdoc'],
+					'tel' 		=>	$res['tel_fijo'],
+					'cel'		=>	$res['tel_cel'],
+					'dom'		=>	$res['domicilio'],
+					'nro_casa'		=>	$res['casa_nro'],
+					'barrio'		=>	$res['barrio'],
+					'localidad'		=>	$res['localidad'],
+					'cod_postal'		=>	$res['codpostal'],
+					'dpmto'		=>	$res['dpmto'],
+					'id_persona' => $res['id_persona']
+					];
+			$id_persona=$res['id_persona'];
+		}	
+	}
+	else
+	{
 		$error=[
-				'menu'			=>"Usuarios",
-				'funcion'		=>"Perfil de usuarios",
-				'descripcion'	=>"No se encontraron resultados."
-				];
+			'menu'			=>"Historia Clinica",
+			'funcion'		=>"Perfil de persona",
+			'descripcion'	=>"No se encontraron resultados."
+			];
 		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));
 	}
-	
-	$usuario[0]['fech_creacion'] = date("d/m/Y", strtotime($usuario[0]['fech_creacion']));
-	
-			
-	///---FUNCIÓN PARA CALCULAR EDAD----
-	
-	$fecha=$usuario[0]['fecnacim'];
-	$dias = explode("-", $fecha, 3);
-	
-	// $dias[0] es el año
-	// $dias[1] es el mes
-	// $dias[2] es el dia
-	
-	// mktime toma los datos en el orden (0,0,0, mes, dia, año) 
-	$dias = mktime(0,0,0,$dias[1],$dias[2],$dias[0]);
-	$edad = (int)((time()-$dias)/31556926 );
-	$usuario[0]['edad']=$edad;
-	
-	///---FIN FUNCIÓN PARA CALCULAR EDAD----
-	
-	echo $GLOBALS['twig']->render('/Atenciones/usuarios_perfil.html', compact('usuario'));
-	
-}
 
-function mostrarFormulario(){
-	echo $GLOBALS['twig']->render('/Atenciones/nuevo_usuario_formulario.html');
-	return;
-}
-
-function validarUsuario(){
-    $user = $_POST["user"];
-	$usuario = $GLOBALS['db']->select("SELECT usuario FROM usuarios
-								WHERE usuario='$user' ");
-
-    if(!$usuario)
-        echo 1;
-    else
-        echo 0;
-	return;
-}
-
-function crearUsuario(){
-	
-	$use=$_SESSION['usuario']; //Usuario que realiza la creacion del nuevo usuario
-	
-	$nombre=$_POST['nombre'];
-	$doc=$_POST['doc'];
-	$sexo=$_POST['sexo'];
-	$fech_nac=$_POST['fech_nac'];
-	$tel_fijo=$_POST['fijo'];
-	$tel_celu=$_POST['celu'];
-	
-	$dom=$_POST['dom'];
-	$nrocasa=$_POST['nrocasa'];
-	$barrio=$_POST['barrio'];
-	$localidad=$_POST['localidad'];
-	$cod_postal=$_POST['codpostal'];
-	$dpto=$_POST['dpto'];
-	
-	$usuario=$_POST['user'];
-	$pass=$_POST['pass'];
-	
-	date_default_timezone_set('America/Argentina/Catamarca');
-	$fec_alta=date("Y")."-".date("m")."-".date("d");
-	
-	
-	$resultado=$GLOBALS['db']->query("INSERT INTO persona_sistema (nombre,numdoc,sexo,fecnacim,domicilio,casa_nro,barrio,localidad,codpostal,dpmto,tel_fijo,tel_cel,fec_alta,usualta)
-				VALUES ('$nombre','$doc','$sexo','$fech_nac','$dom','$nrocasa','$barrio','$localidad','$cod_postal','$dpto','$tel_fijo','$tel_celu','$fec_alta','$use')");
-
-	if(!$resultado)
-	{
-		$error=[
-				'menu'			=>"Usuarios",
-				'funcion'		=>"CrearUsuario",
-				'descripcion'	=>"No se pudo crear el usuario, error tabla persona"
+	$resultado_historia = $GLOBALS['db']->select("SELECT * FROM historia_clinica
+										WHERE id_persona='$id_persona'");
+	if($resultado_historia){
+		foreach($resultado_historia as $res_historia){
+			$historia =[
+					'paperas'		=>	$res_historia['paperas'],
+					'rubeola'		=>	$res_historia['rubeola'],
+					'varicela'	=>	$res_historia['varicela'],
+					'epilepsia' 		=>	$res_historia['epilepsia'],
+					'hepatitis' 		=>	$res_historia['hepatitis'],
+					'sinusitis'		=>	$res_historia['sinusitis'],
+					'diabetes' 	=>	$res_historia['diabetes'],
+					'apendicitis'		=>	$res_historia['apendicitis'],
+					'amigdalitis'		=>	$res_historia['amigdalitis'],
+					'comidas'		=>	$res_historia['comidas'],
+					'medicamentos'		=>	$res_historia['medicamentos'],
+					'otras'		=>	$res_historia['otras'],
+					];
+					
+		}
+	}
+	else{
+		$historia =[
+				'paperas'		=>	0,
+				'rubeola'		=>	0,
+				'varicela'	=>	0,
+				'epilepsia' 		=>	0,
+				'hepatitis' 		=>	0,
+				'sinusitis'		=>	0,
+				'diabetes' 	=>	0,
+				'apendicitis'		=>	0,
+				'amigdalitis'		=>	0,
+				'comidas'		=>	'',
+				'medicamentos'		=>	'',
+				'otras'		=>	'',
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
-		return;
+	}
+
+	
+	echo $GLOBALS['twig']->render('/Atenciones/historia_perfil.html', compact('persona','historia'));
+	
+}
+
+
+function modificarHistoria(){
+	
+	$id_persona=$_POST['id_persona'];
+
+	if(isset($_POST['paperas'])){
+		$paperas=1;
+	}
+	else{
+		$paperas=0;
+	}
+	if(isset($_POST['rubeola'])){
+		$rubeola=1;
+	}
+	else{
+		$rubeola=0;
+	}
+	if(isset($_POST['varicela'])){
+		$varicela=1;
+	}
+	else{
+		$varicela=0;
+	}
+	if(isset($_POST['epilepsia'])){
+		$epilepsia=1;
+	}
+	else{
+		$epilepsia=0;
+	}
+	if(isset($_POST['hepatitis'])){
+		$hepatitis=1;
+	}
+	else{
+		$hepatitis=0;
+	}
+	if(isset($_POST['sinusitis'])){
+		$sinusitis=1;
+	}
+	else{
+		$sinusitis=0;
+	}
+	if(isset($_POST['diabetes'])){
+		$diabetes=1;
+	}
+	else{
+		$diabetes=0;
+	}
+	if(isset($_POST['apendicitis'])){
+		$apendicitis=1;
+	}
+	else{
+		$apendicitis=0;
+	}
+	if(isset($_POST['amigdalitis'])){
+		$amigdalitis=1;
+	}
+	else{
+		$amigdalitis=0;
 	}
 	
+	$comidas=$_POST['comidas'];
+	$medicamentos=$_POST['medicamentos'];
+	$otras=$_POST['otras'];
+	$id_persona=$_POST['id_persona'];
 	
-	
-	$resultado2=$GLOBALS['db']->query("INSERT INTO usuarios (id_persona, usuario, password, fech_creacion, activa)
-				VALUES (LAST_INSERT_ID(),'$usuario','$pass','$fec_alta',1)");
-				
-	if(!$resultado2)
-	{
+	$resultado = $GLOBALS['db']->select("SELECT * FROM historia_clinica
+									WHERE id_persona = '$id_persona' ");
 
-		$error=[
-				'menu'			=>"Usuarios",
-				'funcion'		=>"CrearUsuario",
-				'descripcion'	=>"No se pudo crear el usuario, error tabla usuarios"
-				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
-		return;
+	if($resultado)
+	{
+		$res=$GLOBALS['db']->query("UPDATE historia_clinica SET 
+		paperas='$paperas',rubeola='$rubeola',varicela='$varicela',epilepsia='$epilepsia',
+		hepatitis='$hepatitis',sinusitis='$sinusitis',diabetes='$diabetes',
+		apendicitis='$apendicitis',amigdalitis='$amigdalitis',comidas='$comidas',
+		medicamentos='$medicamentos',otras='$otras'
+		WHERE id_persona='$id_persona'");
 	}
-		
-	
-	header('Location: mensaje_exito.php');
+	else{
+		$res=$GLOBALS['db']->query("INSERT INTO historia_clinica (id_persona,paperas,rubeola,varicela,epilepsia,
+		hepatitis,sinusitis,diabetes,apendicitis,amigdalitis,comidas,medicamentos,otras)
+				VALUES ('$id_persona','$paperas','$rubeola','$varicela','$epilepsia',
+				'$hepatitis','$sinusitis','$diabetes','$apendicitis','$amigdalitis',
+				'$comidas','$medicamentos','$otras')");
+	}
+
+	header('Location: ./historia.php?funcion=mostrarListado&exito');
 
 }
 	

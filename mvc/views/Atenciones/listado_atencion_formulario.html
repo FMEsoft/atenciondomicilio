@@ -117,39 +117,39 @@
 					<fieldset><legend>Enfermedades padecidas</legend>
 						<div class="row">
 							<div class="col-md-4 form-group">
-								<label><input type="checkbox" name="paperas" id="paperas" {% if historia.paperas == 1 %}checked{% else %}{% endif %} disabled>Paperas</label>
+								<label><input type="checkbox" name="paperas" id="paperas" {% if historia.paperas == 1 %}checked{% else %}{% endif %} >Paperas</label>
 							</div>
 							
 							<div class="col-md-4 form-group">
-								<label><input type="checkbox" name="rubeola" id="rubeola" {% if historia.rubeola == 1 %}checked{% else %}{% endif %} disabled>Rubeola</label>
+								<label><input type="checkbox" name="rubeola" id="rubeola" {% if historia.rubeola == 1 %}checked{% else %}{% endif %} >Rubeola</label>
 							</div>
 							
 							<div class="col-md-4 form-group">
-								<label><input type="checkbox" name="varicela" id="varicela" {% if historia.varicela == 1 %}checked{% else %}{% endif %} disabled>Varicela</label>
+								<label><input type="checkbox" name="varicela" id="varicela" {% if historia.varicela == 1 %}checked{% else %}{% endif %} >Varicela</label>
 							</div>
 							
 							<div class="col-md-4 form-group">
-								<label><input type="checkbox" name="epilepsia" id="epilepsia" {% if historia.epilepsia == 1 %}checked{% else %}{% endif %} disabled>Epilepsia</label>
+								<label><input type="checkbox" name="epilepsia" id="epilepsia" {% if historia.epilepsia == 1 %}checked{% else %}{% endif %} >Epilepsia</label>
 							</div>
 							
 							<div class="col-md-4 form-group">
-								<label><input type="checkbox" name="hepatitis" id="hepatitis" {% if historia.hepatitis == 1 %}checked{% else %}{% endif %} disabled>Hepatitis</label>
+								<label><input type="checkbox" name="hepatitis" id="hepatitis" {% if historia.hepatitis == 1 %}checked{% else %}{% endif %} >Hepatitis</label>
 							</div>
 							
 							<div class="col-md-4 form-group">
-								<label><input type="checkbox" name="sinusitis" id="sinusitis" {% if historia.sinusitis == 1 %}checked{% else %}{% endif %} disabled>Sinusitis</label>
+								<label><input type="checkbox" name="sinusitis" id="sinusitis" {% if historia.sinusitis == 1 %}checked{% else %}{% endif %} >Sinusitis</label>
 							</div>
 							
 							<div class="col-md-4 form-group">
-								<label><input type="checkbox" name="diabetes" id="diabetes" {% if historia.diabetes == 1 %}checked{% else %}{% endif %} disabled>Diabetes</label>
+								<label><input type="checkbox" name="diabetes" id="diabetes" {% if historia.diabetes == 1 %}checked{% else %}{% endif %} >Diabetes</label>
 							</div>
 							
 							<div class="col-md-4 form-group">
-								<label><input type="checkbox" name="apendicitis" id="apendicitis" {% if historia.apendicitis == 1 %}checked{% else %}{% endif %} disabled>Apendicitis</label>
+								<label><input type="checkbox" name="apendicitis" id="apendicitis" {% if historia.apendicitis == 1 %}checked{% else %}{% endif %} >Apendicitis</label>
 							</div>
 							
 							<div class="col-md-4 form-group">
-								<label><input type="checkbox" name="amigdalitis" id="amigdalitis" {% if historia.amigdalitis == 1 %}checked{% else %}{% endif %} disabled>Amigdalitis</label>
+								<label><input type="checkbox" name="amigdalitis" id="amigdalitis" {% if historia.amigdalitis == 1 %}checked{% else %}{% endif %} >Amigdalitis</label>
 							</div>
 						</div>
 
@@ -161,15 +161,15 @@
 
 						<div class="col-md-4 form-group">
 							<label for="comidas">Comidas</label><br/>
-							<textarea type="text" class="form-control"  id="comidas" name="comidas" rows="2" placeholder="Escribe las alergias.." readonly />{{ historia.comidas }}</textarea>
+							<textarea type="text" class="form-control"  id="comidas" name="comidas" rows="2" placeholder="Escribe las alergias.."  />{{ historia.comidas }}</textarea>
 						</div>
 						<div class="col-md-4 form-group">
 							<label for="medicamentos">Medicamentos</label><br/>
-							<textarea type="text" class="form-control" id="medicamentos" name="medicamentos" rows="2" placeholder="Escribe las alergias.." readonly />{{ historia.medicamentos }}</textarea>
+							<textarea type="text" class="form-control" id="medicamentos" name="medicamentos" rows="2" placeholder="Escribe las alergias.."  />{{ historia.medicamentos }}</textarea>
 						</div>
 						<div class="col-md-4 form-group">
 							<label for="otras">Otras</label><br/>
-							<textarea type="text" class="form-control" id="otras" name="otras" rows="2" placeholder="Escribe las alergias.." readonly />{{ historia.otras }}</textarea>
+							<textarea type="text" class="form-control" id="otras" name="otras" rows="2" placeholder="Escribe las alergias.."  />{{ historia.otras }}</textarea>
 						</div>
 
 					</fieldset>
@@ -235,6 +235,7 @@
 					</div>
 						<input style="display:none" type="text" class="form-control" name="cod_serv" id="cod_serv" value="{{ persona.cod_serv }}"/>
 						<input style="display:none" type="text" class="form-control" name="num_asistencia" id="num_asistencia" value="{{ persona.num_asistencia }}"/>
+						<input style="display:none" type="text" class="form-control" name="id_persona" id="id_persona" value="{{ persona.id_persona }}"/>
 				</form>
 			</div>    
 		</div>
@@ -282,6 +283,65 @@
 								<input type="text" class="form-control" id="doctit" name="doctit" readonly value="{{ persona.doctit }}"/>
 							</div>
 						</div>
+					</fieldset>
+
+
+					<fieldset><legend>Enfermedades padecidas</legend>
+						<div class="row">
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="paperas" id="paperas" {% if historia.paperas == 1 %}checked{% else %}{% endif %} disabled>Paperas</label>
+							</div>
+							
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="rubeola" id="rubeola" {% if historia.rubeola == 1 %}checked{% else %}{% endif %} disabled>Rubeola</label>
+							</div>
+							
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="varicela" id="varicela" {% if historia.varicela == 1 %}checked{% else %}{% endif %} disabled>Varicela</label>
+							</div>
+							
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="epilepsia" id="epilepsia" {% if historia.epilepsia == 1 %}checked{% else %}{% endif %} disabled>Epilepsia</label>
+							</div>
+							
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="hepatitis" id="hepatitis" {% if historia.hepatitis == 1 %}checked{% else %}{% endif %} disabled>Hepatitis</label>
+							</div>
+							
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="sinusitis" id="sinusitis" {% if historia.sinusitis == 1 %}checked{% else %}{% endif %} disabled>Sinusitis</label>
+							</div>
+							
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="diabetes" id="diabetes" {% if historia.diabetes == 1 %}checked{% else %}{% endif %} disabled>Diabetes</label>
+							</div>
+							
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="apendicitis" id="apendicitis" {% if historia.apendicitis == 1 %}checked{% else %}{% endif %} disabled>Apendicitis</label>
+							</div>
+							
+							<div class="col-md-4 form-group">
+								<label><input type="checkbox" name="amigdalitis" id="amigdalitis" {% if historia.amigdalitis == 1 %}checked{% else %}{% endif %} disabled>Amigdalitis</label>
+							</div>
+						</div>
+
+					</fieldset>
+
+					<fieldset><legend>Alergias</legend>
+
+						<div class="col-md-4 form-group">
+							<label for="comidas">Comidas</label><br/>
+							<textarea type="text" class="form-control"  id="comidas" name="comidas" rows="2" placeholder="Escribe las alergias.." readonly />{{ historia.comidas }}</textarea>
+						</div>
+						<div class="col-md-4 form-group">
+							<label for="medicamentos">Medicamentos</label><br/>
+							<textarea type="text" class="form-control" id="medicamentos" name="medicamentos" rows="2" placeholder="Escribe las alergias.." readonly />{{ historia.medicamentos }}</textarea>
+						</div>
+						<div class="col-md-4 form-group">
+							<label for="otras">Otras</label><br/>
+							<textarea type="text" class="form-control" id="otras" name="otras" rows="2" placeholder="Escribe las alergias.." readonly />{{ historia.otras }}</textarea>
+						</div>
+
 					</fieldset>
 					
 					

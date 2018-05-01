@@ -114,7 +114,8 @@ echo $GLOBALS['twig']->render('/Atenciones/listado_atencion.html',compact ('asis
 }
 
 function verMas()
-{$use=$_SESSION['usuario'];
+{
+	$use=$_SESSION['usuario'];
 
 	if(!isset($_GET['num_asist']))
 	{
@@ -135,7 +136,7 @@ function verMas()
 													 fme_asistencia.profesional, fme_asistencia.dessit, fme_asistencia.fec_ate, fme_asistencia.hora_aten,
 													 fme_asistencia.sintomas, fme_asistencia.tratamiento, fme_asistencia.diagnostico, 
 													 fme_asistencia.domicilio, fme_asistencia.casa_nro, fme_asistencia.barrio, fme_asistencia.localidad,
-													 fme_asistencia.codpostal, fme_asistencia.dpmto
+													 fme_asistencia.codpostal, fme_asistencia.dpmto, fme_asistencia.id_persona
 									  FROM fme_asistencia, persona 
 									  WHERE fme_asistencia.idnum='$numero_asistencia' AND persona.numdoc = fme_asistencia.numdoc");
 
@@ -175,19 +176,62 @@ function verMas()
 		'localidad'		=>	$asistencia[0]['localidad'],
 		'cod_postal'	=>	$asistencia[0]['codpostal'],
 		'dpmto'			=>	$asistencia[0]['dpmto'],
-		'num_asistencia'	=>	$numero_asistencia
+		'num_asistencia'	=>	$numero_asistencia,
+		'id_persona'	=>	$asistencia[0]['id_persona']
 	];
 	if($asistencia[0]['sexo']==1)
 		$persona['sexo']='Masculino';
 	else
 		$persona['sexo']='Femenino';
+	
+	$id_persona = $asistencia[0]['id_persona'];
 
-echo $GLOBALS['twig']->render('/Atenciones/listado_atencion_formulario.html',compact ('persona','estado','use'));
+	$resultado_historia = $GLOBALS['db']->select("SELECT * FROM historia_clinica
+	WHERE id_persona='$id_persona'");
+
+	if($resultado_historia){
+		foreach($resultado_historia as $res_historia){
+			$historia =[
+			'paperas'		=>	$res_historia['paperas'],
+			'rubeola'		=>	$res_historia['rubeola'],
+			'varicela'	=>	$res_historia['varicela'],
+			'epilepsia' 		=>	$res_historia['epilepsia'],
+			'hepatitis' 		=>	$res_historia['hepatitis'],
+			'sinusitis'		=>	$res_historia['sinusitis'],
+			'diabetes' 	=>	$res_historia['diabetes'],
+			'apendicitis'		=>	$res_historia['apendicitis'],
+			'amigdalitis'		=>	$res_historia['amigdalitis'],
+			'comidas'		=>	$res_historia['comidas'],
+			'medicamentos'		=>	$res_historia['medicamentos'],
+			'otras'		=>	$res_historia['otras'],
+			];
+
+		}
+	}
+	else{
+		$historia =[
+		'paperas'		=>	0,
+		'rubeola'		=>	0,
+		'varicela'	=>	0,
+		'epilepsia' 		=>	0,
+		'hepatitis' 		=>	0,
+		'sinusitis'		=>	0,
+		'diabetes' 	=>	0,
+		'apendicitis'		=>	0,
+		'amigdalitis'		=>	0,
+		'comidas'		=>	'',
+		'medicamentos'		=>	'',
+		'otras'		=>	'',
+		];
+	}
+
+echo $GLOBALS['twig']->render('/Atenciones/listado_atencion_formulario.html',compact ('persona','estado','use', 'historia'));
 }
 
 
 function finalizarAtencion()
-{$use=$_SESSION['usuario'];
+{
+	$use=$_SESSION['usuario'];
 	$num_asistencia=$_POST['num_asistencia'];
 	$fecha_ate=$_POST['fech_ate'];		
 	$hora_ate=$_POST['hora_ate'];
@@ -208,7 +252,87 @@ function finalizarAtencion()
 		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
 		return;
 	}
+
+	if(isset($_POST['paperas'])){
+		$paperas=1;
+	}
+	else{
+		$paperas=0;
+	}
+	if(isset($_POST['rubeola'])){
+		$rubeola=1;
+	}
+	else{
+		$rubeola=0;
+	}
+	if(isset($_POST['varicela'])){
+		$varicela=1;
+	}
+	else{
+		$varicela=0;
+	}
+	if(isset($_POST['epilepsia'])){
+		$epilepsia=1;
+	}
+	else{
+		$epilepsia=0;
+	}
+	if(isset($_POST['hepatitis'])){
+		$hepatitis=1;
+	}
+	else{
+		$hepatitis=0;
+	}
+	if(isset($_POST['sinusitis'])){
+		$sinusitis=1;
+	}
+	else{
+		$sinusitis=0;
+	}
+	if(isset($_POST['diabetes'])){
+		$diabetes=1;
+	}
+	else{
+		$diabetes=0;
+	}
+	if(isset($_POST['apendicitis'])){
+		$apendicitis=1;
+	}
+	else{
+		$apendicitis=0;
+	}
+	if(isset($_POST['amigdalitis'])){
+		$amigdalitis=1;
+	}
+	else{
+		$amigdalitis=0;
+	}
 	
+	$comidas=$_POST['comidas'];
+	$medicamentos=$_POST['medicamentos'];
+	$otras=$_POST['otras'];
+	$id_persona=$_POST['id_persona'];
+	
+	$resultado = $GLOBALS['db']->select("SELECT * FROM historia_clinica
+									WHERE id_persona = '$id_persona' ");
+
+	if($resultado)
+	{
+		$res=$GLOBALS['db']->query("UPDATE historia_clinica SET 
+		paperas='$paperas',rubeola='$rubeola',varicela='$varicela',epilepsia='$epilepsia',
+		hepatitis='$hepatitis',sinusitis='$sinusitis',diabetes='$diabetes',
+		apendicitis='$apendicitis',amigdalitis='$amigdalitis',comidas='$comidas',
+		medicamentos='$medicamentos',otras='$otras'
+		WHERE id_persona='$id_persona'");
+	}
+	else{
+		$res=$GLOBALS['db']->query("INSERT INTO historia_clinica (id_persona,paperas,rubeola,varicela,epilepsia,
+		hepatitis,sinusitis,diabetes,apendicitis,amigdalitis,comidas,medicamentos,otras)
+				VALUES ('$id_persona','$paperas','$rubeola','$varicela','$epilepsia',
+				'$hepatitis','$sinusitis','$diabetes','$apendicitis','$amigdalitis',
+				'$comidas','$medicamentos','$otras')");
+	}
+
 	$_GET['num_asist']=$num_asistencia;
 	verMas();
 }
