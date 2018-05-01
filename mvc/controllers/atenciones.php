@@ -687,6 +687,43 @@ function generarPDF()
 		$dpto=$res['dpmto'];
 		$id_persona=$res['id_persona'];
 	}
+
+	$resultado_historia = $GLOBALS['db']->select("SELECT * FROM historia_clinica
+	WHERE id_persona='$id_persona'");
+	if($resultado_historia){
+		foreach($resultado_historia as $res_historia){
+			$historia =[
+			'paperas'		=>	$res_historia['paperas'],
+			'rubeola'		=>	$res_historia['rubeola'],
+			'varicela'	=>	$res_historia['varicela'],
+			'epilepsia' 		=>	$res_historia['epilepsia'],
+			'hepatitis' 		=>	$res_historia['hepatitis'],
+			'sinusitis'		=>	$res_historia['sinusitis'],
+			'diabetes' 	=>	$res_historia['diabetes'],
+			'apendicitis'		=>	$res_historia['apendicitis'],
+			'amigdalitis'		=>	$res_historia['amigdalitis'],
+			'comidas'		=>	$res_historia['comidas'],
+			'medicamentos'		=>	$res_historia['medicamentos'],
+			'otras'		=>	$res_historia['otras'],
+			];
+		}
+	}
+	else{
+		$historia =[
+		'paperas'		=>	0,
+		'rubeola'		=>	0,
+		'varicela'	=>	0,
+		'epilepsia' 		=>	0,
+		'hepatitis' 		=>	0,
+		'sinusitis'		=>	0,
+		'diabetes' 	=>	0,
+		'apendicitis'		=>	0,
+		'amigdalitis'		=>	0,
+		'comidas'		=>	'',
+		'medicamentos'		=>	'',
+		'otras'		=>	'',
+		];
+	}
 	
 	//---------------Generar PDF -------------------------------
 	
@@ -758,8 +795,93 @@ function generarPDF()
 	$pdf->SetXY(70,500);
 	$pdf->Cell(10, 8, utf8_decode('Situacion: '.$dessit), 0, 'L');
 
+	//historia clinica
+	$pdf->SetXY(70,540);
+	$pdf->Cell(10, 8, utf8_decode('Paperas '), 0, 'L');
+
+	$pdf->SetXY(70,560);
+	$pdf->Cell(10, 8, utf8_decode('Rubeola '), 0, 'L');
+
+	$pdf->SetXY(70,580);
+	$pdf->Cell(10, 8, utf8_decode('Varicela '), 0, 'L');
+
+	$pdf->SetXY(250,540);
+	$pdf->Cell(10, 8, utf8_decode('Epilepsia '), 0, 'L');
+
+	$pdf->SetXY(250,560);
+	$pdf->Cell(10, 8, utf8_decode('Hepatitis '), 0, 'L');
+
+	$pdf->SetXY(250,580);
+	$pdf->Cell(10, 8, utf8_decode('Sinusitis '), 0, 'L');
+
+	$pdf->SetXY(420,540);
+	$pdf->Cell(10, 8, utf8_decode('Diabetes '), 0, 'L');
+
+	$pdf->SetXY(420,560);
+	$pdf->Cell(10, 8, utf8_decode('Apendicitis '), 0, 'L');
+
+	$pdf->SetXY(420,580);
+	$pdf->Cell(10, 8, utf8_decode('Amigdalitis '), 0, 'L');
+
+	$pdf->SetXY(70,610);
+	$pdf->Cell(10, 8, utf8_decode('Comidas: '.$historia['comidas']), 0, 'L');
+
+	$pdf->SetXY(70,630);
+	$pdf->Cell(10, 8, utf8_decode('Medicamentos: '.$historia['medicamentos']), 0, 'L');
+
+	$pdf->SetXY(70,650);
+	$pdf->Cell(10, 8, utf8_decode('Otras: '.$historia['otras']), 0, 'L');
+
 	$pdf->Line(70,320,525,320);
 	$pdf->Line(70,460,525,460);
+	$pdf->Line(70,520,525,520);
+
+	
+	$pdf->SetXY(130,540);
+	if($historia['paperas'] == 1)
+		$check = "4"; else $check = "";
+		$pdf->SetFont('ZapfDingbats','', 10);
+		$pdf->Cell(10, 10, $check, 1, 0);
+
+	$pdf->SetXY(130,560);
+	if($historia['rubeola'] == true)
+		$check = "4"; else $check = "";
+		$pdf->Cell(10, 10, $check, 1, 0);
+
+	$pdf->SetXY(130,580);
+	if($historia['varicela'] == true)
+		$check = "4"; else $check = "";
+		$pdf->Cell(10, 10, $check, 1, 0);
+
+	$pdf->SetXY(320,540);
+	if($historia['epilepsia'] == true)
+		$check = "4"; else $check = "";
+		$pdf->Cell(10, 10, $check, 1, 0);
+
+	$pdf->SetXY(320,560);
+	if($historia['hepatitis'] == true)
+		$check = "4"; else $check = "";
+		$pdf->Cell(10, 10, $check, 1, 0);
+
+	$pdf->SetXY(320,580);
+	if($historia['sinusitis'] == true)
+		$check = "4"; else $check = "";
+		$pdf->Cell(10, 10, $check, 1, 0);
+
+	$pdf->SetXY(500,540);
+	if($historia['diabetes'] == true)
+		$check = "4"; else $check = "";
+		$pdf->Cell(10, 10, $check, 1, 0);
+
+	$pdf->SetXY(500,560);
+	if($historia['apendicitis'] == true)
+		$check = "4"; else $check = "";
+		$pdf->Cell(10, 10, $check, 1, 0);
+
+	$pdf->SetXY(500,580);
+	if($historia['amigdalitis'] == true)
+		$check = "4"; else $check = "";
+		$pdf->Cell(10, 10, $check, 1, 0);	
 
 	$pdf->Image('../../static/images/logo_mutual.png','425','100','100','100','PNG');	
 	$pdf->Image('../../static/images/back.png','0','0','595','841','PNG');	

@@ -140,14 +140,14 @@ function comprobar(){
             success: function( respuesta ){
               if(respuesta == '1'){
                 $('#usuario').attr('class', 'col-md-6 form-group has-success');
-				$('#disponible').show();
-				$('#noDisponible').hide();
+				$('#disponible').hide();
+				$('#noDisponible').show();
 				$("#crear_usuario_boton").prop( "disabled", false );
 				}
               else{
                 $('#usuario').attr('class', 'col-md-6 form-group has-error');
-				$('#disponible').hide();
-				$('#noDisponible').show();
+				$('#disponible').show();
+				$('#noDisponible').hide();
 				$("#crear_usuario_boton").prop( "disabled", true );
 				}
             }

@@ -58,7 +58,13 @@ function mostrarListado(){
 			}
 			$i++;
 		}
-		echo $GLOBALS['twig']->render('/Atenciones/profesionales_listado.html', compact('profesionales'));
+
+		$exito=0;
+		if(isset($_GET['exito'])){
+			$exito=1;
+		}
+
+		echo $GLOBALS['twig']->render('/Atenciones/profesionales_listado.html', compact('profesionales', 'exito'));
 	}
 	else
 	{
@@ -182,7 +188,7 @@ function registrarProfesional(){
 	}
 		
 	
-	header('Location: mensaje_exito.php');
+	header('Location: ./profesionales.php?funcion=mostrarListado&exito');
 
 }
 
