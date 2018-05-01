@@ -105,6 +105,30 @@ function verMas(){
 				];
 		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));
 	}
+
+	$privilegios_resultado = $GLOBALS['db']->select("SELECT * FROM privilegios
+									WHERE id_usuario='$id_usuario'");
+	if($privilegios_resultado){
+		foreach($privilegios_resultado as $res){
+			$privilegios =[
+					'atenciones'		=>	$res['atenciones'],
+					'estadisticas'		=>	$res['estadisticas'],
+					'usuarios'			=>	$res['usuarios'],
+					'profesionales' 	=>	$res['profesionales'],
+					'historia' 			=>	$res['historia']
+					];
+					$id_usuario=$res['id_usuario'];		
+		}
+	}
+	else{
+		$privilegios =[
+			'atenciones'		=>	0,
+			'estadisticas'		=>	0,
+			'usuarios'			=>	0,
+			'profesionales' 	=>	0,
+			'historia' 			=>	0
+			];
+	}
 	
 	$usuario[0]['fech_creacion'] = date("d/m/Y", strtotime($usuario[0]['fech_creacion']));
 	
@@ -124,8 +148,23 @@ function verMas(){
 	$usuario[0]['edad']=$edad;
 	
 	///---FIN FUNCIÓN PARA CALCULAR EDAD----
+
+	$permiso=0;
+	if(isset($_GET['permiso'])){
+		$permiso=1;
+	}
+
+	$modificar=0;
+	if(isset($_GET['modificar'])){
+		$modificar=1;
+	}
+
+	$contrasena=0;
+	if(isset($_GET['contrasena'])){
+		$contrasena=1;
+	}
 	
-	echo $GLOBALS['twig']->render('/Atenciones/usuarios_perfil.html', compact('usuario'));
+	echo $GLOBALS['twig']->render('/Atenciones/usuarios_perfil.html', compact('usuario','privilegios','permiso','id_usuario','modificar','contrasena'));
 	
 }
 
@@ -224,6 +263,87 @@ function crearUsuario(){
 			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
 			return;
 		}
+}
+
+function modificarPrivilegios(){
+	$id_usuario=$_POST['id_usuario'];
+	
+	if(isset($_POST['atenciones'])){
+		$atenciones=1;
+	}
+	else{
+		$atenciones=0;
+	}
+
+	if(isset($_POST['estadisticas'])){
+		$estadisticas=1;
+	}
+	else{
+		$estadisticas=0;
+	}
+
+	if(isset($_POST['usuarios'])){
+		$usuarios=1;
+	}
+	else{
+		$usuarios=0;
+	}
+
+	if(isset($_POST['profesionales'])){
+		$profesionales=1;
+	}
+	else{
+		$profesionales=0;
+	}
+
+	if(isset($_POST['historia'])){
+		$historia=1;
+	}
+	else{
+		$historia=0;
+	}
+	
+	$resultado = $GLOBALS['db']->select("SELECT * FROM privilegios
+									WHERE id_usuario = '$id_usuario' ");
+
+	if($resultado)
+	{
+		$res=$GLOBALS['db']->query("UPDATE privilegios SET 
+		atenciones='$atenciones',estadisticas='$estadisticas',usuarios='$usuarios',profesionales='$profesionales',
+		historia='$historia'
+		WHERE id_usuario='$id_usuario'");
+	}
+	else{
+		$res=$GLOBALS['db']->query("INSERT INTO privilegios (id_usuario,atenciones,estadisticas,usuarios,profesionales,
+		historia)
+				VALUES ('$id_usuario','$atenciones','$estadisticas','$usuarios','$profesionales',
+				'$historia')");
+	}
+
+	header('Location: ./usuarios.php?funcion=verMas&id_usuario='.$id_usuario.'&permiso');
+}
+
+function modificarContrasena(){
+	$id_usuario=$_POST['id_usuario'];
+	$pass=$_POST['pass'];
+
+	$res=$GLOBALS['db']->query("UPDATE usuarios SET 
+	password='$pass'
+	WHERE id_usuario='$id_usuario'");
+
+	if(!$res){
+		$error=[
+			'menu'			=>"Usuarios",
+			'funcion'		=>"ModificarContraseña",
+			'descripcion'	=>"No se pudo modificar la contraseña del usuario ".$usuario
+			];
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+			return;
+	}
+	
+
+
+	header('Location: ./usuarios.php?funcion=verMas&id_usuario='.$id_usuario.'&contrasena');
 }
 	
 

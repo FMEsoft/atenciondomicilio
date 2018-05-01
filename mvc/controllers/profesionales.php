@@ -121,8 +121,18 @@ function verMas(){
 	$profesional[0]['edad']=$edad;
 	
 	///---FIN FUNCIÓN PARA CALCULAR EDAD----
+
+	$modificar=0;
+	if(isset($_GET['modificar'])){
+		$modificar=1;
+	}
+
+	$modprofesional=0;
+	if(isset($_GET['modprofesional'])){
+		$modprofesional=1;
+	}
 	
-	echo $GLOBALS['twig']->render('/Atenciones/profesionales_perfil.html', compact('profesional'));
+	echo $GLOBALS['twig']->render('/Atenciones/profesionales_perfil.html', compact('profesional','modificar','modprofesional'));
 	
 }
 
@@ -190,6 +200,30 @@ function registrarProfesional(){
 	
 	header('Location: ./profesionales.php?funcion=mostrarListado&exito');
 
+}
+
+function modificarProfesional(){
+	$id_profesional=$_POST['id_profesional'];
+	$espec=$_POST['espec'];
+	$matricula=$_POST['matricula'];
+
+	$res=$GLOBALS['db']->query("UPDATE profesionales SET 
+	matricula='$matricula', especialidad='$espec'
+	WHERE id_profesional='$id_profesional'");
+
+	if(!$res){
+		$error=[
+			'menu'			=>"Profesionales",
+			'funcion'		=>"Modificar datos del profesional",
+			'descripcion'	=>"No se pudo modificar los datos del profesional ".$id_profesional
+			];
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+			return;
+	}
+	
+
+
+	header('Location: ./profesionales.php?funcion=verMas&id_profesional='.$id_profesional.'&modprofesional');
 }
 
 	

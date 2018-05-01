@@ -14,6 +14,12 @@
 {% endblock %}
 
 {% block content %}
+    <div class="box-header text-center" {% if modprofesional=='0' %} style="display:none" {% endif %}>
+        <h1>
+            <span class="label label-success">La datos del profesional se modificaron correctamente.</span>
+        </h1>
+    </div>
+
     <section class="content">
         <div class="row">
             <div class="col-md-12">
@@ -26,53 +32,69 @@
                     <div class="tab-content">
                         <div class="active tab-pane" id="datos_persona">
                             <div class="post">
-                                {% for res in profesional %}
-                                    <div class="box box-solid box-primary" >  
-                                        <div class="box-header">                                  
+                                    {% for res in profesional %}
+                                    <div class="box box-solid box-primary">
+                                        <div class="box-header">
                                             <div class="user-block">
                                                 {% if res.sexo == 'M' %}
-                                                    <img class="img-circle img-bordered-sm" src="../../static/images/user.png" alt="user image">                 
-                                                {% else %}
-                                                    <img class="img-circle img-bordered-sm" src="../../static/images/user_fem.png" alt="user image">
-                                                {% endif %}
+                                                <img class="img-circle img-bordered-sm" src="../../static/images/user.png" alt="user image"> {% else %}
+                                                <img class="img-circle img-bordered-sm" src="../../static/images/user_fem.png" alt="user image"> {% endif %}
                                                 <span class="username">
-                                                  <h4 class="box-title"><b><a href="#">{{ res.nombre }}</a></b></h4>
+                                                    <h4 class="box-title">
+                                                        <b>
+                                                            <a href="#">{{ res.nombre }}</a>
+                                                        </b>
+                                                    </h4>
                                                 </span>
                                             </div>
                                         </div>
-
+        
                                         <div class="row">
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="box-body">
-                                                    <p><label>Número de documento :</label> {{ res.numdoc }}
+                                                    <H4>Datos personales :</H4>
+                                                    <p>
+                                                        <label>Número de documento :</label> {{ res.numdoc }}
                                                     </p>
                                                     {% if res.sexo == 'M' %}
-                                                        <p><label>Sexo :</label> Masculino 
-														<label style="color:white">_______</label><label>edad : </label>{{ res.edad }}
-                                                        </p>                    
-                                                    {% else %}
-                                                        <p><label>Sexo :</label> Femenino 
-														<label style="color:white">_______</label><label>edad : </label>{{ res.edad }}
-                                                        </p> 
-                                                    {% endif %}
-                                                    <p><label>Fecha de nacimiento : </label>{{ res.fecnacim }}
+                                                    <p>
+                                                        <label>Sexo :</label> Masculino
                                                     </p>
-                                                    <p><label>Domicilio : </label>{{ res.domicilio }}</p>
+                                                    <p><label>edad : </label> {{ res.edad }} Años</p>
+                                                    {% else %}
+                                                    <p>
+                                                        <label>Sexo :</label> Femenino
+                                                    </p>
+                                                    <p><label>edad : </label> {{ res.edad }} Años</p>
+                                                    {% endif %}
+                                                    <p><label>Fecha de nacimiento   : </label> {{ res.fecnacim }}</p>
+                                                    <p><label>Telefono fijo         : </label> {{ res.tel_fijo }}</p>
+                                                    <p><label>Telefono celular      : </label> {{ res.tel_cel }}</p>
                                                 </div>
                                             </div>
+        
+                                                <div class="box-body">
+                                                    <H4>Domicilio :</H4> 
+                                                    <p><label>Domicilio             : </label> {{ res.domicilio }}</p>
+                                                    <p><label>Nro. casa             : </label> {{ res.casa_nro }}</p>
+                                                    <p><label>Barrio                : </label> {{ res.barrio }}</p>
+                                                    <p><label>Localidad             : </label> {{ res.localidad }}</p>
+                                                    <p><label>Codigo Postal         : </label> {{ res.codpostal }}</p>
+                                                    <p><label>Dpto.                 : </label> {{ res.dpmto }}</p>
+                                                </div>
                                         </div>
                                     </div>
-                                {% endfor %}
+                                    {% endfor %}
                             </div>
                         </div>
     					
     					<div class="tab-pane" id="datos_prof">
-                            <div class="box box-primary">
-									{% for res in profesional %}
+                                    {% for res in profesional %}
+                                    <form action="../controllers/profesionales.php?funcion=modificarProfesional" method="post">
 										<div class="row">
 											<div class="col-md-6 form-group">
 												<label for="nombre">Matricula</label><br/>
-												<input type="text" class="form-control" id="matricula" name="matricula" readonly value="{{ res.matricula }}"/>
+												<input type="text" class="form-control" id="matricula" name="matricula" value="{{ res.matricula }}"/>
 											</div>
 											
 											<div class="col-md-3 form-group">
@@ -86,9 +108,21 @@
 											</div>
 											<input style="display:none" type="text" class="form-control" name="id_profesional" id="id_profesional" value="{{ res.id_profesional }}"/>
 											
-										</div>
+                                        </div>
+                                        <div class="row">
+                                                <br>
+                                                <br>
+                                                <div class="col-md-6">
+                                                    <input class="btn btn-block btn-success" type="submit" name="modificar_profesional" value="Actualizar datos" />
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <a href="../controllers/profesionales.php?funcion=mostrarListado">
+                                                        <input class="btn btn-block btn-default" type="button" name="cancelar" value="Cancelar"/>
+                                                    </a>
+                                                </div>  
+                                        </div>
+                                    </form>
 									{% endfor %}
-                            </div>
                         </div>
 
 
