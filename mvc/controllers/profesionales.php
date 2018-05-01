@@ -226,6 +226,42 @@ function modificarProfesional(){
 	header('Location: ./profesionales.php?funcion=verMas&id_profesional='.$id_profesional.'&modprofesional');
 }
 
+function modificarPersonaProfesional(){
+	$id_profesional=$_POST['id_profesional'];
+	$id_persona=$_POST['id_persona'];
+	$nombre=$_POST['nombre'];
+	$doc=$_POST['doc'];
+	$sexo=$_POST['sexo'];
+	$fech_nac=$_POST['fech_nac'];
+	$tel_fijo=$_POST['fijo'];
+	$tel_celu=$_POST['celu'];
+	
+	$dom=$_POST['dom'];
+	$nrocasa=$_POST['nrocasa'];
+	$barrio=$_POST['barrio'];
+	$localidad=$_POST['localidad'];
+	$cod_postal=$_POST['codpostal'];
+	$dpto=$_POST['dpto'];
+
+	$res=$GLOBALS['db']->query("UPDATE persona_sistema SET nombre='$nombre', numdoc='$doc', sexo='$sexo', fecnacim='$fech_nac', domicilio='$dom',
+	casa_nro='$nrocasa', barrio='$barrio', localidad='$localidad', codpostal='$cod_postal', dpmto='$dpto', tel_fijo='$tel_fijo', tel_cel='$tel_celu'
+	WHERE id_persona='$id_persona'");
+
+	if(!$res){
+		$error=[
+			'menu'			=>"Profesionales",
+			'funcion'		=>"ModificarPersonaProfesional",
+			'descripcion'	=>"No se pudo modificar los datos de la persona ".$id_persona
+			];
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+			return;
+	}
+	
+
+
+	header('Location: ./profesionales.php?funcion=verMas&id_profesional='.$id_profesional.'&modificar');
+}
+
 	
 //llamada a la funcion con el parametro pasado por la url.	
 	$_GET['funcion']();

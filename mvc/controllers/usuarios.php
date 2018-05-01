@@ -236,8 +236,8 @@ function crearUsuario(){
 			
 			
 			
-			$resultado2=$GLOBALS['db']->query("INSERT INTO usuarios (id_persona, usuario, password, fech_creacion, activa)
-						VALUES (LAST_INSERT_ID(),'$usuario','$pass','$fec_alta',1)");
+			$resultado2=$GLOBALS['db']->query("INSERT INTO usuarios (id_persona, usuario, password, fech_creacion)
+						VALUES (LAST_INSERT_ID(),'$usuario','$pass','$fec_alta')");
 						
 			if(!$resultado2)
 			{
@@ -335,7 +335,7 @@ function modificarContrasena(){
 		$error=[
 			'menu'			=>"Usuarios",
 			'funcion'		=>"ModificarContraseña",
-			'descripcion'	=>"No se pudo modificar la contraseña del usuario ".$usuario
+			'descripcion'	=>"No se pudo modificar la contraseña del usuario ".$id_usuario
 			];
 			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
 			return;
@@ -344,6 +344,42 @@ function modificarContrasena(){
 
 
 	header('Location: ./usuarios.php?funcion=verMas&id_usuario='.$id_usuario.'&contrasena');
+}
+
+function modificarUsuario(){
+	$id_usuario=$_POST['id_usuario'];
+	$id_persona=$_POST['id_persona'];
+	$nombre=$_POST['nombre'];
+	$doc=$_POST['doc'];
+	$sexo=$_POST['sexo'];
+	$fech_nac=$_POST['fech_nac'];
+	$tel_fijo=$_POST['fijo'];
+	$tel_celu=$_POST['celu'];
+	
+	$dom=$_POST['dom'];
+	$nrocasa=$_POST['nrocasa'];
+	$barrio=$_POST['barrio'];
+	$localidad=$_POST['localidad'];
+	$cod_postal=$_POST['codpostal'];
+	$dpto=$_POST['dpto'];
+
+	$res=$GLOBALS['db']->query("UPDATE persona_sistema SET nombre='$nombre', numdoc='$doc', sexo='$sexo', fecnacim='$fech_nac', domicilio='$dom',
+	casa_nro='$nrocasa', barrio='$barrio', localidad='$localidad', codpostal='$cod_postal', dpmto='$dpto', tel_fijo='$tel_fijo', tel_cel='$tel_celu'
+	WHERE id_persona='$id_persona'");
+
+	if(!$res){
+		$error=[
+			'menu'			=>"Usuarios",
+			'funcion'		=>"ModificarUsuario",
+			'descripcion'	=>"No se pudo modificar los datos de la persona ".$id_persona
+			];
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+			return;
+	}
+	
+
+
+	header('Location: ./usuarios.php?funcion=verMas&id_usuario='.$id_usuario.'&modificar');
 }
 	
 
