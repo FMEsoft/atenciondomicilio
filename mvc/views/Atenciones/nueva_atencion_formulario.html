@@ -167,7 +167,7 @@
 				<div class="row">
 					<div class="col-md-6 form-group">
 						<label for="prof">Profesional</label>
-						<select class="form-control select2" style="width: 100%;" id="prof" name="prof">
+						<select class="select2 form-control" style="width: 100%;" id="prof" name="prof">
 							{% for profesional in profesionales %}
 								<option value="{{ profesional.nombre }}|{{ profesional.id_profesional }}">{{ profesional.nombre }} | {{ profesional.especialidad }} | {{ profesional.matricula }}</option>
 							{% endfor %}
@@ -202,10 +202,9 @@
 {% block javascript %}
 
 <script>
-  $(function () {
-    //Initialize Select2 Elements
-    $(".select2").select2();
-  });
+  $(document).ready(function() {
+    $('#prof').select2();
+});
 </script>
 
 {% endblock %}
