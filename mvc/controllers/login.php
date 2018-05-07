@@ -18,6 +18,7 @@ $errore = '';
 
 //para comprobar que enviemos informacion.
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+
 	$usuario = filter_var( strtolower($_POST['usuario']), FILTER_SANITIZE_STRING);
 	$password = $_POST['password'];
 	//$password = hash('sha512', $password);
@@ -33,42 +34,63 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 //para acceder a la variable $db en el ambito de una funcion, se usará la variable super global $GLOBALS['db'], de manera tal queda definida una unica vez la bd
 	$db = new CONEXION($config['dbhost'],$config['dbuser'],$config['dbpass'],$config['db']);
 
-$resultado = $GLOBALS['db']->select("
-	SELECT * FROM usuarios WHERE usuario = '$usuario' AND password = '$password' LIMIT 1"
-);
+	$resultado = $GLOBALS['db']->select("
+		SELECT * FROM usuarios WHERE usuario = '$usuario' AND password = '$password' LIMIT 1");
 
 
 
-if ( $resultado != false) {
+	if ( $resultado != false) {
+		//header('Location:index.php');
+		//echo $GLOBALS['twig']->render('/Base/header.html',compact('usuario'));
+		//echo $GLOBALS['twig']->render('/controllers/index.php',compact('resultado'));
 
-	$_SESSION['usuario'] = $usuario;
-	$_SESSION['tipo'] = $usuario;
+		$id_usuario=$resultado[0]['id_usuario'];
 
-	//header('Location:index.php');
-	//echo $GLOBALS['twig']->render('/Base/header.html',compact('usuario'));
-	//echo $GLOBALS['twig']->render('/controllers/index.php',compact('resultado'));
-	header('Location:index.php');
-	return;
+		$privilegios = $GLOBALS['db']->select("SELECT * FROM privilegios WHERE id_usuario = '$id_usuario' LIMIT 1");
+
+		if( $privilegios != false){
+			//Comprobar si tiene algun permiso para acceder
+			if($privilegios[0]['atenciones']=="0" && $privilegios[0]['estadisticas']=="0" && $privilegios[0]['usuarios']=="0" && $privilegios[0]['profesionales']=="0" && $privilegios[0]['historia']=="0")
+			{
+				$errore.= 'El usuario no posee ningun persmiso aun.';
+				echo $GLOBALS['twig']->render('/Atenciones/login.html', compact('errore'));	
+				return;
+			}
+			$_SESSION['usuario'] = $usuario;
+			$_SESSION['privilegios'] = [
+				'atenciones'		=>$privilegios[0]['atenciones'],
+				'estadisticas'		=>$privilegios[0]['estadisticas'],
+				'usuarios'			=>$privilegios[0]['usuarios'],
+				'profesionales'		=>$privilegios[0]['profesionales'],
+				'historia'			=>$privilegios[0]['historia']
+				];
+
+			header('Location:index.php');	
+		}
+		else{
 	
-} else{
+			$errore.= 'El usuario no posee ningun persmiso aun.';
+			echo $GLOBALS['twig']->render('/Atenciones/login.html', compact('errore'));	
+			return;
+		}
 
-	//Seria mostrarlo abajo  los errores ...porque el cuadro de alert es molesto...
-		$errore.= 'El usuario y/o la contraseña son incorrectos';
-		echo $GLOBALS['twig']->render('/Atenciones/login.html', compact('errore'));	
-		return;
+		
+	} else{
+
+		//Seria mostrarlo abajo  los errores ...porque el cuadro de alert es molesto...
+			$errore.= 'El usuario y/o la contraseña son incorrectos';
+			echo $GLOBALS['twig']->render('/Atenciones/login.html', compact('errore'));	
+			return;
 
 
-	//	echo '<script type="text/javascript">'; echo 'alert("El usuario y/o la contraseña son incorrectos")'; echo '</script>';
-	//$errores.= '<li>El usuario y/o la contraseña son incorrectos</li>';
+		//	echo '<script type="text/javascript">'; echo 'alert("El usuario y/o la contraseña son incorrectos")'; echo '</script>';
+		//$errores.= '<li>El usuario y/o la contraseña son incorrectos</li>';
 
-}
-
+	}
 
 }
 
 
 	
 	echo $twig->render('/Atenciones/login.html', compact('usuario'));
-
-
 ?>

@@ -164,8 +164,8 @@ function registrarProfesional(){
 	$cod_postal=$_POST['codpostal'];
 	$dpto=$_POST['dpto'];
 	
-	$matr=$_POST['especialidad'];
-	$espec=$_POST['matricula'];
+	$matr=$_POST['matricula'];
+	$espec=$_POST['especialidad'];
 	
 	date_default_timezone_set('America/Argentina/Catamarca');
 	$fec_alta=date("Y")."-".date("m")."-".date("d");

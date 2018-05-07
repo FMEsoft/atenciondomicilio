@@ -87,9 +87,8 @@ function verMas(){
 	}
 	$id_persona=$_GET['id_persona'];
 	
-	$resultado = $GLOBALS['db']->select("SELECT * FROM persona, historia_clinica
-								WHERE persona.id_persona=historia_clinica.id_persona
-								AND historia_clinica.id_persona='$id_persona' ");
+	$resultado = $GLOBALS['db']->select("SELECT * FROM persona
+								WHERE id_persona='$id_persona' ");
 
 	if($resultado)
 	{
@@ -120,6 +119,7 @@ function verMas(){
 			'descripcion'	=>"No se encontraron resultados."
 			];
 		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));
+		return;
 	}
 
 	$resultado_historia = $GLOBALS['db']->select("SELECT * FROM historia_clinica
