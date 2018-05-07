@@ -192,7 +192,7 @@
 					<fieldset><legend>Datos para finalizar la atención</legend>
 						<div class="row">
 							<div class="col-md-2 form-group" id="div1">
-								<label for="prof">Fecha de atencion</label>
+								<label for="fech_ate">Fecha de atencion</label>
 								
 								<div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-highlight="true" data-date-start-date="{{ persona.fecha }}" data-date-language='es'>
 									<input type="text" class="form-control" id="fech_ate" name="fech_ate" required>
@@ -201,24 +201,24 @@
 									</div>
 								</div>
 
-								<label for="prof">Hora de atencion</label>
+								<label for="hora_ate">Hora de atencion</label>
 								<div class="input-group time">
 									<input id="timepicker1" type="text" name="hora_ate" class="form-control input-small" data-provide="timepicker" data-show-inputs="false" data-minute-step="1" data-show-meridian="false" data-max-hours="24" required>
 								</div>
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="desc">Sintomas</label><br/>
-							<textarea type="text" style="resize: none;" class="form-control" id="sintomas" name="sintomas"  rows="5" required maxlength="65"/></textarea>
+							<label for="hora_ate">Sintomas</label><br/>
+							<textarea type="text" style="resize: none;" class="form-control" id="hora_ate" name="sintomas"  rows="5" required maxlength="65"/></textarea>
 						</div>
 						
 						<div class="form-group">
-							<label for="desc">Diagnostico</label><br/>
+							<label for="diagnostico">Diagnostico</label><br/>
 							<textarea type="text" style="resize: none;" class="form-control" id="diagnostico" name="diagnostico"  rows="5"  required maxlength="65"/></textarea>
 						</div>
 						
 						<div class="form-group">
-							<label for="desc">Tratamiento</label><br/>
+							<label for="tratamiento">Tratamiento</label><br/>
 							<textarea type="text" style="resize: none;" class="form-control" id="tratamiento" name="tratamiento"  rows="5" required maxlength="65"/></textarea>
 						</div>
 					</fieldset>

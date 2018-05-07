@@ -44,14 +44,14 @@
 	
 //Para acceder a cada funcion se debe pasar por parametro una variable de nombre funcion=nombrefuncion; por ejemeplo atenciones.php?funcion=nuevaAtencion		
 	
-		
+$use=$_SESSION['usuario'];
 		
 //funcion verMAS, el cual debe realizar la consulta del asociado seleccionado para mostrar toda su informacion
 function verMas()	
 		{
 			
-			$use=$_SESSION['usuario'];
-			
+			global $use;
+
 			//NOTA: Para ver si funciona tienen que asociarle un adherente en la tabla socios, ya que en los datos de ejemplo todos son titulares
 			//NOTA: Lo que hice fue: en tabla socios en numero_soc=00044 cambiar el campo soc_titula de manera que quede soc_titula=00277
 			
@@ -212,7 +212,7 @@ function verMas()
 function verMasParticular()	
 		{
 			
-			$use=$_SESSION['usuario'];
+			global $use;
 			
 			//---------------CONSULTA QUE DEVUELVE TODA LA INFO DEL PARTICULAR----------------
 			

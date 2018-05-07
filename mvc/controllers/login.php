@@ -39,7 +39,7 @@ $resultado = $GLOBALS['db']->select("
 
 
 
-if ( $resultado != false && $resultado[0]['activa']==1) {
+if ( $resultado != false) {
 
 	$_SESSION['usuario'] = $usuario;
 	$_SESSION['tipo'] = $usuario;

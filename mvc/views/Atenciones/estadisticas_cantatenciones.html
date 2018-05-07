@@ -22,19 +22,20 @@
 					<!-- AL PRESIONAR ESTE BOTON TRAE LA INFORMACION VARIAS VECES, VERIFICAR -->
 					<div class="row">
 						<div class="col-md-6">
-							<button class="btn btn-default" type="button" onclick="getData()">Estadistica por año</button>
-							<br>
-							<br>
-							<select id="select-datos" class="form-control" onchange="mostrarResultadosAnual(this.value)" style='display:none;'></select>
-							<br>
-							<br>
+							<div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-highlight="true" data-date-language='es'>
+								<input type="text" class="form-control" id="fecha" name="fecha">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</div>
+							</div>
 						</div>
 						<!-- FALTAN LOS SELECT PARA EL MES Y EL DIA -->
 						<div class="col-md-6">
-							<button class="btn btn-default" type="button" onclick="mostrarResultadosDiarias(2016, 03, 11)">Estadistica por día</button>
-							<!-- Agregar datepicker para seleccionar el dia a ver -->
+							<button class="btn btn-default" type="button" onclick="mostrarResultadosAnual()">Estadistica por año</button>
+							<button class="btn btn-default" type="button" onclick="mostrarResultadosDiarias()">Estadistica por día</button>
 						</div>
 					</div>
+
 
 					<div class="box-tools pull-right">
 						<button type="button" class="btn btn-box-tool" data-widget="collapse">
@@ -48,6 +49,10 @@
 				</div>
 
 				<div class="box-body chart-responsive">
+					<div class="callout callout-danger lead" id="mensaje" style="display:none">
+							<p>No se encontraron datos</p>
+					</div>
+
 					<div class="chart" id="cant-atenciones" style="width: 300px; height: 400px;"></div>
 				</div>
 
@@ -69,33 +74,32 @@
 {% endblock %} {% block javascript %}
 <script> 
 
-	//Función que rellena los datos del select, trae todos los años encontrados en la base de datos
-	function getData() {
-		$("#select-datos").empty();
-		//Método POST de ajax para mandar:
-		//1.- El PHP donde se va a procesar todo es el archivo estadisticas.php, se procesa en la función cantidadAtencionesProceso
-		//2.- El o los datos, en este caso no requerimos datos
-		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
-		$.post("../controllers/estadisticas.php?funcion=cantidadAtencionesProceso", 0).done(function (data) {
-			var data = $.parseJSON(data);
-			console.log(data);
+	function mostrarResultadosAnual() {
+		$("#cant-atenciones").empty();
 
-			$.each(data, function (key, registro) {
-				//Levanto todos los datos para rellenar en el select
-				$("#select-datos").append('<option value=' + registro.anio + '>' + registro.anio + '</option>');
-			});
-		});
+		if(!$("#fecha").val()){
+			$("#fecha").focus();
+			return;
+		}
 
-		document.getElementById('select-datos').style.display = 'block';
-	}
+		var fecha= $("#fecha").val().split('-', 1);
+		anio= fecha[0];
 
-	function mostrarResultadosAnual(anio) {
 		//Método POST de ajax para mandar:
 		//1.- El PHP donde se va a procesar todo es el archivo estadisticas.php, se procesa en la función cantidadAtencionesProceso
 		//2.- El o los datos, en este caso el año seleccionado, aqui esa info se ve en {'anio': anio}
 		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
 		$.post("../controllers/estadisticas.php?funcion=cantidadAtencionesProceso", { 'anio': anio }).done(function (data) {
 			var data = $.parseJSON(data);
+			
+			$("#mensaje").hide();
+
+			if(!data){
+				$("#mensaje").show();
+				$("#tot-atenciones").text("No se encontraron datos.");
+				return;
+			}
+
 			var total_atenciones = 0;
 			//Información para manejar el Bar chart de FLOT js
 			bar_chart_data = [];
@@ -186,12 +190,33 @@
 	}
 
 	function mostrarResultadosDiarias(anio, mes, dia) {
+		$("#cant-atenciones").empty();
+
+		if(!$("#fecha").val()){
+			$("#fecha").focus();
+			return;
+		}
+
+		var fecha= $("#fecha").val().split('-', 3);
+		anio = fecha[0];
+		mes = fecha[1];
+		dia = fecha[2];
+
 		//Método POST de ajax para mandar:
 		//1.- El PHP donde se va a procesar todo es el archivo estadisticas.php, se procesa en la función cantidadAtencionesProceso
 		//2.- El o los datos, en este caso el año seleccionado, aqui esa info se ve en {'anio': anio}
 		//3.- Luego se llama a una función una vez que se enviaron los datos y se obtuvo una respuesta
 		$.post("../controllers/estadisticas.php?funcion=cantidadAtencionesProceso", { 'anio': anio, 'mes': mes, 'dia': dia }).done(function (data) {
 			var data = $.parseJSON(data);
+
+			$("#mensaje").hide();
+
+			if(!data){
+				$("#mensaje").show();
+				$("#tot-atenciones").text("No se encontraron datos.");
+				return;
+			}
+
 			console.log(data);
 			console.log("La fecha es: " + data[0].fecha + " y las atenciones son: " + data[0].numatenciones);
 
