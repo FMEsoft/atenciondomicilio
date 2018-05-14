@@ -3,23 +3,25 @@
 
 session_start();
 
+$use=$_SESSION['usuario'];
+$priv=$_SESSION['privilegios'];
+
 if (!isset($_SESSION['usuario'])) {
 
 header('location:login.php');
 # code...
 }
-$use=$_SESSION['usuario'];
+
+if($priv['atenciones']=="0")
+{
+    header('location:index.php');
+    return;
+}
 
 if(!isset($_GET['id_atencion']))
 {
-    require_once '../../vendor/autoload.php';
-
-    $loader = new Twig_Loader_Filesystem('../views');
-
-    $twig = new Twig_Environment($loader, []);
-    
-    echo $twig->render('/Inicio/inicio.html');
-    
+    header('location:index.php');
+    return;
 }
 else
 {
@@ -30,7 +32,9 @@ else
     $twig = new Twig_Environment($loader, []);
 }
 
+
+
 $id_atencion=$_GET['id_atencion'];
 
-echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_finalizar.html', compact('id_atencion','use'));	
+echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_finalizar.html', compact('id_atencion','use','priv'));	
 ?>

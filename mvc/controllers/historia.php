@@ -3,14 +3,8 @@
 //Si la variable funcion no tiene ningun valor, se redirecciona al inicio------------
 	if(!isset($_GET['funcion']))
 	{
-		require_once '../../vendor/autoload.php';
-
-		$loader = new Twig_Loader_Filesystem('../views');
-
-		$twig = new Twig_Environment($loader, []);
-		
-		echo $twig->render('/Inicio/inicio.html');
-		
+		header('location:index.php');
+		return;
 	}
 	else
 	{
@@ -41,9 +35,17 @@
 //para acceder a la variable $db en el ambito de una funcion, se usará la variable super global $GLOBALS['db'], de manera tal queda definida una unica vez la bd
 	$db = new CONEXION($config['dbhost'],$config['dbuser'],$config['dbpass'],$config['db']);
 	
+	$use=$_SESSION['usuario'];
+	$priv=$_SESSION['privilegios'];	
+	if($priv['historia']=="0")
+	{
+		header('location:index.php');
+		return;
+	}
 	
 function mostrarListado(){
-	
+	global $use;
+	global $priv;
 	$personas = $GLOBALS['db']->select('SELECT * FROM persona');								
 	if($personas)
 	{
@@ -61,7 +63,7 @@ function mostrarListado(){
 		if(isset($_GET['exito'])){
 			$exito=1;
 		}
-		echo $GLOBALS['twig']->render('/Atenciones/historia_listado.html', compact('personas','exito'));
+		echo $GLOBALS['twig']->render('/Atenciones/historia_listado.html', compact('personas','exito','use','priv'));
 	}
 	else
 	{
@@ -70,12 +72,13 @@ function mostrarListado(){
 				'funcion'		=>"Listado de personas",
 				'descripcion'	=>"No se encontraron resultados."
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 	}
 }
 
 function verMas(){
-	
+	global $use;
+	global $priv;
 	if(!isset($_GET['id_persona']))
 	{
 		$error=[
@@ -83,7 +86,7 @@ function verMas(){
 				'funcion'		=>"Perfil de usuarios",
 				'descripcion'	=>"No se encontraron resultados."
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));
 	}
 	$id_persona=$_GET['id_persona'];
 	
@@ -118,7 +121,7 @@ function verMas(){
 			'funcion'		=>"Perfil de persona",
 			'descripcion'	=>"No se encontraron resultados."
 			];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));
 		return;
 	}
 
@@ -161,13 +164,14 @@ function verMas(){
 	}
 
 	
-	echo $GLOBALS['twig']->render('/Atenciones/historia_perfil.html', compact('persona','historia'));
+	echo $GLOBALS['twig']->render('/Atenciones/historia_perfil.html', compact('persona','historia','use','priv'));
 	
 }
 
 
 function modificarHistoria(){
-	
+	global $use;
+	global $priv;
 	$id_persona=$_POST['id_persona'];
 
 	if(isset($_POST['paperas'])){

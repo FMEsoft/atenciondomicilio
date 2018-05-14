@@ -3,14 +3,8 @@
 //Si la variable funcion no tiene ningun valor, se redirecciona al inicio------------
 	if(!isset($_GET['funcion']))
 	{
-		require_once '../../vendor/autoload.php';
-
-		$loader = new Twig_Loader_Filesystem('../views');
-
-		$twig = new Twig_Environment($loader, []);
-		
-		echo $twig->render('/Inicio/inicio.html');
-		
+		header('location:index.php');
+		return;
 	}
 	else
 	{
@@ -42,10 +36,17 @@
 	$config['dbEngine']='MYSQL';
 //para acceder a la variable $db en el ambito de una funcion, se usará la variable super global $GLOBALS['db'], de manera tal queda definida una unica vez la bd
 	$db = new CONEXION($config['dbhost'],$config['dbuser'],$config['dbpass'],$config['db']);
-	
+	$use=$_SESSION['usuario'];
+	$priv=$_SESSION['privilegios'];
+	if($priv['usuarios']=="0")
+	{
+		header('location:index.php');
+		return;
+	}
 	
 function mostrarListado(){
-	$use=$_SESSION['usuario'];
+	global $use;
+	global $priv;
 	
 	$usuarios = $GLOBALS['db']->select('SELECT usuarios.id_usuario, usuarios.usuario, persona_sistema.nombre, persona_sistema.numdoc, persona_sistema.sexo FROM usuarios, persona_sistema
 								WHERE usuarios.id_persona=persona_sistema.id_persona');								
@@ -72,7 +73,7 @@ function mostrarListado(){
 		$eliminado=1;
 	}
 
-		echo $GLOBALS['twig']->render('/Atenciones/usuarios_listado.html', compact('usuarios','use', 'exito', 'eliminado'));
+		echo $GLOBALS['twig']->render('/Atenciones/usuarios_listado.html', compact('usuarios','exito', 'eliminado','use','priv'));
 	}
 	else
 	{
@@ -81,12 +82,14 @@ function mostrarListado(){
 				'funcion'		=>"Listado de usuarios",
 				'descripcion'	=>"No se encontraron resultados."
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 	}
 }
 
 function verMas(){
-	
+	global $use;
+	global $priv;
+
 	if(!isset($_GET['id_usuario']))
 	{
 		$error=[
@@ -94,7 +97,7 @@ function verMas(){
 				'funcion'		=>"Perfil de usuarios",
 				'descripcion'	=>"No se encontraron resultados."
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));
 	}
 	$id_usuario=$_GET['id_usuario'];
 	
@@ -108,7 +111,7 @@ function verMas(){
 				'funcion'		=>"Perfil de usuarios",
 				'descripcion'	=>"No se encontraron resultados."
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));
 	}
 
 	$privilegios_resultado = $GLOBALS['db']->select("SELECT * FROM privilegios
@@ -169,12 +172,14 @@ function verMas(){
 		$contrasena=1;
 	}
 	
-	echo $GLOBALS['twig']->render('/Atenciones/usuarios_perfil.html', compact('usuario','privilegios','permiso','id_usuario','modificar','contrasena'));
+	echo $GLOBALS['twig']->render('/Atenciones/usuarios_perfil.html', compact('usuario','privilegios','permiso','id_usuario','modificar','contrasena','use','priv'));
 	
 }
 
 function mostrarFormulario(){
-	echo $GLOBALS['twig']->render('/Atenciones/nuevo_usuario_formulario.html');
+	global $use;
+	global $priv;
+	echo $GLOBALS['twig']->render('/Atenciones/nuevo_usuario_formulario.html',compact('use','priv'));
 	return;
 }
 
@@ -191,7 +196,9 @@ function validarUsuario(){
 }
 
 function crearUsuario(){
-	
+	global $use;
+	global $priv;
+
 	$use=$_SESSION['usuario']; //Usuario que realiza la creacion del nuevo usuario
 	
 	$nombre=$_POST['nombre'];
@@ -220,21 +227,20 @@ function crearUsuario(){
 
     if(!$usuarioTEST)
         {
-			$db=$GLOBALS['db'];
-
-
+			$GLOBALS['db']->startCommit();
 
 			$resultado=$GLOBALS['db']->query("INSERT INTO persona_sistema (nombre,numdoc,sexo,fecnacim,domicilio,casa_nro,barrio,localidad,codpostal,dpmto,tel_fijo,tel_cel,fec_alta,usualta)
 				VALUES ('$nombre','$doc','$sexo','$fech_nac','$dom','$nrocasa','$barrio','$localidad','$cod_postal','$dpto','$tel_fijo','$tel_celu','$fec_alta','$use')");
 
 			if(!$resultado)
 			{
+				$GLOBALS['db']->rollback();
 				$error=[
 						'menu'			=>"Usuarios",
 						'funcion'		=>"CrearUsuario",
 						'descripcion'	=>"No se pudo crear el usuario, error tabla persona"
 						];
-				echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));
+				echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));
 
 				return;
 			}
@@ -246,16 +252,17 @@ function crearUsuario(){
 						
 			if(!$resultado2)
 			{
-
+				$GLOBALS['db']->rollback();
 				$error=[
 						'menu'			=>"Usuarios",
 						'funcion'		=>"CrearUsuario",
 						'descripcion'	=>"No se pudo crear el usuario, error tabla usuarios"
 						];
-				echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+				echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 
 				return;
 			}
+			$GLOBALS['db']->commit();
 			header('Location: ./usuarios.php?funcion=mostrarListado&exito');
 		}
     else
@@ -265,12 +272,15 @@ function crearUsuario(){
 					'funcion'		=>"CrearUsuario",
 					'descripcion'	=>"No se pudo crear el usuario, el usuario ".$usuario." ya existe"
 					];
-			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 			return;
 		}
 }
 
 function modificarPrivilegios(){
+	global $use;
+	global $priv;
+
 	$id_usuario=$_POST['id_usuario'];
 	
 	if(isset($_POST['atenciones'])){
@@ -329,6 +339,9 @@ function modificarPrivilegios(){
 }
 
 function modificarContrasena(){
+	global $use;
+	global $priv;
+
 	$id_usuario=$_POST['id_usuario'];
 	$pass=$_POST['pass'];
 
@@ -342,7 +355,7 @@ function modificarContrasena(){
 			'funcion'		=>"ModificarContraseña",
 			'descripcion'	=>"No se pudo modificar la contraseña del usuario ".$id_usuario
 			];
-			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 			return;
 	}
 	
@@ -352,6 +365,9 @@ function modificarContrasena(){
 }
 
 function modificarUsuario(){
+	global $use;
+	global $priv;
+
 	$id_usuario=$_POST['id_usuario'];
 	$id_persona=$_POST['id_persona'];
 	$nombre=$_POST['nombre'];
@@ -378,7 +394,7 @@ function modificarUsuario(){
 			'funcion'		=>"ModificarUsuario",
 			'descripcion'	=>"No se pudo modificar los datos de la persona ".$id_persona
 			];
-			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 			return;
 	}
 	
@@ -388,6 +404,9 @@ function modificarUsuario(){
 }
 
 function eliminarUsuario(){
+	global $use;
+	global $priv;
+
 	$id_usuario=$_POST['id_usuario'];
 	$persona = $GLOBALS['db']->select("SELECT id_persona FROM usuarios
 								WHERE id_usuario='$id_usuario'");
@@ -398,11 +417,13 @@ function eliminarUsuario(){
 			'funcion'		=>"EliminarUsuario",
 			'descripcion'	=>"No se pudo encontrar los datos de la persona del usuario  ".$id_usuario
 			];
-			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 			return;
 	}
 
 	$id_persona=$persona[0]['id_persona'];
+
+	$GLOBALS['db']->startCommit();
 
 	$res=$GLOBALS['db']->query("DELETE FROM persona_sistema
 	WHERE id_persona='$id_persona'");
@@ -410,6 +431,19 @@ function eliminarUsuario(){
 	$res1=$GLOBALS['db']->query("DELETE FROM usuarios
 	WHERE id_usuario='$id_usuario'");
 
+	if(!$res && !$res1){
+		$error=[
+			'menu'			=>"Usuarios",
+			'funcion'		=>"EliminarUsuario",
+			'descripcion'	=>"No se pudo elminar al usuario:  ".$id_usuario
+			];
+
+			$GLOBALS['db']->rollback();
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
+			return;
+	}
+
+	$GLOBALS['db']->commit();
 	header('Location: ./usuarios.php?funcion=mostrarListado&eliminado');
 }
 	

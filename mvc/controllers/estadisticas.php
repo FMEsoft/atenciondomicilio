@@ -3,14 +3,8 @@
 //Si la variable funcion no tiene ningun valor, se redirecciona al inicio------------
 if(!isset($_GET['funcion']))
 {
-	require_once '../../vendor/autoload.php';
-
-	$loader = new Twig_Loader_Filesystem('../views');
-
-	$twig = new Twig_Environment($loader, []);
-	
-	echo $twig->render('/Inicio/inicio.html');
-	
+	header('location:index.php');
+	return;
 }
 else
 {
@@ -39,40 +33,53 @@ $config['dbhost']='localhost';
 $config['dbEngine']='MYSQL';
 //para acceder a la variable $db en el ambito de una funcion, se usará la variable super global $GLOBALS['db'], de manera tal queda definida una unica vez la bd
 $db = new CONEXION($config['dbhost'],$config['dbuser'],$config['dbpass'],$config['db']);
-	
+
+$use=$_SESSION['usuario'];
+$priv=$_SESSION['privilegios'];	
+if($priv['estadisticas']=="0")
+	{
+		header('location:index.php');
+		return;
+	}
 	
 //funcion cantidadAtenciones
 function cantidadAtenciones(){
+	global $use;
+	global $priv;
 	require_once '../../vendor/autoload.php';
 	
 		$loader = new Twig_Loader_Filesystem('../views');
 	
 		$twig = new Twig_Environment($loader, []);
 	
-		echo $twig->render('/Atenciones/estadisticas_cantatenciones.html', compact(''));
+		echo $twig->render('/Atenciones/estadisticas_cantatenciones.html', compact('use','priv'));
 }
 
 
 //funcion atencionesAsociados
 function asociados(){
+	global $use;
+	global $priv;
 	require_once '../../vendor/autoload.php';
 	
 		$loader = new Twig_Loader_Filesystem('../views');
 	
 		$twig = new Twig_Environment($loader, []);
 	
-		echo $twig->render('/Atenciones/estadisticas_asociados.html', compact(''));
+		echo $twig->render('/Atenciones/estadisticas_asociados.html', compact('use','priv'));
 }
 
 //funcion horarioAtenciones
 function horarios(){
+	global $use;
+	global $priv;
 	require_once '../../vendor/autoload.php';
 	
 		$loader = new Twig_Loader_Filesystem('../views');
 	
 		$twig = new Twig_Environment($loader, []);
 	
-		echo $twig->render('/Atenciones/estadisticas_horario.html', compact(''));
+		echo $twig->render('/Atenciones/estadisticas_horario.html', compact('use','priv'));
 }
 
 //Funciones que son llamadas en los métodos Ajax para las estadisticas (estan en los archivos .html, en las vistas, al final del documento donde estan los scripts)

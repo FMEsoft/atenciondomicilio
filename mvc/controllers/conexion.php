@@ -75,6 +75,19 @@
 		{
 			mysqli_close($this->dbConn);
 		}
+
+		//Funcionaes para realizar el commit
+		function startCommit(){
+			mysqli_autocommit($this->dbConn, FALSE);
+		}
+
+		function commit(){
+			mysqli_commit($this->dbConn);
+		}
+
+		function rollback(){
+			mysqli_rollback($this->dbConn);
+		}
     
 }
 

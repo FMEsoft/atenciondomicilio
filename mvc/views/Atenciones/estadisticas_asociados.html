@@ -1,4 +1,6 @@
-{% extends 'Base/base.html' %} {% block wrapper %}
+{% extends 'Base/base.html' %} 
+{% block title %}Estadisticas asociados{% endblock %}
+{% block wrapper %}
 
 <head>
 	<meta charset="utf-8">
@@ -11,7 +13,11 @@
 			<h3 class="text-primary text-center">Estadisticas</h3>
 			<div class="box box-primary">
 				<div class="box-header with-border">
+					<br>
 					<h3 class="box-title">Asociados que solicitan más atenciones (Titulares)</h3>
+					<br>
+					<br>
+					<span>Seleccione si desea visualizar la estadistica por año o por dia</span>
 					<br>
 					<br>
 
@@ -28,9 +34,9 @@
 						<!-- FALTAN LOS SELECT PARA EL MES Y EL DIA -->
 
 						<div class="col-md-6">
-							<button class="btn btn-default" type="button" onclick="asociadosAnio()">POR AÑO</button>
-							<button class="btn btn-default" type="button" onclick="asociadosMes()">POR MES</button>
-							<button class="btn btn-default" type="button" onclick="asociadosDia()">POR DIA</button>
+							<button class="btn btn-default" type="button" onclick="asociadosAnio()">Estadistica por año</button>
+							<button class="btn btn-default" type="button" onclick="asociadosMes()">Estadistica por mes</button>
+							<button class="btn btn-default" type="button" onclick="asociadosDia()">Estadistica por dia</button>
 						</div>
 					</div>
 

@@ -3,14 +3,8 @@
 //Si la variable funcion no tiene ningun valor, se redirecciona al inicio------------
 	if(!isset($_GET['funcion']))
 	{
-		require_once '../../vendor/autoload.php';
-
-		$loader = new Twig_Loader_Filesystem('../views');
-
-		$twig = new Twig_Environment($loader, []);
-		
-		echo $twig->render('/Inicio/inicio.html');
-		
+		header('location:index.php');
+		return;
 	}
 	else
 	{
@@ -40,10 +34,18 @@
 	$config['dbEngine']='MYSQL';
 //para acceder a la variable $db en el ambito de una funcion, se usará la variable super global $GLOBALS['db'], de manera tal queda definida una unica vez la bd
 	$db = new CONEXION($config['dbhost'],$config['dbuser'],$config['dbpass'],$config['db']);
-	
+	$use=$_SESSION['usuario'];
+	$priv=$_SESSION['privilegios'];
+	if($priv['profesionales']=="0")
+	{
+		header('location:index.php');
+		return;
+	}
 	
 function mostrarListado(){
-	
+	global $use;
+	global $priv;
+
 	$profesionales = $GLOBALS['db']->select('SELECT * FROM profesionales, persona_sistema
 								WHERE profesionales.id_persona=persona_sistema.id_persona');								
 	if($profesionales)
@@ -69,7 +71,7 @@ function mostrarListado(){
 			$eliminado=1;
 		}
 
-		echo $GLOBALS['twig']->render('/Atenciones/profesionales_listado.html', compact('profesionales', 'exito', 'eliminado'));
+		echo $GLOBALS['twig']->render('/Atenciones/profesionales_listado.html', compact('profesionales', 'exito', 'eliminado','use','priv'));
 	}
 	else
 	{
@@ -78,12 +80,14 @@ function mostrarListado(){
 				'funcion'		=>"Listado de profesionales",
 				'descripcion'	=>"No se encontraron resultados."
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 	}
 }
 
 function verMas(){
-	
+	global $use;
+	global $priv;
+
 	if(!isset($_GET['id_profesional']))
 	{
 		$error=[
@@ -91,7 +95,7 @@ function verMas(){
 				'funcion'		=>"Perfil del profesional",
 				'descripcion'	=>"No se encontraron resultados."
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));
 	}
 	$id_profesional=$_GET['id_profesional'];
 	
@@ -105,7 +109,7 @@ function verMas(){
 				'funcion'		=>"Perfil del profesional",
 				'descripcion'	=>"No se encontraron resultados."
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));
 	}
 	
 	$profesional[0]['fech_creacion'] = date("d/m/Y", strtotime($profesional[0]['fech_alta']));
@@ -137,17 +141,21 @@ function verMas(){
 		$modprofesional=1;
 	}
 	
-	echo $GLOBALS['twig']->render('/Atenciones/profesionales_perfil.html', compact('profesional','modificar','modprofesional'));
+	echo $GLOBALS['twig']->render('/Atenciones/profesionales_perfil.html', compact('profesional','modificar','modprofesional','use','priv'));
 	
 }
 
 function mostrarFormulario(){
-	echo $GLOBALS['twig']->render('/Atenciones/nuevo_profesional_formulario.html');
+	global $use;
+	global $priv;
+	echo $GLOBALS['twig']->render('/Atenciones/nuevo_profesional_formulario.html', compact('use','priv'));
 	return;
 }
 
 function registrarProfesional(){
-	
+	global $use;
+	global $priv;
+
 	$use=$_SESSION['usuario']; //Usuario que realiza la creacion del nuevo profesional
 	
 	$nombre=$_POST['nombre'];
@@ -170,7 +178,8 @@ function registrarProfesional(){
 	date_default_timezone_set('America/Argentina/Catamarca');
 	$fec_alta=date("Y")."-".date("m")."-".date("d");
 	
-	
+	$GLOBALS['db']->startCommit();
+
 	$resultado=$GLOBALS['db']->query("INSERT INTO persona_sistema (nombre,numdoc,sexo,fecnacim,domicilio,casa_nro,barrio,localidad,codpostal,dpmto,tel_fijo,tel_cel,fec_alta,usualta)
 				VALUES ('$nombre','$doc','$sexo','$fech_nac','$dom','$nrocasa','$barrio','$localidad','$cod_postal','$dpto','$tel_fijo','$tel_celu','$fec_alta','$use')");
 
@@ -181,7 +190,8 @@ function registrarProfesional(){
 				'funcion'		=>"registrarProfesional",
 				'descripcion'	=>"No se pudo registrar el profesional, error tabla persona"
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+		$GLOBALS['db']->rollback();
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 		return;
 	}
 	
@@ -198,16 +208,20 @@ function registrarProfesional(){
 				'funcion'		=>"registrarProfesional",
 				'descripcion'	=>"No se pudo crear el usuario, error tabla usuarios"
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+		$GLOBALS['db']->rollback();
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 		return;
 	}
 		
-	
+	$GLOBALS['db']->commit();
 	header('Location: ./profesionales.php?funcion=mostrarListado&exito');
 
 }
 
 function modificarProfesional(){
+	global $use;
+	global $priv;
+
 	$id_profesional=$_POST['id_profesional'];
 	$espec=$_POST['espec'];
 	$matricula=$_POST['matricula'];
@@ -222,7 +236,7 @@ function modificarProfesional(){
 			'funcion'		=>"Modificar datos del profesional",
 			'descripcion'	=>"No se pudo modificar los datos del profesional ".$id_profesional
 			];
-			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 			return;
 	}
 	
@@ -232,6 +246,9 @@ function modificarProfesional(){
 }
 
 function modificarPersonaProfesional(){
+	global $use;
+	global $priv;
+
 	$id_profesional=$_POST['id_profesional'];
 	$id_persona=$_POST['id_persona'];
 	$nombre=$_POST['nombre'];
@@ -258,7 +275,7 @@ function modificarPersonaProfesional(){
 			'funcion'		=>"ModificarPersonaProfesional",
 			'descripcion'	=>"No se pudo modificar los datos de la persona ".$id_persona
 			];
-			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 			return;
 	}
 	
@@ -269,6 +286,9 @@ function modificarPersonaProfesional(){
 
 
 function eliminarProfesional(){
+	global $use;
+	global $priv;
+
 	$id_profesional=$_POST['id_profesional'];
 	$persona = $GLOBALS['db']->select("SELECT id_persona FROM profesionales
 								WHERE id_profesional='$id_profesional'");
@@ -279,11 +299,13 @@ function eliminarProfesional(){
 			'funcion'		=>"EliminarProfesional",
 			'descripcion'	=>"No se pudo encontrar los datos de la persona del profesional  ".$id_profesional
 			];
-			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 			return;
 	}
 
 	$id_persona=$persona[0]['id_persona'];
+
+	$GLOBALS['db']->startCommit();
 
 	$res=$GLOBALS['db']->query("DELETE FROM persona_sistema
 	WHERE id_persona='$id_persona'");
@@ -291,6 +313,20 @@ function eliminarProfesional(){
 	$res1=$GLOBALS['db']->query("DELETE FROM profesionales
 	WHERE id_profesional='$id_profesional'");
 
+	if(!$res && !$res1){
+		$error=[
+			'menu'			=>"Profesionales",
+			'funcion'		=>"EliminarProfesional",
+			'descripcion'	=>"No se pudo elminar al profesional:  ".$id_profesional
+			];
+
+			$GLOBALS['db']->rollback();
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
+			return;
+	}
+
+
+	$GLOBALS['db']->commit();
 	header('Location: ./profesionales.php?funcion=mostrarListado&eliminado');
 }
 

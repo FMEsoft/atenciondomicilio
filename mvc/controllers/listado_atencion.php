@@ -3,14 +3,8 @@
 //Si la variable funcion no tiene ningun valor, se redirecciona al inicio------------
 	if(!isset($_GET['funcion']))
 	{
-		require_once '../../vendor/autoload.php';
-
-		$loader = new Twig_Loader_Filesystem('../views');
-
-		$twig = new Twig_Environment($loader, []);
-		
-		echo $twig->render('/Inicio/inicio.html');
-
+		header('location:index.php');
+		return;
 	}
 	else
 	{
@@ -42,11 +36,18 @@
 //para acceder a la variable $db en el ambito de una funcion, se usará la variable super global $GLOBALS['db'], de manera tal queda definida una unica vez la bd
 	$db = new CONEXION($config['dbhost'],$config['dbuser'],$config['dbpass'],$config['db']);
 
-	
+	$use=$_SESSION['usuario'];
+	$priv=$_SESSION['privilegios'];
+	if($priv['atenciones']=="0")
+	{
+		header('location:index.php');
+		return;
+	}
 	
 function mostrarListado()
 {
-	$use=$_SESSION['usuario'];
+	global $use;
+	global $priv;
 	$asistencias1 = $GLOBALS['db']->select("SELECT fme_asistencia.idnum, fme_asistencia.nombre, fme_asistencia.numdoc, persona.numdoc, persona.sexo, fme_asistencia.fec_pedido
 									  FROM fme_asistencia, persona 
 									  WHERE persona.numdoc = fme_asistencia.numdoc AND fme_asistencia.fec_ate='' ORDER BY fme_asistencia.fec_ate,fme_asistencia.hora_aten ASC");
@@ -62,7 +63,7 @@ function mostrarListado()
 		'funcion'		=>"mostrarListado",
 		'descripcion'	=>"No se encontraron resultados de atenciones."
 		];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error'));	
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 		return;
 	}
 	
@@ -110,12 +111,13 @@ function mostrarListado()
 		}
 	}
 
-echo $GLOBALS['twig']->render('/Atenciones/listado_atencion.html',compact ('asistencias','use'));
+echo $GLOBALS['twig']->render('/Atenciones/listado_atencion.html',compact ('asistencias','use','priv'));
 }
 
 function verMas()
 {
-	$use=$_SESSION['usuario'];
+	global $use;
+	global $priv;
 
 	if(!isset($_GET['num_asist']))
 	{
@@ -124,7 +126,7 @@ function verMas()
 				'funcion'		=>"verMas Listado_atencion",
 				'descripcion'	=>"No se recibió num_asist como parametro de la función"
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 		return;
 	}
 	$numero_asistencia=$_GET['num_asist'];
@@ -147,7 +149,7 @@ function verMas()
 			'funcion'		=>"verMas",
 			'descripcion'	=>"No se encontraron resultados para la atencion '$numero_asistencia'."
 			];
-			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 			return;
 		}
 	
@@ -225,13 +227,15 @@ function verMas()
 		];
 	}
 
-echo $GLOBALS['twig']->render('/Atenciones/listado_atencion_formulario.html',compact ('persona','estado','use', 'historia'));
+echo $GLOBALS['twig']->render('/Atenciones/listado_atencion_formulario.html',compact ('persona','estado','historia','use','priv'));
 }
 
 
 function finalizarAtencion()
 {
-	$use=$_SESSION['usuario'];
+	global $use;
+	global $priv;
+
 	$num_asistencia=$_POST['num_asistencia'];
 	$fecha_ate=$_POST['fech_ate'];		
 	$hora_ate=$_POST['hora_ate'];
@@ -249,7 +253,7 @@ function finalizarAtencion()
 				'descripcion'	=>"No se pudo realizar la consulta: UPDATE fme_asistencia SET fec_ate='$fecha_ate',sintomas='$sintomas',diagnostico='$diagnostico',tratamiento='$tratamiento',hora_aten='$hora_ate'
 										WHERE idnum='$num_asistencia'"
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 		return;
 	}
 

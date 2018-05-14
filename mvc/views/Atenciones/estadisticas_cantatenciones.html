@@ -1,4 +1,6 @@
-{% extends 'Base/base.html' %} {% block wrapper %}
+{% extends 'Base/base.html' %} 
+{% block title %}Estadisticas cantidad de atenciones{% endblock %}
+{% block wrapper %}
 
 <head>
 	<meta charset="utf-8">
@@ -9,7 +11,6 @@
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
 			<h3 class="text-primary text-center">Estadisticas</h3>
-			<!-- Cantidad de atenciones realizadas -->
 			<div class="box box-primary">
 				<div class="box-header with-border">
 					<br>
@@ -19,7 +20,7 @@
 					<span>Seleccione si desea visualizar la estadistica por año o por dia</span>
 					<br>
 					<br>
-					<!-- AL PRESIONAR ESTE BOTON TRAE LA INFORMACION VARIAS VECES, VERIFICAR -->
+
 					<div class="row">
 						<div class="col-md-6">
 							<div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-highlight="true" data-date-language='es'>

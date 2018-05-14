@@ -3,14 +3,8 @@
 //Si la variable funcion no tiene ningun valor, se redirecciona al inicio------------
 	if(!isset($_GET['funcion']))
 	{
-		require_once '../../vendor/autoload.php';
-
-		$loader = new Twig_Loader_Filesystem('../views');
-
-		$twig = new Twig_Environment($loader, []);
-		
-		echo $twig->render('/Inicio/inicio.html');
-		
+		header('location:index.php');
+		return;
 	}
 	else
 	{
@@ -45,12 +39,50 @@
 //Para acceder a cada funcion se debe pasar por parametro una variable de nombre funcion=nombrefuncion; por ejemeplo atenciones.php?funcion=nuevaAtencion		
 	
 $use=$_SESSION['usuario'];
+$priv=$_SESSION['privilegios'];
+if($priv['atenciones']=="0")
+	{
+		header('location:index.php');
+		return;
+	}
+
+function mostrarListado(){
+	global $use;
+	global $priv;
+
+	$resultado = $GLOBALS['db']->select('SELECT socios.beneficio,socios.soc_titula,socios.numero_soc,persona.sexo,persona.nombre,persona.numdoc 
+							FROM socios, persona 
+							WHERE socios.soc_titula=socios.numero_soc 
+							AND persona.id_persona=socios.id_persona;');
+
+							
+	$resultado_particulares = $GLOBALS['db']->select('SELECT fme_adhsrv.nombre, fme_adhsrv.documento, persona.sexo, fme_adhsrv.id_persona 
+								FROM fme_adhsrv, persona 
+								WHERE fme_adhsrv.codigo=021 
+								AND persona.id_persona=fme_adhsrv.id_persona;');		
+								
+	if($resultado || $resultado_particulares)
+	{
+		echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_1.html', compact('asociado','resultado','resultado_particulares','use','priv'));
+	}
+	else
+	{
+		$error=[
+					'menu'			=>"Atenciones",
+					'funcion'		=>"Listado de asociados",
+					'descripcion'	=>"No se encontraron resultados."
+					];
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
+	}
+}
+
 		
 //funcion verMAS, el cual debe realizar la consulta del asociado seleccionado para mostrar toda su informacion
 function verMas()	
 		{
 			
 			global $use;
+			global $priv;
 
 			//NOTA: Para ver si funciona tienen que asociarle un adherente en la tabla socios, ya que en los datos de ejemplo todos son titulares
 			//NOTA: Lo que hice fue: en tabla socios en numero_soc=00044 cambiar el campo soc_titula de manera que quede soc_titula=00277
@@ -76,7 +108,7 @@ function verMas()
 				'funcion'		=>"verMas",
 				'descripcion'	=>"No se encuentra al titular $numero_socio"
 				];
-				echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+				echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 				return;
 			}
 			
@@ -203,7 +235,7 @@ function verMas()
 																  'resultadoAdherentes1',
 																  'resultadoAdherentes2',
 																  'asistencias',
-																  'estado','use'));	
+																  'estado','use','priv'));	
 			
 			
 		}
@@ -213,7 +245,7 @@ function verMasParticular()
 		{
 			
 			global $use;
-			
+			global $priv;
 			//---------------CONSULTA QUE DEVUELVE TODA LA INFO DEL PARTICULAR----------------
 			
 			$id_persona = $_GET['persona']; //Es el número del particular
@@ -233,7 +265,7 @@ function verMasParticular()
 				'funcion'		=>"verMas",
 				'descripcion'	=>"No se encuentra al particular $id_persona"
 				];
-				echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+				echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 				return;
 			}
 			
@@ -265,7 +297,7 @@ function verMasParticular()
 
 			echo $GLOBALS['twig']->render('/Atenciones/perfil_particular.html', compact('particular',
 																  'asistencias',
-																  'estado','use'));	
+																  'estado','use','priv'));	
 			
 			
 		}
@@ -275,7 +307,10 @@ function verMasParticular()
 //se debe pasar por parametro el la variable 
 
 function mostrarFormulario()
-{$use=$_SESSION['usuario'];
+{
+	global $use;
+	global $priv;
+
 	if(!isset($_GET['num_soc']))
 	{
 		$error=[
@@ -295,7 +330,7 @@ function mostrarFormulario()
 				'funcion'		=>"mostrarFormulario",
 				'descripcion'	=>"No se recibió cod_servicio como parametro de la función"
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 		return;
 	}
 	
@@ -360,7 +395,7 @@ function mostrarFormulario()
 				'funcion'		=>"mostrarFormulario",
 				'descripcion'	=>"No se encontraron datos para el socio '$numero_socio'"
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 		return;
 	}
 	
@@ -406,12 +441,14 @@ function mostrarFormulario()
 										WHERE profesionales.id_persona = persona_sistema.id_persona");
 	
 
-	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_formulario.html', compact('persona','use','historia','profesionales'));
+	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_formulario.html', compact('persona','historia','profesionales','use','priv'));
 }
 
 
 function mostrarFormularioParticular()
-{$use=$_SESSION['usuario'];
+{
+	global $use;
+	global $priv;
 	if(!isset($_GET['id_persona']))
 	{
 		$error=[
@@ -419,7 +456,7 @@ function mostrarFormularioParticular()
 				'funcion'		=>"mostrarFormulario",
 				'descripcion'	=>"No se recibió id_persona como parametro de la función"
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 		return;
 	}
 	
@@ -430,7 +467,7 @@ function mostrarFormularioParticular()
 				'funcion'		=>"mostrarFormulario",
 				'descripcion'	=>"No se recibió cod_servicio como parametro de la función"
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 		return;
 	}
 	
@@ -476,7 +513,7 @@ function mostrarFormularioParticular()
 				'funcion'		=>"mostrarFormulario",
 				'descripcion'	=>"No se encontraron datos para el particular '$id_persona'"
 				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 		return;
 	}
 	
@@ -521,13 +558,15 @@ function mostrarFormularioParticular()
 	$profesionales = $GLOBALS['db']->select("SELECT * FROM profesionales,persona_sistema
 										WHERE profesionales.id_persona = persona_sistema.id_persona");
 
-	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_formulario_particular.html', compact('persona','use','historia','profesionales'));
+	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_formulario_particular.html', compact('persona','historia','profesionales','use','priv'));
 }
 	
 	
 //funcion generarAtencion, que se ejecuta tras completar el formulario
 function generarAtencion()
-{   $use=$_SESSION['usuario'];
+{   
+	global $use;
+	global $priv;
 
 		//DISTINGUE ENTRE ATENCION A DOMICILIO O ATENCION EN CONSULTORIO
 		if(isset($_POST['atencion_domicilio'])){
@@ -579,7 +618,7 @@ function generarAtencion()
 					'descripcion'	=>"No se pudo realizar la consulta: INSERT INTO fme_asistencia (doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional)
 				VALUES ('$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional')"
 					];
-			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 			return;
 		}
 		
@@ -621,7 +660,7 @@ function generarAtencion()
 					'descripcion'	=>"No se pudo realizar la consulta: INSERT INTO fme_asistencia (doctitu,numdoc,nombre,fec_pedido,hora_pedido,dessit,profesional)
 				VALUES ('$doctitu','$numdoc','$nombre','$fec_pedido','$hora_pedido','$dessit','$profesional')"
 					];
-			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use'));	
+			echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
 			return;
 		}
 

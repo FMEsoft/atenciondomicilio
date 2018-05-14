@@ -10,8 +10,18 @@ $twig = new Twig_Environment($loader, []);
 
 session_start();
 
-if (isset($_SESSION['usuario'])) {
-	header('location:index.php');
+if (isset($_SESSION['usuario']) && isset($_SESSION['privilegios'])) {
+	//comprobar si tiene algun privilegio
+	if($privilegios[0]['atenciones']=="0" && $privilegios[0]['estadisticas']=="0" && $privilegios[0]['usuarios']=="0" && $privilegios[0]['profesionales']=="0" && $privilegios[0]['historia']=="0"){
+		session_destroy();
+		$_SESSION = array();
+		header('Location: login.php');
+	}
+
+	else{
+		header('location:index.php');
+	}
+	
 }
 
 $errore = '';
@@ -40,9 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 
 	if ( $resultado != false) {
-		//header('Location:index.php');
-		//echo $GLOBALS['twig']->render('/Base/header.html',compact('usuario'));
-		//echo $GLOBALS['twig']->render('/controllers/index.php',compact('resultado'));
+
 
 		$id_usuario=$resultado[0]['id_usuario'];
 
@@ -54,6 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 			{
 				$errore.= 'El usuario no posee ningun persmiso aun.';
 				echo $GLOBALS['twig']->render('/Atenciones/login.html', compact('errore'));	
+				session_destroy();
+				$_SESSION = array();
 				return;
 			}
 			$_SESSION['usuario'] = $usuario;
@@ -71,6 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	
 			$errore.= 'El usuario no posee ningun persmiso aun.';
 			echo $GLOBALS['twig']->render('/Atenciones/login.html', compact('errore'));	
+			session_destroy();
+			$_SESSION = array();
 			return;
 		}
 

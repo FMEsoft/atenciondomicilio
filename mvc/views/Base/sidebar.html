@@ -3,18 +3,20 @@
         <ul class="sidebar-menu">
             <li class="header">Menú</li>
 
+            {% if priv.atenciones == '1' %}
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-files-o"></i>
                     <span>Atenciones</span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="../controllers/index.php"><i class="fa fa-circle-o"></i> Nueva Atención</a></li>
+                    <li><a href="../controllers/atenciones.php?funcion=mostrarListado"><i class="fa fa-circle-o"></i> Nueva Atención</a></li>
                     <li><a href="../controllers/listado_atencion.php?funcion=mostrarListado"><i class="fa fa-circle-o"></i> Listado Atenciones</a></li>
                 </ul>
             </li>
+            {% endif %}
             
-			
+			{% if priv.estadisticas == '1' %}
 			<li class="treeview">
                 <a href="#">
                     <i class="fa fa-files-o"></i>
@@ -26,22 +28,31 @@
 					<li><a href="../controllers/estadisticas.php?funcion=horarios"><i class="fa fa-circle-o"></i>Horarios de mayor atención</a></li>
                 </ul>
             </li>
-			
+            {% endif %}
+            
+            {% if priv.usuarios == '1' %}
 			<li>
                 <a href="../controllers/usuarios.php?funcion=mostrarListado">
                     <i class="fa fa-th"></i> <span>Listado usuarios</span>
                 </a>
             </li>
+            {% endif %}
+
+            {% if priv.profesionales == '1' %}
 			<li>
                 <a href="../controllers/profesionales.php?funcion=mostrarListado">
                     <i class="fa fa-th"></i> <span>Listado profesionales</span>
                 </a>
             </li>
+            {% endif %}
+
+            {% if priv.historia == '1' %}
 			<li>
                 <a href="../controllers/historia.php?funcion=mostrarListado">
                     <i class="fa fa-th"></i> <span>Historia Clinica</span>
                 </a>
             </li>
+            {% endif %}
         </ul>
     </section>
 </aside>
