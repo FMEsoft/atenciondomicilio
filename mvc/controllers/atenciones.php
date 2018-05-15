@@ -439,6 +439,16 @@ function mostrarFormulario()
 
 	$profesionales = $GLOBALS['db']->select("SELECT * FROM profesionales,persona_sistema
 										WHERE profesionales.id_persona = persona_sistema.id_persona");
+
+	if(!$profesionales){
+		$error=[
+			'menu'			=>"Atenciones",
+			'funcion'		=>"mostrarFormulario",
+			'descripcion'	=>"No hay ningun profesional que pueda realizar la atención"
+			];
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
+		return;
+	}
 	
 
 	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_formulario.html', compact('persona','historia','profesionales','use','priv'));
@@ -557,6 +567,15 @@ function mostrarFormularioParticular()
 	
 	$profesionales = $GLOBALS['db']->select("SELECT * FROM profesionales,persona_sistema
 										WHERE profesionales.id_persona = persona_sistema.id_persona");
+	if(!$profesionales){
+		$error=[
+			'menu'			=>"Atenciones",
+			'funcion'		=>"mostrarFormulario",
+			'descripcion'	=>"No hay ningun profesional que pueda realizar la atención"
+			];
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
+		return;
+	}
 
 	echo $GLOBALS['twig']->render('/Atenciones/nueva_atencion_formulario_particular.html', compact('persona','historia','profesionales','use','priv'));
 }
@@ -929,7 +948,7 @@ function generarPDF()
 	else{
 		$pdf->Image('../../static/images/back_finalizado.png','0','0','595','841','PNG');
 	}
-	$pdf->Image('../../static/images/logo_mutual.png','425','100','100','100','PNG');//LOGO
+	$pdf->Image('../../static/images/logo_MutualFME.png','425','100','100','100','PNG');//LOGO
 	
 
 	

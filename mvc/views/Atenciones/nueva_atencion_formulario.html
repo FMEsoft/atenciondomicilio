@@ -168,7 +168,7 @@
 				<div class="row">
 					<div class="col-md-6 form-group">
 						<label for="prof">Profesional</label>
-						<select class="select2 form-control" style="width: 100%;" id="prof" name="prof">
+						<select class="select2 form-control" style="width: 100%;" id="prof" name="prof" required>
 							{% for profesional in profesionales %}
 								<option value="{{ profesional.nombre }}|{{ profesional.id_profesional }}">{{ profesional.nombre }} | {{ profesional.especialidad }} | {{ profesional.matricula }}</option>
 							{% endfor %}
