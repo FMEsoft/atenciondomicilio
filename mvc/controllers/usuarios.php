@@ -62,28 +62,17 @@ function mostrarListado(){
 			}
 			$i++;
 		}
-
-		$exito=0;
-		if(isset($_GET['exito'])){
-			$exito=1;
-		}
+	}
+	$exito=0;
+	if(isset($_GET['exito'])){
+		$exito=1;
+	}
 
 	$eliminado=0;
 	if(isset($_GET['eliminado'])){
 		$eliminado=1;
 	}
-
-		echo $GLOBALS['twig']->render('/Atenciones/usuarios_listado.html', compact('usuarios','exito', 'eliminado','use','priv'));
-	}
-	else
-	{
-		$error=[
-				'menu'			=>"Usuarios",
-				'funcion'		=>"Listado de usuarios",
-				'descripcion'	=>"No se encontraron resultados."
-				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
-	}
+	echo $GLOBALS['twig']->render('/Atenciones/usuarios_listado.html', compact('usuarios','exito', 'eliminado','use','priv'));
 }
 
 function verMas(){

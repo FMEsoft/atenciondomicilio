@@ -61,7 +61,9 @@ function mostrarListado(){
 			$i++;
 		}
 
-		$exito=0;
+	}
+
+	$exito=0;
 		if(isset($_GET['exito'])){
 			$exito=1;
 		}
@@ -71,17 +73,8 @@ function mostrarListado(){
 			$eliminado=1;
 		}
 
-		echo $GLOBALS['twig']->render('/Atenciones/profesionales_listado.html', compact('profesionales', 'exito', 'eliminado','use','priv'));
-	}
-	else
-	{
-		$error=[
-				'menu'			=>"Profesionales",
-				'funcion'		=>"Listado de profesionales",
-				'descripcion'	=>"No se encontraron resultados."
-				];
-		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
-	}
+	echo $GLOBALS['twig']->render('/Atenciones/profesionales_listado.html', compact('profesionales', 'exito', 'eliminado','use','priv'));
+
 }
 
 function verMas(){
