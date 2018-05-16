@@ -34,15 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	//$password = hash('sha512', $password);
 
 
-//array para la conexion de la bd
 	include ('conexion.php');
-	$config['db']='fme_mutual';
-	$config['dbuser']='root';
-	$config['dbpass']='';
-	$config['dbhost']='localhost';
-	$config['dbEngine']='MYSQL';
-//para acceder a la variable $db en el ambito de una funcion, se usará la variable super global $GLOBALS['db'], de manera tal queda definida una unica vez la bd
-	$db = new CONEXION($config['dbhost'],$config['dbuser'],$config['dbpass'],$config['db']);
+
+	$db = new CONEXION();
 
 	$resultado = $GLOBALS['db']->select("
 		SELECT * FROM usuarios WHERE usuario = '$usuario' AND password = '$password' LIMIT 1");

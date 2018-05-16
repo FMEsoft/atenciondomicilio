@@ -25,15 +25,9 @@
 	}
 
 	
-//array para la conexion de la bd
 	include ('conexion.php');
-	$config['db']='fme_mutual';
-	$config['dbuser']='root';
-	$config['dbpass']='';
-	$config['dbhost']='localhost';
-	$config['dbEngine']='MYSQL';
-//para acceder a la variable $db en el ambito de una funcion, se usará la variable super global $GLOBALS['db'], de manera tal queda definida una unica vez la bd
-	$db = new CONEXION($config['dbhost'],$config['dbuser'],$config['dbpass'],$config['db']);
+
+	$db = new CONEXION();
 	
 	
 //Para acceder a cada funcion se debe pasar por parametro una variable de nombre funcion=nombrefuncion; por ejemeplo atenciones.php?funcion=nuevaAtencion		
@@ -734,7 +728,13 @@ function generarPDF()
 		$hora_pedido=$res['hora_pedido'];
 		$dessit=$res['dessit'];
 		$profesional=$res['profesional'];
-		$sexo=$res['sexo'];		
+		if($res['sexo']=='1'){
+			$sexo="Masculino";	
+		}
+		else{
+			$sexo="Femenino";
+		}
+			
 		$tel=$res['tel_fijo'];
 		$tel=$tel.$res['tel_cel'];
 		$dom=$res['domicilio'];

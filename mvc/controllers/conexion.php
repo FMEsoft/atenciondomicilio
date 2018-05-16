@@ -13,12 +13,12 @@
 		var $errorMsg;
 		
 	
-		function CONEXION($host,$dbUser,$dbPass,$dbName)
+		function CONEXION()
 		{
-			$this->host 	= $host;
-			$this->dbUser 	= $dbUser;
-			$this->dbPass	= $dbPass;
-			$this->dbName	= $dbName;
+			$this->host 	= 'localhost';
+			$this->dbUser 	= 'root';
+			$this->dbPass	= '';
+			$this->dbName	= 'fme_mutual';
 			$this->connect();
 		}
 

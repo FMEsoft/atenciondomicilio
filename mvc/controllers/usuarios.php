@@ -27,15 +27,10 @@
 	
 
 	
-//array para la conexion de la bd
-	include ('conexion.php');
-	$config['db']='fme_mutual';
-	$config['dbuser']='root';
-	$config['dbpass']='';
-	$config['dbhost']='localhost';
-	$config['dbEngine']='MYSQL';
-//para acceder a la variable $db en el ambito de una funcion, se usará la variable super global $GLOBALS['db'], de manera tal queda definida una unica vez la bd
-	$db = new CONEXION($config['dbhost'],$config['dbuser'],$config['dbpass'],$config['db']);
+
+include ('conexion.php');
+
+$db = new CONEXION();
 	$use=$_SESSION['usuario'];
 	$priv=$_SESSION['privilegios'];
 	if($priv['usuarios']=="0")
