@@ -7,7 +7,7 @@
             <small>Listado Atención</small>
         </h1>
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="index.php"><i class="fa fa-home"></i> Home</a></li>
             <li class="active">Listado Atención</li>
         </ol>
     </section>
@@ -65,10 +65,15 @@
  	var tabla = $('#tabla').DataTable({
  		"language": {
             "lengthMenu": "Mostrando _MENU_ registros por página",
+			"search": "Buscar",
             "zeroRecords": "Ningún registro coincide con lo ingresado",
             "info": "Mostrando página _PAGE_ de _PAGES_",
             "infoEmpty": "No hay resultados",
-            "infoFiltered": "(de un total de _MAX_ total registros)"
+            "infoFiltered": "(de un total de _MAX_ total registros)",
+			"paginate": {
+				"previous": "Anterior",
+				"next": "Siguiente"
+			}
         },
 		"columnDefs": [
 			{ "width": "10%", "targets": 6 }
