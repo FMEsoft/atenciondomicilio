@@ -706,6 +706,9 @@ function generarAtencion()
 
 function generarPDF()
 {
+	global $use;
+	global $priv;
+
 	if(!isset($_GET['id_atencion']))
 	{
 		return;
@@ -718,6 +721,17 @@ function generarPDF()
 	FROM fme_asistencia, persona 
 	WHERE fme_asistencia.id_persona= persona.id_persona
 	AND fme_asistencia.idnum='$id_atencion'");
+
+	if(!$resultado)
+	{
+		$error=[
+		'menu'			=>"Atenciones",
+		'funcion'		=>"PDF",
+		'descripcion'	=>"No se encuentra la atención con código: $id_atencion"
+		];
+		echo $GLOBALS['twig']->render('/Atenciones/error.html', compact('error','use','priv'));	
+		return;
+	}
 
 	foreach($resultado as $res){
 		$cod_ser=$res['cod_ser'];
@@ -746,6 +760,7 @@ function generarPDF()
 		$id_persona=$res['id_persona'];
 		$fec_ate=$res['fec_ate'];
 	}
+	
 
 	$resultado_historia = $GLOBALS['db']->select("SELECT * FROM historia_clinica
 	WHERE id_persona='$id_persona'");
